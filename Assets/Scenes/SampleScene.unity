@@ -11406,7 +11406,7 @@ PrefabInstance:
       objectReference: {fileID: 6814055989085665327}
     - target: {fileID: 4065352408503999986, guid: 8bc8a2920c54993468812b31854d00b2, type: 3}
       propertyPath: canDoubleJump
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5110894066306529884, guid: 8bc8a2920c54993468812b31854d00b2, type: 3}
       propertyPath: runSpeed
@@ -12164,6 +12164,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 818148947746581355, guid: 3f77e4509ed4cc54a908101ef1c181df, type: 3}
+      propertyPath: orthographic size
+      value: 6.75
+      objectReference: {fileID: 0}
     - target: {fileID: 1250434925205954514, guid: 3f77e4509ed4cc54a908101ef1c181df, type: 3}
       propertyPath: m_Name
       value: Level Bits

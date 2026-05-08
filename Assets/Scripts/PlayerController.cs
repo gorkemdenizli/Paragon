@@ -1,6 +1,8 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -39,6 +41,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float dashSpeed = 25f;
     [SerializeField] private float dashTime = 0.2f;
     [SerializeField] private float waitAfterDashing;
+    [SerializeField] private Slider dashCooldownSlider;
 
     [Header("Gravity")]
     [SerializeField] private float fallMultiplier = 2.5f;
@@ -68,6 +71,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform bombPoint;
     [SerializeField] private GameObject bomb;
     [SerializeField] private float bombThrowForce = 15f;
+    [SerializeField] private int maxGrenades = 3;
+    [SerializeField] private float grenadeRegenTime = 20f;
+    [SerializeField] private Slider grenadeRegenSlider;
+    [SerializeField] private TMP_Text grenadeCountText;
 
     [Header("Other")]
     [SerializeField] public PlayerAbilityTracker abilities;
@@ -92,6 +99,9 @@ public class PlayerController : MonoBehaviour
     private float dashCounter;
     private bool isDashing;
     private int dashDirection;
+    private int currentGrenades;
+    private int grenadesAwaitingRegen;
+    private float grenadeRegenCounter;
     private bool hasShotFiredParam;
     private bool hasDoubleJumpParam;
 
@@ -159,6 +169,8 @@ public class PlayerController : MonoBehaviour
         gate = FindFirstObjectByType<GateController>();
         canMove = true;
         extraJumpsLeft = maxExtraJumps;
+        currentGrenades = maxGrenades;
+        UpdateGrenadeUI();
     }
 
     // aim fire ground jump buffer each frame
@@ -171,6 +183,7 @@ public class PlayerController : MonoBehaviour
         OnLandedClearStaleJumpTrigger();
         PollJumpInput();
         TickJumpBuffer();
+        TickGrenadeRegen();
     }
 
     // push blend params and flags to animator after movement
@@ -184,6 +197,9 @@ public class PlayerController : MonoBehaviour
     {
         if (dashRechargeCounter > 0f)
             dashRechargeCounter -= Time.fixedDeltaTime;
+
+        if (dashCooldownSlider != null)
+            dashCooldownSlider.value = waitAfterDashing > 0f ? dashRechargeCounter / waitAfterDashing : 0f;
 
         if (isDashing)
         {
@@ -612,11 +628,52 @@ public class PlayerController : MonoBehaviour
             return;
         if (abilities != null && !abilities.canDropBomb)
             return;
+        if (currentGrenades <= 0)
+            return;
 
         GameObject newBomb = Instantiate(bomb, bombPoint.position, Quaternion.identity);
         Rigidbody2D rb = newBomb.GetComponent<Rigidbody2D>();
         if (rb != null)
             rb.linearVelocity = aimDirection * bombThrowForce;
+
+        currentGrenades--;
+        if (grenadesAwaitingRegen == 0)
+            grenadeRegenCounter = grenadeRegenTime;
+        grenadesAwaitingRegen++;
+        UpdateGrenadeUI();
+    }
+
+    // count down regen queue one grenade at a time update slider and text
+    void TickGrenadeRegen()
+    {
+        if (grenadesAwaitingRegen <= 0)
+        {
+            if (grenadeRegenSlider != null)
+                grenadeRegenSlider.value = 0f;
+            return;
+        }
+
+        grenadeRegenCounter -= Time.deltaTime;
+
+        if (grenadeRegenSlider != null)
+            grenadeRegenSlider.value = grenadeRegenTime > 0f ? grenadeRegenCounter / grenadeRegenTime : 0f;
+
+        if (grenadeRegenCounter <= 0f)
+        {
+            currentGrenades++;
+            grenadesAwaitingRegen--;
+
+            if (grenadesAwaitingRegen > 0)
+                grenadeRegenCounter = grenadeRegenTime;
+
+            UpdateGrenadeUI();
+        }
+    }
+
+    void UpdateGrenadeUI()
+    {
+        if (grenadeCountText != null)
+            grenadeCountText.text = currentGrenades.ToString();
     }
 
     // start horizontal dash zero gravity until timer ends

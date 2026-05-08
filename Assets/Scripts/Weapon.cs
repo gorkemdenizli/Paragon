@@ -76,6 +76,13 @@ public class Weapon : MonoBehaviour
     private Vector3 _pivotBaseLocalPos;
     private bool _pivotBaseCached;
 
+    // Ammo total text punch animation
+    private float _ammoTextPunchTimer;
+    private bool _ammoTextPunching;
+    private Vector3 _ammoTextBaseScale;
+    private const float AmmoTextPunchDuration = 0.25f;
+    private const float AmmoTextPunchScale    = 1.45f;
+
     private int _magAmmo;
     private int _reserveAmmo;
     // Shown as right-hand number; decreases when reload finishes (by rounds moved from reserve), not each shot.
@@ -104,6 +111,8 @@ public class Weapon : MonoBehaviour
         CachePivotBasePos();
         IgnorePlayerVsShotLayerCollision();
 
+        _ammoTextBaseScale = ammoTotalText != null ? ammoTotalText.transform.localScale : Vector3.one;
+
         InitSlots();
         RefreshAmmoUi();
 
@@ -117,6 +126,12 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
+        HandleSlotSwitchInput();
+        TickAmmoTextPunch();
+    }
+
+    void HandleSlotSwitchInput()
+    {
         if (_slotStates == null || Keyboard.current == null)
             return;
         for (int i = 0; i < _slotStates.Length && i < DigitKeys.Length; i++)
@@ -124,6 +139,28 @@ public class Weapon : MonoBehaviour
             if (i != _activeSlot && Keyboard.current[DigitKeys[i]].wasPressedThisFrame)
                 SwitchToSlot(i);
         }
+    }
+
+    // Mermi alındığında total ammo text'i büyütüp küçülten animasyon.
+    // AddReserveAmmo çağrısı timer'ı sıfırlayarak animasyonu yeniden başlatır.
+    void TickAmmoTextPunch()
+    {
+        if (!_ammoTextPunching || ammoTotalText == null)
+            return;
+
+        _ammoTextPunchTimer -= Time.deltaTime;
+
+        if (_ammoTextPunchTimer <= 0f)
+        {
+            _ammoTextPunching = false;
+            ammoTotalText.transform.localScale = _ammoTextBaseScale;
+            return;
+        }
+
+        // t: 1 → 0 olarak azalır; Sin(t*PI) ile 0→max→0 eğrisi oluşturur.
+        float t = _ammoTextPunchTimer / AmmoTextPunchDuration;
+        float scale = 1f + (AmmoTextPunchScale - 1f) * Mathf.Sin(t * Mathf.PI);
+        ammoTotalText.transform.localScale = _ammoTextBaseScale * scale;
     }
 
     void OnDisable()
@@ -248,7 +285,7 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    // Call from pickups etc.
+    // Call from pickups, AmmoCrate, etc.
     public void AddReserveAmmo(int amount)
     {
         if (amount <= 0)
@@ -256,11 +293,19 @@ public class Weapon : MonoBehaviour
         _reserveAmmo += amount;
         _displayTotalAmmo += amount;
         RefreshAmmoUi();
+
+        // Her mermi alımında total text'i büyüt-küçült (timer sıfırlanarak animasyon yenilenir).
+        if (ammoTotalText != null)
+        {
+            _ammoTextPunchTimer = AmmoTextPunchDuration;
+            _ammoTextPunching   = true;
+        }
     }
 
     public int MagAmmo => _magAmmo;
     public int ReserveAmmo => _reserveAmmo;
     public int TotalAmmoRemaining => _magAmmo + _reserveAmmo;
+    public bool ActiveWeaponHasInfiniteAmmo => weaponData != null && weaponData.infiniteAmmo;
 
     // Bullets on Shot layer should never collide with Player layer (spawn inside collider).
     static void IgnorePlayerVsShotLayerCollision()

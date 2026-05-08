@@ -129,8 +129,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c38e24f78fcb9b24cb341e77366a8d2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BombController
-  timeToExplode: 1
+  timeToExplode: 1.25
   explosion: {fileID: 3154808496819796744, guid: b2cbcb42b0f2b76469c3c10ba6ee084d, type: 3}
+  blastRange: 3
+  damageAmount: 50
+  edgeDamageRatio: 0.5
+  whatIsDamageable:
+    serializedVersion: 2
+    m_Bits: 65536
 --- !u!50 &49206553277316665
 Rigidbody2D:
   serializedVersion: 5
@@ -144,7 +150,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 1
   m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}

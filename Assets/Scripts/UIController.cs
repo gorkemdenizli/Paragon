@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
@@ -23,11 +25,14 @@ public class UIController : MonoBehaviour
     [SerializeField] private float fadeSpeed = 2f;
     [SerializeField] private bool shouldFadeFromBlack;
     [SerializeField] private bool shouldFadeToBlack;
+    [SerializeField] private string mainMenuScene;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public GameObject pauseScreen;
+
     void Start()
     {
-
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     // Update is called once per frame
@@ -51,6 +56,11 @@ public class UIController : MonoBehaviour
                 shouldFadeFromBlack = false;
             }
         }
+
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            PauseUnpause();
+        }
     }
 
     public void StartFadeToBlack()
@@ -64,4 +74,46 @@ public class UIController : MonoBehaviour
         shouldFadeFromBlack = true;
         shouldFadeToBlack = false;
     }  
+
+    public void PauseUnpause()
+    {
+        if (!pauseScreen.activeSelf)
+        {
+            pauseScreen.SetActive(true);
+            Time.timeScale = 0f;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            pauseScreen.SetActive(false);
+            Time.timeScale = 1f;
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Confined;
+        }
+    }
+
+    public void GoToMainMenu()
+    {
+        Time.timeScale = 1f;
+        
+        Destroy(PlayerHealthController.instance.gameObject);
+        PlayerHealthController.instance = null;
+
+        Destroy(RespawnController.instance.gameObject);
+        RespawnController.instance = null;
+
+        instance = null;
+        Destroy(gameObject);   
+
+        SceneManager.LoadScene(mainMenuScene);
+
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+
+        Debug.Log("Quitting game");
+    }
 }

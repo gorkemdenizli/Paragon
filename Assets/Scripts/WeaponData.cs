@@ -20,6 +20,12 @@ public class WeaponData : ScriptableObject
     public float bulletSpeed = 18f;
     public Sprite weaponSprite;
 
+    [Header("Shotgun")]
+    [Tooltip("Her ateşlemede kaç pellet fırlatılır. 1 = normal. Her zaman 1 mermi tüketir.")]
+    [Min(1)] public int pelletsPerShot = 1;
+    [Tooltip("Aktifse şarjör tek seferde değil shell shell dolar; her shell reloadSpeed kadar sürer. Ateş basılınca kesebilirsiniz.")]
+    public bool shellReload = false;
+
     [Header("Screen Shake")]
     [Tooltip("Max positional offset (world units) applied to the camera on each shot.")]
     [Min(0f)] public float shootShakeIntensity = 0.08f;

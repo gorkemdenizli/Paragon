@@ -126,6 +126,8 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f) return;
+
         HandleSlotSwitchInput();
         TickAmmoTextPunch();
     }
@@ -364,6 +366,8 @@ public class Weapon : MonoBehaviour
     // Point gun at mouse, flip Y when cursor is left of body.
     void LateUpdate()
     {
+        if (Time.timeScale == 0f) return;
+
         if (weaponData == null || player == null || aimPlaneRoot == null)
             return;
 
@@ -429,7 +433,15 @@ public class Weapon : MonoBehaviour
             return false;
 
         if (_reloading)
-            return false;
+        {
+            // Shell reload kesilirse yüklü shell'lerle ateş edilebilir.
+            if (!weaponData.shellReload || _magAmmo <= 0)
+                return false;
+
+            if (_reloadRoutine != null) { StopCoroutine(_reloadRoutine); _reloadRoutine = null; }
+            _reloading = false;
+            if (reloadProgressSlider != null) reloadProgressSlider.gameObject.SetActive(false);
+        }
 
         if (_magAmmo <= 0)
         {
@@ -454,11 +466,15 @@ public class Weapon : MonoBehaviour
         Vector2 dir = toCursor.normalized;
         float baseDeg = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         float spreadHalf = 10f - weaponData.accuracy;
-        float spread = Random.Range(-spreadHalf, spreadHalf);
-        Vector2 shootDir = (Quaternion.Euler(0f, 0f, baseDeg + spread) * Vector2.right).normalized;
 
-        Bullet b = Instantiate(bulletPrefab, muzzle.position, Quaternion.identity);
-        b.Initialize(shootDir, weaponData.bulletSpeed, weaponData.damage);
+        int pellets = Mathf.Max(1, weaponData.pelletsPerShot);
+        for (int p = 0; p < pellets; p++)
+        {
+            float spread = Random.Range(-spreadHalf, spreadHalf);
+            Vector2 shootDir = (Quaternion.Euler(0f, 0f, baseDeg + spread) * Vector2.right).normalized;
+            Bullet b = Instantiate(bulletPrefab, muzzle.position, Quaternion.identity);
+            b.Initialize(shootDir, weaponData.bulletSpeed, weaponData.damage);
+        }
 
         _magAmmo--;
         _nextShotTime = Time.time + interval;
@@ -541,7 +557,9 @@ public class Weapon : MonoBehaviour
 
         if (_reloadRoutine != null)
             StopCoroutine(_reloadRoutine);
-        _reloadRoutine = StartCoroutine(ReloadRoutine());
+        _reloadRoutine = weaponData.shellReload
+            ? StartCoroutine(ShellReloadRoutine())
+            : StartCoroutine(ReloadRoutine());
         return true;
     }
 
@@ -587,5 +605,49 @@ public class Weapon : MonoBehaviour
         _reloading = false;
         _reloadRoutine = null;
         RefreshAmmoUi();
+    }
+
+    // Shell shell doldurma: her shell reloadSpeed kadar sürer, slider her shell için 0→1 döngüsü yapar.
+    // Ateş edilince kesilir (TryShoot içinde _reloading=false yapılır), yüklü shell'lerle devam edilir.
+    IEnumerator ShellReloadRoutine()
+    {
+        _reloading = true;
+        RefreshAmmoUi();
+
+        if (reloadProgressSlider != null)
+            reloadProgressSlider.gameObject.SetActive(true);
+
+        float shellDuration = Mathf.Max(0.0001f, weaponData.reloadSpeed);
+        int cap = weaponData.magazineSize;
+        bool infinite = weaponData.infiniteAmmo;
+
+        while (_magAmmo < cap && (infinite || _reserveAmmo > 0))
+        {
+            float elapsed = 0f;
+            if (reloadProgressSlider != null)
+                reloadProgressSlider.value = 0f;
+
+            while (elapsed < shellDuration)
+            {
+                elapsed += Time.deltaTime;
+                if (reloadProgressSlider != null)
+                    reloadProgressSlider.value = Mathf.Clamp01(elapsed / shellDuration);
+                yield return null;
+            }
+
+            _magAmmo++;
+            if (!infinite)
+            {
+                _reserveAmmo--;
+                _displayTotalAmmo--;
+            }
+            RefreshAmmoUi();
+        }
+
+        if (reloadProgressSlider != null)
+            reloadProgressSlider.gameObject.SetActive(false);
+
+        _reloading = false;
+        _reloadRoutine = null;
     }
 }

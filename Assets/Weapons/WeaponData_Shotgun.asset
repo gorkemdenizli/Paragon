@@ -15,8 +15,13 @@ MonoBehaviour:
   damage: 10
   fireRate: 6
   accuracy: 2
-  magazineSize: 12
+  magazineSize: 8
   startingTotalAmmo: 120
-  reloadSpeed: 1.5
+  infiniteAmmo: 0
+  reloadSpeed: 0.4
   bulletSpeed: 18
   weaponSprite: {fileID: 866531754212974474, guid: 943c61fb86931eb42b7301c1801d6fa0, type: 3}
+  pelletsPerShot: 6
+  shellReload: 1
+  shootShakeIntensity: 0.08
+  shootShakeDuration: 0.08

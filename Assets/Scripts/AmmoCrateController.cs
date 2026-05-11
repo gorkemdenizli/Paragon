@@ -32,7 +32,8 @@ public class AmmoCrateController : MonoBehaviour
 
     private Weapon _weapon;
     private bool _landed;
-    private bool _activated;
+    private bool _started;
+    private bool _playerInside;
 
     public void Initialize(Weapon weapon)
     {
@@ -41,12 +42,10 @@ public class AmmoCrateController : MonoBehaviour
 
     void Awake()
     {
-        // Yere değene kadar trigger zone kapalı — havadayken oyuncu algılanmasın.
         if (triggerZone != null)
             triggerZone.enabled = false;
     }
 
-    // Root objedeki fizik collider zemini yakalar.
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (_landed) return;
@@ -58,10 +57,8 @@ public class AmmoCrateController : MonoBehaviour
             triggerZone.enabled = true;
     }
 
-    // Child trigger collider'dan gelen olay Rigidbody2D sayesinde buraya iletilir.
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (_activated) return;
         if (!other.CompareTag("Player")) return;
 
         if (_weapon == null)
@@ -73,19 +70,35 @@ public class AmmoCrateController : MonoBehaviour
             return;
         }
 
-        if (_weapon.ActiveWeaponHasInfiniteAmmo)
-            return;
+        _playerInside = true;
 
-        _activated = true;
-        StartCoroutine(GiveAmmoRoutine());
+        if (!_started)
+        {
+            _started = true;
+            StartCoroutine(GiveAmmoRoutine());
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+        _playerInside = false;
     }
 
     IEnumerator GiveAmmoRoutine()
     {
-        for (int i = 0; i < totalTicks; i++)
+        int ticksLeft = totalTicks;
+
+        while (ticksLeft > 0)
         {
+            // Oyuncu içeride değilse veya aktif silahın mermisi sonsuzsa bekle.
+            yield return new WaitUntil(() => _playerInside && !_weapon.ActiveWeaponHasInfiniteAmmo);
+
             _weapon.AddReserveAmmo(ammoPerTick);
-            yield return new WaitForSeconds(tickInterval);
+            ticksLeft--;
+
+            if (ticksLeft > 0)
+                yield return new WaitForSeconds(tickInterval);
         }
 
         yield return new WaitForSeconds(destroyDelay);

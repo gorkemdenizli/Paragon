@@ -162,7 +162,6 @@ public class PlayerController : MonoBehaviour
     // cache camera gravity abilities gate jump charges
     void Start()
     {
-        Cursor.visible = false;
         mainCam = Camera.main;
         originalGravity = theRB.gravityScale;
         abilities = GetComponent<PlayerAbilityTracker>();
@@ -176,6 +175,8 @@ public class PlayerController : MonoBehaviour
     // aim fire ground jump buffer each frame
     void Update()
     {
+        if (Time.timeScale == 0f) return;
+
         moveInput = ReadMoveInput();
         RefreshCameraIfNeeded();
         UpdateAimFacingAndWeaponInput();

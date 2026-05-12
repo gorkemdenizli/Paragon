@@ -71,6 +71,12 @@ public class Weapon : MonoBehaviour
     [Tooltip("Geri tepkinin orijinal konuma dönüş hızı. Yüksek = sert/hızlı, düşük = yumuşak.")]
     [SerializeField] private float kickbackReturnSpeed = 14f;
 
+    [Header("Precise Aim")]
+    [Tooltip("Sağ tık precise aim bileşeni. Atanırsa tam ADS'te accuracy artar.")]
+    [SerializeField] private PreciseAimController preciseAimController;
+    [Tooltip("Precise aim tam açıkken accuracy'ye uygulanacak çarpan. 1.25 = %25 artış.")]
+    [SerializeField] private float preciseAimAccuracyMultiplier = 1.25f;
+
     private float _recoilOffset;
     private float _recoilAngleDeg;
     private Vector3 _pivotBaseLocalPos;
@@ -465,7 +471,10 @@ public class Weapon : MonoBehaviour
 
         Vector2 dir = toCursor.normalized;
         float baseDeg = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        float spreadHalf = 10f - weaponData.accuracy;
+        float adsBlend = preciseAimController != null ? preciseAimController.AimBlendNormalized : 0f;
+        float effectiveAccuracy = weaponData.accuracy * Mathf.Lerp(1f, preciseAimAccuracyMultiplier, adsBlend);
+        effectiveAccuracy = Mathf.Min(effectiveAccuracy, 10f);
+        float spreadHalf = 10f - effectiveAccuracy;
 
         int pellets = Mathf.Max(1, weaponData.pelletsPerShot);
         for (int p = 0; p < pellets; p++)

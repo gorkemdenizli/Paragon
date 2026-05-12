@@ -31,4 +31,5 @@ public class WeaponData : ScriptableObject
     [Min(0f)] public float shootShakeIntensity = 0.08f;
     [Tooltip("Seconds the shake lasts per shot.")]
     [Min(0f)] public float shootShakeDuration = 0.08f;
+
 }

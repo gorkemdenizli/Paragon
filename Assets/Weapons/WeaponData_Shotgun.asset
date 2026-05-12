@@ -18,8 +18,8 @@ MonoBehaviour:
   magazineSize: 8
   startingTotalAmmo: 120
   infiniteAmmo: 0
-  reloadSpeed: 0.4
-  bulletSpeed: 18
+  reloadSpeed: 0.8
+  bulletSpeed: 40
   weaponSprite: {fileID: 866531754212974474, guid: 943c61fb86931eb42b7301c1801d6fa0, type: 3}
   pelletsPerShot: 6
   shellReload: 1

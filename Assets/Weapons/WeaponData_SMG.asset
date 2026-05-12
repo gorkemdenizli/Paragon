@@ -21,5 +21,7 @@ MonoBehaviour:
   reloadSpeed: 1.8
   bulletSpeed: 60
   weaponSprite: {fileID: 6132957875410310527, guid: 943c61fb86931eb42b7301c1801d6fa0, type: 3}
+  pelletsPerShot: 1
+  shellReload: 0
   shootShakeIntensity: 0.08
   shootShakeDuration: 0.08

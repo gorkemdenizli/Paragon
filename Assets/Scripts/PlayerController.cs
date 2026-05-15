@@ -170,6 +170,9 @@ public class PlayerController : MonoBehaviour
         extraJumpsLeft = maxExtraJumps;
         currentGrenades = maxGrenades;
         UpdateGrenadeUI();
+
+        PlayerStats.instance?.RegisterBaseValue(StatType.MovementSpeed, runSpeed);
+        PlayerStats.instance?.RegisterBaseValue(StatType.JumpForce, jumpForce);
     }
 
     // aim fire ground jump buffer each frame
@@ -469,7 +472,8 @@ public class PlayerController : MonoBehaviour
     void ApplyHorizontalMove()
     {
         float armorMult = ArmorController.instance != null ? ArmorController.instance.SpeedMultiplier : 1f;
-        float targetMax = (IsSprintHeld() ? runSpeed : walkSpeed) * armorMult;
+        float statMult  = PlayerStats.instance     != null ? PlayerStats.instance.MovementSpeedMultiplier : 1f;
+        float targetMax = (IsSprintHeld() ? runSpeed : walkSpeed) * armorMult * statMult;
 
         // Guard against Dpad composite diagonal normalization: when W/Up is held with A/D the
         // composite can output 0.707 instead of 1.0 on X. Clamp to [-1, 1] after restoring
@@ -583,7 +587,8 @@ public class PlayerController : MonoBehaviour
     // vertical impulse animator triggers jump grace window
     void DoJump(float force, bool isDoubleJump)
     {
-        theRB.linearVelocity = new Vector2(theRB.linearVelocity.x, force);
+        float jumpMult = PlayerStats.instance != null ? PlayerStats.instance.JumpForceMultiplier : 1f;
+        theRB.linearVelocity = new Vector2(theRB.linearVelocity.x, force * jumpMult);
         jumpBufferTimer = 0f;
         lastGroundedTime = -100f;
         jumpGraceEnd = Time.time + JumpGroundSuppressDuration;

@@ -74,6 +74,10 @@ public class EquipmentController : MonoBehaviour
 
     void Start()
     {
+        // Apply loadout equipment type selection if available; stat values remain as set in Inspector.
+        if (LoadoutManager.instance?.EquippedEquipment != null)
+            selectedEquipment = LoadoutManager.instance.EquippedEquipment.equipmentType;
+
         RefreshUI();
     }
 

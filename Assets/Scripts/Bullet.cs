@@ -9,13 +9,15 @@ public class Bullet : MonoBehaviour
     private Vector2 _dir;
     private float _speed;
     private int _damage;
+    private bool _isCrit;
 
     // Sets direction, speed, damage from weapon; applies rotation and velocity.
-    public void Initialize(Vector2 direction, float speed, int damage)
+    public void Initialize(Vector2 direction, float speed, int damage, bool isCrit = false)
     {
-        _dir = direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector2.right;
-        _speed = speed;
+        _dir    = direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector2.right;
+        _speed  = speed;
         _damage = Mathf.Max(1, damage);
+        _isCrit = isCrit;
 
         float z = Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, z);
@@ -41,7 +43,7 @@ public class Bullet : MonoBehaviour
             var ehc = collision.GetComponent<EnemyHealthController>();
             if (ehc != null)
             {
-                killed   = ehc.DamageEnemy(_damage);
+                killed   = ehc.DamageEnemy(_damage, _isCrit);
                 hitEnemy = true;
             }
 

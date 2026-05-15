@@ -25,6 +25,8 @@ public class PlayerHealthController : MonoBehaviour
     [SerializeField] private TMP_Text healthText;
     [SerializeField] private int maxHealth;
     public int currentHealth;
+
+    private int _baseMaxHealth;
     [SerializeField] private float invincibilityLength;
     private float invincibilityCounter;
     [SerializeField] private float flashLength = 0.1f;
@@ -37,12 +39,33 @@ public class PlayerHealthController : MonoBehaviour
 
     void Start()
     {
-        currentHealth = maxHealth;
+        _baseMaxHealth = maxHealth;
+        currentHealth  = maxHealth; // initialize before ApplyStatMultipliers reads it
 
         // Auto-find sprites on the same GameObject if none assigned in Inspector.
         if (playerSprites == null || playerSprites.Length == 0)
             playerSprites = GetComponentsInChildren<SpriteRenderer>();
 
+        PlayerStats.instance?.RegisterBaseValue(StatType.MaxHealth, _baseMaxHealth);
+        ApplyStatMultipliers();
+
+        if (PlayerStats.instance != null)
+            PlayerStats.instance.OnStatsChanged += ApplyStatMultipliers;
+    }
+
+    private void OnDestroy()
+    {
+        if (PlayerStats.instance != null)
+            PlayerStats.instance.OnStatsChanged -= ApplyStatMultipliers;
+    }
+
+    private void ApplyStatMultipliers()
+    {
+        float mult    = PlayerStats.instance != null ? PlayerStats.instance.MaxHealthMultiplier : 1f;
+        int newMax    = Mathf.RoundToInt(_baseMaxHealth * mult);
+        int delta     = newMax - maxHealth;
+        maxHealth     = newMax;
+        currentHealth = Mathf.Clamp(currentHealth + delta, 1, maxHealth);
         UpdateHealthSlider(currentHealth, maxHealth);
     }
 

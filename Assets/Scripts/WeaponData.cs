@@ -4,6 +4,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "WeaponData", menuName = "Game/Weapon Data", order = 0)]
 public class WeaponData : ScriptableObject
 {
+    [Tooltip("Display name shown in the Loadout menu.")]
+    public string weaponName;
+
     [Min(1)] public int damage = 10;
     [Tooltip("Shots per second.")]
     public float fireRate = 6f;

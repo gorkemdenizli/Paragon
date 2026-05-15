@@ -151,4 +151,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DamagePopup
   moveSpeed: 30
-  lifetime: 1.2
+  holdDuration: 0.5
+  fadeDuration: 0.4
+  critColor: {r: 0.7075472, g: 0, b: 0, a: 1}

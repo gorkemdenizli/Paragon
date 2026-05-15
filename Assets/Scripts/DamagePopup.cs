@@ -23,10 +23,14 @@ public class DamagePopup : MonoBehaviour
         _text = GetComponent<TMP_Text>();
     }
 
+    [Tooltip("Color used for critical hit numbers.")]
+    [SerializeField] private Color critColor = Color.red;
+
     // Called by the spawner immediately after instantiation.
-    public void Init(int damage)
+    public void Init(int damage, bool isCrit = false)
     {
-        _text.text = damage.ToString();
+        _text.text  = damage.ToString();
+        if (isCrit) _text.color = critColor;
         StartCoroutine(Animate());
     }
 

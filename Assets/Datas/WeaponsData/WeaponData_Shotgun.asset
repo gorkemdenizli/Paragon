@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e8d8cfa64cc7c943b5a09a40a8ec64b, type: 3}
+  m_Name: WeaponData_Shotgun
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponData
+  weaponName: Shotgun
+  damage: 8
+  fireRate: 2.5
+  accuracy: 2
+  magazineSize: 8
+  startingTotalAmmo: 120
+  infiniteAmmo: 0
+  reloadSpeed: 0.8
+  bulletSpeed: 40
+  weaponSprite: {fileID: 866531754212974474, guid: 943c61fb86931eb42b7301c1801d6fa0, type: 3}
+  pelletsPerShot: 8
+  shellReload: 1
+  shootShakeIntensity: 0.08
+  shootShakeDuration: 0.08

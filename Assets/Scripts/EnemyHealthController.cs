@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class EnemyHealthController : MonoBehaviour
 {
     [SerializeField] private int totalHealth;
+    [SerializeField] private int xpReward = 100;
     [SerializeField] private GameObject deathEffect;
     [SerializeField] private EnemyDrops enemyDrops;
 
@@ -24,6 +25,7 @@ public class EnemyHealthController : MonoBehaviour
     [SerializeField] private DamagePopup damagePopupPrefab;
 
     private int _maxHealth;
+    private bool _isDead;
     private HitFlash _hitFlash;
     private Coroutine _hideRoutine;
 
@@ -47,8 +49,9 @@ public class EnemyHealthController : MonoBehaviour
     }
 
     // Returns true if this hit killed the enemy.
-    public bool DamageEnemy(int damageAmount)
+    public bool DamageEnemy(int damageAmount, bool isCrit = false)
     {
+        if (_isDead) return true;
         _hitFlash?.Flash();
 
         totalHealth -= damageAmount;
@@ -58,27 +61,30 @@ public class EnemyHealthController : MonoBehaviour
 
         if (totalHealth <= 0)
         {
+            _isDead = true;
+
             if (deathEffect != null)
                 Instantiate(deathEffect, transform.position, transform.rotation);
 
             if (enemyDrops != null)
                 enemyDrops.TrySpawnDrops(transform.position);
 
+            RunLevelManager.instance?.AddXP(xpReward);
+
             Destroy(gameObject);
             return true;
         }
 
         ShowHealthBar();
-        SpawnDamageNumber(damageAmount);
+        SpawnDamageNumber(damageAmount, isCrit);
         return false;
     }
 
-    void SpawnDamageNumber(int damage)
+    void SpawnDamageNumber(int damage, bool isCrit = false)
     {
         if (damagePopupPrefab == null || damageNumbersCanvas == null) return;
 
-        // Pick a random X within the canvas width, leaving half-text-width margin on each side.
-        Rect r     = damageNumbersCanvas.rect;
+        Rect r      = damageNumbersCanvas.rect;
         float halfW = r.width  * 0.5f;
         float halfH = r.height * 0.5f;
 
@@ -89,7 +95,7 @@ public class EnemyHealthController : MonoBehaviour
 
         DamagePopup popup = Instantiate(damagePopupPrefab, damageNumbersCanvas);
         popup.GetComponent<RectTransform>().anchoredPosition = randomPos;
-        popup.Init(damage);
+        popup.Init(damage, isCrit);
     }
 
     void ShowHealthBar()

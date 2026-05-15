@@ -33,11 +33,17 @@ public class ArmorController : MonoBehaviour
     [SerializeField] private Slider armorSlider;
     [SerializeField] private TMP_Text armorText;
 
+    // Public read-only access to per-type stats (used by LoadoutController for display).
+    public ArmorStats LightStats  => lightStats;
+    public ArmorStats MediumStats => mediumStats;
+    public ArmorStats HeavyStats  => heavyStats;
+
     // Read by PlayerController to scale walk/run speed.
     public float SpeedMultiplier => armorType == ArmorType.None ? 1f : CurrentStats.speedMultiplier;
 
     public int CurrentArmor  => _currentArmor;
-    public int MaxArmor      => armorType == ArmorType.None ? 0 : CurrentStats.maxArmor;
+    public int MaxArmor      => armorType == ArmorType.None ? 0
+        : Mathf.RoundToInt(CurrentStats.maxArmor * (PlayerStats.instance?.MaxArmorMultiplier ?? 1f));
 
     private ArmorStats CurrentStats => armorType switch
     {
@@ -66,12 +72,36 @@ public class ArmorController : MonoBehaviour
 
     private void Start()
     {
+        if (LoadoutManager.instance != null)
+            armorType = LoadoutManager.instance.EquippedArmorType;
+
+        PlayerStats.instance?.RegisterBaseValue(StatType.MaxArmor, CurrentStats.maxArmor);
+
+        if (PlayerStats.instance != null)
+            PlayerStats.instance.OnStatsChanged += OnStatUpgraded;
+
         FillArmor();
+    }
+
+    private void OnDestroy()
+    {
+        if (PlayerStats.instance != null)
+            PlayerStats.instance.OnStatsChanged -= OnStatUpgraded;
+    }
+
+    private void OnStatUpgraded()
+    {
+        // Re-clamp current armor to the new (higher) max without resetting it.
+        int newMax = MaxArmor;
+        if (_currentArmor > newMax) _currentArmor = newMax;
+        _armorFloat = Mathf.Max(_armorFloat, _currentArmor);
+        UpdateUI();
     }
 
     private void Update()
     {
-        if (armorType == ArmorType.None || _currentArmor >= CurrentStats.maxArmor)
+        int max = MaxArmor;
+        if (armorType == ArmorType.None || _currentArmor >= max)
             return;
 
         // Phase 1 – waiting after last hit.
@@ -82,8 +112,8 @@ public class ArmorController : MonoBehaviour
         }
 
         // Phase 2 – gradually fill armor.
-        float rate = CurrentStats.maxArmor / Mathf.Max(0.01f, CurrentStats.refillDuration);
-        _armorFloat = Mathf.Min(CurrentStats.maxArmor, _armorFloat + rate * Time.deltaTime);
+        float rate = max / Mathf.Max(0.01f, CurrentStats.refillDuration);
+        _armorFloat = Mathf.Min(max, _armorFloat + rate * Time.deltaTime);
 
         int newArmor = Mathf.FloorToInt(_armorFloat);
         if (newArmor != _currentArmor)
@@ -117,7 +147,7 @@ public class ArmorController : MonoBehaviour
     // Instantly fills armor to max (useful on respawn or equip).
     public void FillArmor()
     {
-        _currentArmor  = armorType == ArmorType.None ? 0 : CurrentStats.maxArmor;
+        _currentArmor  = armorType == ArmorType.None ? 0 : MaxArmor;
         _armorFloat    = _currentArmor;
         _rechargeTimer = 0f;
         UpdateUI();

@@ -130,6 +130,65 @@ public class Weapon : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        RegisterWeaponBaseStats();
+
+        if (PlayerStats.instance != null)
+            PlayerStats.instance.OnStatsChanged += OnPlayerStatsChanged;
+    }
+
+    void OnDestroy()
+    {
+        if (PlayerStats.instance != null)
+            PlayerStats.instance.OnStatsChanged -= OnPlayerStatsChanged;
+    }
+
+    // Re-compute slot capacities when an upgrade changes magazine size.
+    void OnPlayerStatsChanged()
+    {
+        if (_slotStates == null || weaponSlots == null) return;
+
+        for (int i = 0; i < weaponSlots.Length; i++)
+        {
+            if (weaponSlots[i] == null) continue;
+            int newCap = EffectiveMagSize(weaponSlots[i]);
+
+            // Keep current ammo in active slot, but expand/clamp the stored cap.
+            if (i == _activeSlot)
+            {
+                // If mag was full before, fill to new cap too.
+                if (_magAmmo == _slotStates[i].mag && _slotStates[i].mag == Mathf.RoundToInt(weaponSlots[i].magazineSize * 1f))
+                    _magAmmo = newCap;
+                _slotStates[i] = new SlotState { mag = _magAmmo, reserve = _reserveAmmo, displayTotal = _displayTotalAmmo };
+            }
+            else
+            {
+                // For inactive slots, scale stored mag proportionally.
+                SlotState s   = _slotStates[i];
+                int oldCap    = Mathf.Max(1, s.mag + s.reserve > 0 ? weaponSlots[i].magazineSize : 1);
+                s.mag         = Mathf.Clamp(s.mag, 0, newCap);
+                _slotStates[i] = s;
+            }
+        }
+
+        RefreshAmmoUi();
+    }
+
+    // Returns the effective magazine capacity for a WeaponData, including PlayerStats multiplier.
+    static int EffectiveMagSize(WeaponData d)
+        => d == null ? 0 : Mathf.Max(1, Mathf.RoundToInt(d.magazineSize * (PlayerStats.instance?.MagazineSizeMultiplier ?? 1f)));
+
+    void RegisterWeaponBaseStats()
+    {
+        if (weaponData == null || PlayerStats.instance == null) return;
+        PlayerStats.instance.RegisterBaseValue(StatType.Damage,       weaponData.damage);
+        PlayerStats.instance.RegisterBaseValue(StatType.RateOfFire,   weaponData.fireRate);
+        PlayerStats.instance.RegisterBaseValue(StatType.Accuracy,     weaponData.accuracy);
+        PlayerStats.instance.RegisterBaseValue(StatType.MagazineSize, weaponData.magazineSize);
+        PlayerStats.instance.RegisterBaseValue(StatType.ReloadSpeed,  weaponData.reloadSpeed);
+    }
+
     void Update()
     {
         if (Time.timeScale == 0f) return;
@@ -180,6 +239,13 @@ public class Weapon : MonoBehaviour
     // Slot 0'dan başlayarak tüm slotları başlatır; yoksa tek silah moduna düşer.
     void InitSlots()
     {
+        // Apply the loadout-selected primary weapon to slot 0 if available.
+        if (LoadoutManager.instance?.EquippedPrimaryWeapon != null
+            && weaponSlots != null && weaponSlots.Length > 0)
+        {
+            weaponSlots[0] = LoadoutManager.instance.EquippedPrimaryWeapon;
+        }
+
         bool hasSlots = weaponSlots != null && weaponSlots.Length > 0;
         if (hasSlots)
         {
@@ -205,7 +271,7 @@ public class Weapon : MonoBehaviour
         if (_slotStates == null || weaponSlots == null || index >= weaponSlots.Length) return;
         WeaponData d = weaponSlots[index];
         if (d == null) return;
-        int cap   = d.magazineSize;
+        int cap   = Mathf.RoundToInt(d.magazineSize * (PlayerStats.instance?.MagazineSizeMultiplier ?? 1f));
         int total = Mathf.Max(0, d.startingTotalAmmo);
         int mag   = Mathf.Min(cap, total);
         _slotStates[index] = new SlotState { mag = mag, reserve = total - mag, displayTotal = total };
@@ -455,7 +521,8 @@ public class Weapon : MonoBehaviour
             return false;
         }
 
-        float interval = 1f / Mathf.Max(0.01f, weaponData.fireRate);
+        float rateOfFireMult = PlayerStats.instance?.RateOfFireMultiplier ?? 1f;
+        float interval = 1f / Mathf.Max(0.01f, weaponData.fireRate * rateOfFireMult);
         if (Time.time < _nextShotTime)
             return false;
 
@@ -472,9 +539,16 @@ public class Weapon : MonoBehaviour
         Vector2 dir = toCursor.normalized;
         float baseDeg = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         float adsBlend = preciseAimController != null ? preciseAimController.AimBlendNormalized : 0f;
-        float effectiveAccuracy = weaponData.accuracy * Mathf.Lerp(1f, preciseAimAccuracyMultiplier, adsBlend);
+        float accuracyMult = PlayerStats.instance?.AccuracyMultiplier ?? 1f;
+        float effectiveAccuracy = weaponData.accuracy * accuracyMult * Mathf.Lerp(1f, preciseAimAccuracyMultiplier, adsBlend);
         effectiveAccuracy = Mathf.Min(effectiveAccuracy, 10f);
         float spreadHalf = 10f - effectiveAccuracy;
+
+        float critChance  = PlayerStats.instance?.CritChance ?? 0.05f;
+        float critDamage  = PlayerStats.instance?.CritDamage ?? 1.5f;
+        bool  isCrit      = Random.value < critChance;
+        int baseFinalDmg  = Mathf.RoundToInt(weaponData.damage * (PlayerStats.instance?.DamageMultiplier ?? 1f));
+        int finalDamage   = isCrit ? Mathf.RoundToInt(baseFinalDmg * critDamage) : baseFinalDmg;
 
         int pellets = Mathf.Max(1, weaponData.pelletsPerShot);
         for (int p = 0; p < pellets; p++)
@@ -482,7 +556,7 @@ public class Weapon : MonoBehaviour
             float spread = Random.Range(-spreadHalf, spreadHalf);
             Vector2 shootDir = (Quaternion.Euler(0f, 0f, baseDeg + spread) * Vector2.right).normalized;
             Bullet b = Instantiate(bulletPrefab, muzzle.position, Quaternion.identity);
-            b.Initialize(shootDir, weaponData.bulletSpeed, weaponData.damage);
+            b.Initialize(shootDir, weaponData.bulletSpeed, finalDamage, isCrit);
         }
 
         _magAmmo--;
@@ -503,7 +577,7 @@ public class Weapon : MonoBehaviour
     {
         if (weaponData == null || _reloading)
             return false;
-        if (_magAmmo >= weaponData.magazineSize)
+        if (_magAmmo >= EffectiveMagSize(weaponData))
             return false;
         if (!weaponData.infiniteAmmo && _reserveAmmo <= 0)
             return false;
@@ -554,7 +628,7 @@ public class Weapon : MonoBehaviour
     {
         if (weaponData == null || _reloading)
             return false;
-        int cap = weaponData.magazineSize;
+        int cap = EffectiveMagSize(weaponData);
         if (!force && _magAmmo >= cap)
             return false;
 
@@ -578,7 +652,8 @@ public class Weapon : MonoBehaviour
         _reloading = true;
         RefreshAmmoUi();
 
-        float duration = Mathf.Max(0.0001f, weaponData.reloadSpeed);
+        float reloadMult = PlayerStats.instance?.ReloadSpeedMultiplier ?? 1f;
+        float duration = Mathf.Max(0.0001f, weaponData.reloadSpeed * reloadMult);
         if (reloadProgressSlider != null)
         {
             reloadProgressSlider.gameObject.SetActive(true);
@@ -600,7 +675,7 @@ public class Weapon : MonoBehaviour
             reloadProgressSlider.gameObject.SetActive(false);
         }
 
-        int cap = weaponData.magazineSize;
+        int cap = EffectiveMagSize(weaponData);
         int need = cap - _magAmmo;
         bool infinite = weaponData.infiniteAmmo;
         int load = infinite ? need : Mathf.Min(need, _reserveAmmo);
@@ -626,8 +701,9 @@ public class Weapon : MonoBehaviour
         if (reloadProgressSlider != null)
             reloadProgressSlider.gameObject.SetActive(true);
 
-        float shellDuration = Mathf.Max(0.0001f, weaponData.reloadSpeed);
-        int cap = weaponData.magazineSize;
+        float reloadMult    = PlayerStats.instance?.ReloadSpeedMultiplier ?? 1f;
+        float shellDuration = Mathf.Max(0.0001f, weaponData.reloadSpeed * reloadMult);
+        int cap = Mathf.RoundToInt(weaponData.magazineSize * (PlayerStats.instance?.MagazineSizeMultiplier ?? 1f));
         bool infinite = weaponData.infiniteAmmo;
 
         while (_magAmmo < cap && (infinite || _reserveAmmo > 0))

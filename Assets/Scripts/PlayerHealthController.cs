@@ -96,7 +96,7 @@ public class PlayerHealthController : MonoBehaviour
         }
     }
 
-    // Starts the sprite flash. Triggers on any hit (armor or health).
+    // Starts the sprite flash. Triggers on health damage only.
     void StartFlash()
     {
         _flashActiveTimer = Mathf.Max(0.1f, invincibilityLength);
@@ -130,12 +130,10 @@ public class PlayerHealthController : MonoBehaviour
             ? ArmorController.instance.ProcessDamage(damageAmount)
             : damageAmount;
 
-        // Flash on every hit (armor or health) for visual feedback.
-        StartFlash();
-
         if (healthDamage <= 0)
-            return; // armor absorbed all — no health damage, no iframes
+            return; // armor absorbed all — no health damage, no flash, no iframes
 
+        StartFlash();
         currentHealth -= healthDamage;
         invincibilityCounter = invincibilityLength;
 

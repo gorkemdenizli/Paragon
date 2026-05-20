@@ -126,22 +126,21 @@ public class UpgradeManager : MonoBehaviour
         return offers;
     }
 
-    // Tier probabilities scale with the player's Luck stat.
-    // highChance = baseHigh * luck
-    // midChance  = baseMid  * luck
-    // lowChance  = remainder (clamped ≥ 0)
+    // Tier probabilities scale with the player's Luck stat (high/mid × luck; normalize if sum > 1).
     private UpgradeTier RollTier()
     {
         float luck = PlayerStats.instance != null ? PlayerStats.instance.Luck : 1f;
 
-        float high = Mathf.Clamp01(baseHighChance * luck);
-        float mid  = Mathf.Clamp01(baseMidChance  * luck);
-        // Ensure total does not exceed 1
-        if (high + mid > 1f)
+        float high = baseHighChance * luck;
+        float mid  = baseMidChance  * luck;
+        float low  = baseLowChance;
+
+        float total = high + mid + low;
+        if (total > 1f)
         {
-            float scale = 1f / (high + mid);
-            high *= scale;
-            mid  *= scale;
+            high /= total;
+            mid  /= total;
+            low  /= total;
         }
 
         float roll = Random.value;

@@ -215,7 +215,7 @@ public class LoadoutController : MonoBehaviour
             mainMenuCanvas.SetActive(true);
 
         // Auto-find MainMenu so no extra Inspector assignment is needed.
-        FindObjectOfType<MainMenu>()?.RefreshWeaponImage();
+        FindFirstObjectByType<MainMenu>()?.RefreshWeaponImage();
     }
 
     // Reads saved state from LoadoutManager and refreshes all tab UIs.

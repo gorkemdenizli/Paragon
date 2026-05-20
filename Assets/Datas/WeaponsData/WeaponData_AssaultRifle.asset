@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: Assualt Rifle
   damage: 14
-  fireRate: 14
+  fireRate: 12
   accuracy: 4
   magazineSize: 31
   startingTotalAmmo: 600

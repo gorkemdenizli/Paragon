@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Upgrade_CritChance
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeDefinition
   statType: 10
-  upgradeName: 'Crit Chance '
-  descriptionTemplate: 'Increase crit chance by {0}% '
+  upgradeName: 'Critic Chance '
+  descriptionTemplate: 'Increase critic chance by {0}% '
   tierBonuses:
   - 2
   - 5

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: Sub Machine Gun
   damage: 50
-  fireRate: 20
+  fireRate: 16
   accuracy: 6
   magazineSize: 24
   startingTotalAmmo: 600

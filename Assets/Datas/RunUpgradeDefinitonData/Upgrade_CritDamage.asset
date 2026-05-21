@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Upgrade_CritDamage
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeDefinition
   statType: 11
-  upgradeName: 'Critic Damage '
-  descriptionTemplate: 'Increase critic damage by {0}% '
+  upgradeName: 'Critical Damage '
+  descriptionTemplate: 'Increase critical damage by {0}% '
   tierBonuses:
   - 10
   - 20

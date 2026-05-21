@@ -33,6 +33,22 @@ public class PlayerHealthController : MonoBehaviour
     private float flashCounter;
     [SerializeField] private SpriteRenderer[] playerSprites;
 
+    [Header("Ammo orb homing")]
+    [Tooltip("Orbs fly toward this point (torso center). Falls back to player collider center.")]
+    [SerializeField] private Transform ammoAbsorbPoint;
+
+    public Transform AmmoAbsorbPoint
+    {
+        get
+        {
+            if (ammoAbsorbPoint != null)
+                return ammoAbsorbPoint;
+
+            Collider2D col = GetComponentInChildren<Collider2D>();
+            return col != null ? col.transform : transform;
+        }
+    }
+
     // Drives the flash visual independently from invincibility iframes.
     // Set by StartFlash(); checked each Update to toggle sprites.
     private float _flashActiveTimer;

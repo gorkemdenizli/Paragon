@@ -40,8 +40,8 @@ public class UpgradeButton : MonoBehaviour
             float current   = PlayerStats.instance.GetCurrentValue(def.statType);
             float projected = PlayerStats.instance.GetProjectedValue(def.statType, bonus);
 
-            if (currentValueText   != null) currentValueText.text   = FormatValue(def.statType, current);
-            if (projectedValueText != null) projectedValueText.text = FormatValue(def.statType, projected);
+            if (currentValueText   != null) currentValueText.text   = StatValueFormatter.Format(def.statType, current);
+            if (projectedValueText != null) projectedValueText.text = StatValueFormatter.Format(def.statType, projected);
         }
 
         ApplyTierSprites(tier);
@@ -66,24 +66,6 @@ public class UpgradeButton : MonoBehaviour
             highlightedSprite = hovered,
             pressedSprite     = hovered,
             selectedSprite    = hovered
-        };
-    }
-
-    private static string FormatValue(StatType stat, float value)
-    {
-        return stat switch
-        {
-            StatType.CritChance    => value.ToString("0.#")  + "%",
-            StatType.CritDamage    => value.ToString("0.#")  + "%",
-            StatType.Luck          => value.ToString("0.##") + "x",
-            StatType.XPGain        => value.ToString("0.##") + "x",
-            StatType.ReloadSpeed   => value.ToString("0.##") + "s",
-            StatType.RateOfFire    => value.ToString("0.#"),
-            StatType.Accuracy      => value.ToString("0.#"),
-            StatType.MaxHealth
-            or StatType.MaxArmor
-            or StatType.MagazineSize => Mathf.RoundToInt(value).ToString(),
-            _                        => value.ToString("0.#")
         };
     }
 }

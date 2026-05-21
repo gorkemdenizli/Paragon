@@ -61,8 +61,8 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -2068484865
+  m_SortingOrder: 20
   m_TargetDisplay: 0
 --- !u!114 &7463922041193867627
 MonoBehaviour:
@@ -312,6 +312,22 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 1
+--- !u!114 &6497602569823215224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1425626231719464675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa0b8a4675fa9bc498fcb2917c350c5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamagePlayer
+  damageAmount: 5
+  destroyOnDamage: 0
+  destroyEffect: {fileID: 0}
+  damageTickInterval: 1
 --- !u!1 &2829502782454124119
 GameObject:
   m_ObjectHideFlags: 0
@@ -553,8 +569,8 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingLayerID: -2068484865
+  m_SortingOrder: 21
   m_TargetDisplay: 0
 --- !u!114 &6298131989117356992
 MonoBehaviour:
@@ -924,6 +940,7 @@ GameObject:
   - component: {fileID: 7561575421183079610}
   - component: {fileID: 7026747723223181757}
   - component: {fileID: 823741462049719029}
+  - component: {fileID: 5658581478013356166}
   m_Layer: 16
   m_Name: Enemy Walker
   m_TagString: Enemy
@@ -1033,6 +1050,12 @@ MonoBehaviour:
   patrolPoints:
   - {fileID: 5038273173370996698}
   anim: {fileID: 3185292396821943311}
+  groundCheck: {fileID: 0}
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  groundCheckRadius: 0.2
+  wallJumpCooldown: 0.35
 --- !u!114 &7561575421183079610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1055,22 +1078,6 @@ MonoBehaviour:
   fadeDuration: 0.4
   damageNumbersCanvas: {fileID: 1542808831733165598}
   damagePopupPrefab: {fileID: 7946161119943171763, guid: aab930e5eefee6a44b58b048de51576c, type: 3}
---- !u!114 &6497602569823215224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1425626231719464675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa0b8a4675fa9bc498fcb2917c350c5c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::DamagePlayer
-  damageAmount: 5
-  destroyOnDamage: 0
-  destroyEffect: {fileID: 0}
-  damageTickInterval: 1
 --- !u!114 &7026747723223181757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1104,3 +1111,29 @@ MonoBehaviour:
   knockbackDistance: 0.2
   knockbackSpeed: 6
   stunDuration: 0
+--- !u!114 &5658581478013356166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9207018233560384962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3b6c6f139c84546b1d564552efed90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDrops
+  shouldDropHealthPickup: 1
+  healthPickupChance: 0.2
+  healthPickupPrefab: {fileID: 6253703724549170281, guid: c91a39d447741c24aa13531acd60ac64, type: 3}
+  dropAmmoOrbs: 1
+  ammoOrbPrefab: {fileID: 3847291056382749101, guid: e7c4a91b2f3d5860491e7b3c5a8d2f16, type: 3}
+  minOrbCount: 1
+  maxOrbCount: 3
+  spawnSpreadRadius: 1
+  minAmmoPerOrb: 1
+  maxAmmoPerOrb: 10
+  orbHomingSpeed: 40
+  orbAbsorbDistance: 0.35
+  orbHomingDelay: 0.4
+  orbBurstSpeed: 6

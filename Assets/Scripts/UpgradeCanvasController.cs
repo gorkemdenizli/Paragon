@@ -8,6 +8,8 @@ using UnityEngine.UI;
 // Attach to the root of the upgrade canvas GameObject.
 public class UpgradeCanvasController : MonoBehaviour
 {
+    public static UpgradeCanvasController instance;
+
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private float fadeInDuration  = 0.3f;
     [SerializeField] private float fadeOutDuration = 0.15f;
@@ -18,13 +20,23 @@ public class UpgradeCanvasController : MonoBehaviour
 
     private Coroutine _fadeRoutine;
 
+    public bool IsOpen => gameObject.activeInHierarchy;
+
     private void Awake()
     {
+        instance = this;
+
         if (canvasGroup != null)
             canvasGroup.alpha = 0f;
         // Do NOT call SetActive(false) here — the canvas starts inactive in the scene hierarchy.
         // Calling SetActive(false) in Awake would re-trigger Awake on the next SetActive(true),
         // causing StartCoroutine to fail because the object briefly becomes inactive again.
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+            instance = null;
     }
 
     public void Show(List<UpgradeManager.UpgradeOffer> offers, bool rerollAvailable)

@@ -59,6 +59,15 @@ public class UIController : MonoBehaviour
 
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
+            if (UpgradeCanvasController.instance != null && UpgradeCanvasController.instance.IsOpen)
+                return;
+
+            if (StatsScreenController.instance != null && StatsScreenController.instance.IsOpen)
+            {
+                StatsScreenController.instance.Close();
+                return;
+            }
+
             PauseUnpause();
         }
     }
@@ -77,6 +86,9 @@ public class UIController : MonoBehaviour
 
     public void PauseUnpause()
     {
+        if (StatsScreenController.instance != null && StatsScreenController.instance.IsOpen)
+            StatsScreenController.instance.Close();
+
         if (!pauseScreen.activeSelf)
         {
             pauseScreen.SetActive(true);

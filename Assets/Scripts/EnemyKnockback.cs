@@ -19,6 +19,8 @@ public class EnemyKnockback : MonoBehaviour
     private Behaviour _mover;
     private Coroutine _routine;
 
+    public bool IsActive { get; private set; }
+
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -33,7 +35,7 @@ public class EnemyKnockback : MonoBehaviour
               ?? (Behaviour)GetComponentInChildren<EnemyFlyerController>();
     }
 
-    // dir: normalised direction the bullet was travelling.
+    // dir: normalised direction the bullet was travelling (vertical component preserved).
     public void Apply(Vector2 dir)
     {
         if (_rb == null) return;
@@ -46,22 +48,20 @@ public class EnemyKnockback : MonoBehaviour
 
     IEnumerator KnockbackRoutine(Vector2 dir)
     {
+        IsActive = true;
+
         if (_mover != null) _mover.enabled = false;
 
-        // --- Knockback travel phase ---
         float travelTime = knockbackDistance / Mathf.Max(0.01f, knockbackSpeed);
         float elapsed = 0f;
 
         while (elapsed < travelTime)
         {
-            // Force velocity every physics step so the mover cannot override it even
-            // if the component was not found / disabled correctly.
             _rb.linearVelocity = dir * knockbackSpeed;
             elapsed += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
         }
 
-        // --- Stun phase: stand still ---
         _rb.linearVelocity = Vector2.zero;
         elapsed = 0f;
 
@@ -73,6 +73,13 @@ public class EnemyKnockback : MonoBehaviour
         }
 
         if (_mover != null) _mover.enabled = true;
+
+        IsActive = false;
         _routine = null;
+    }
+
+    void OnDisable()
+    {
+        IsActive = false;
     }
 }

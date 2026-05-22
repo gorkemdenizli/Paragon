@@ -12,7 +12,7 @@ public static class StatValueFormatter
             StatType.XPGain        => value.ToString("0.##") + "x",
             StatType.ReloadSpeed   => value.ToString("0.##") + "s",
             StatType.RateOfFire    => value.ToString("0.#"),
-            StatType.Accuracy      => value.ToString("0.#"),
+            StatType.Accuracy      => value.ToString("0.00"),
             StatType.MaxHealth
             or StatType.MaxArmor
             or StatType.MagazineSize => Mathf.RoundToInt(value).ToString(),

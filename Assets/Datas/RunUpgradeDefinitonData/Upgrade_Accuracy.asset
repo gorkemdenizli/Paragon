@@ -16,6 +16,6 @@ MonoBehaviour:
   upgradeName: Accuracy
   descriptionTemplate: 'Increase accuracy by {0}% '
   tierBonuses:
-  - 2
   - 5
   - 10
+  - 20

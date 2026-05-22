@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
+  m_LocalScale: {x: 0.04, y: 0.04, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -86,7 +86,7 @@ SpriteRenderer:
   m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7232226872651855156, guid: 6bf62be0b05360b4e88dd397f9ed95e8, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9433962, g: 0.6897472, b: 0.6897472, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -228,7 +228,7 @@ TrailRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 11
   m_MaskInteraction: 0
-  m_Time: 0.05
+  m_Time: 0.1
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -238,13 +238,13 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.12376993
+        value: 0.0990099
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0
+        outWeight: 0
       - serializedVersion: 3
         time: 1
         value: 0
@@ -259,10 +259,10 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.9490197, g: 0.64705884, b: 0.24313727, a: 1}
-      key1: {r: 0.9490197, g: 0.64705884, b: 0.24313727, a: 0.9852941}
+      key0: {r: 0.8941177, g: 0.43921572, b: 0.15294118, a: 1}
+      key1: {r: 0.9490197, g: 0.64705884, b: 0.24313727, a: 0}
       key2: {r: 0, g: 0, b: 5.8242017e-10, a: 0}
-      key3: {r: 0, g: 3e-45, b: 0, a: 4.5907e-41}
+      key3: {r: 0, g: 3e-45, b: 0, a: 0}
       key4: {r: -0.0000000046801603, g: 7.68e-43, b: -4.612396e-33, a: 3.5e-43}
       key5: {r: 0, g: 0, b: 0, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
@@ -275,10 +275,10 @@ TrailRenderer:
       ctime5: 0
       ctime6: 0
       ctime7: 0
-      atime0: 0
-      atime1: 13878
+      atime0: 16384
+      atime1: 65535
       atime2: 65535
-      atime3: 0
+      atime3: 65535
       atime4: 0
       atime5: 0
       atime6: 0
@@ -286,7 +286,7 @@ TrailRenderer:
       m_Mode: 0
       m_ColorSpace: 0
       m_NumColorKeys: 2
-      m_NumAlphaKeys: 3
+      m_NumAlphaKeys: 2
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0

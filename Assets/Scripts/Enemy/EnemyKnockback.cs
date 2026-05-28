@@ -27,9 +27,9 @@ public class EnemyKnockback : MonoBehaviour
         if (_rb == null) _rb = GetComponentInParent<Rigidbody2D>();
 
         // Search on self, parent, and children to handle varied prefab hierarchies.
-        _mover = (Behaviour)GetComponent<EnemyPatroller>()
-              ?? (Behaviour)GetComponentInParent<EnemyPatroller>()
-              ?? (Behaviour)GetComponentInChildren<EnemyPatroller>()
+        _mover = (Behaviour)GetComponent<EnemyGroundChaseController>()
+              ?? (Behaviour)GetComponentInParent<EnemyGroundChaseController>()
+              ?? (Behaviour)GetComponentInChildren<EnemyGroundChaseController>()
               ?? (Behaviour)GetComponent<EnemyFlyerController>()
               ?? (Behaviour)GetComponentInParent<EnemyFlyerController>()
               ?? (Behaviour)GetComponentInChildren<EnemyFlyerController>();

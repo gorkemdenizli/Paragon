@@ -12,6 +12,10 @@ public class DamagePlayer : MonoBehaviour
     private int _playerInsideCount;
     private Coroutine _damageLoop;
 
+    public bool IsPlayerInContact => _playerInsideCount > 0;
+    public int BaseDamageAmount => damageAmount;
+    public void SetDamage(int newDamage) { damageAmount = Mathf.Max(0, newDamage); }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;

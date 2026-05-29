@@ -18,6 +18,9 @@ public class EnemyGroundChaseController : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float horizontalAcceleration = 40f;
 
+    public float BaseMoveSpeed => moveSpeed;
+    public void SetMoveSpeed(float newSpeed) { moveSpeed = Mathf.Max(0f, newSpeed); }
+
     [Tooltip("Sprite default halinde sağa bakıyorsa aç. Default halinde sola bakıyorsa kapalı kalsın.")]
     [SerializeField] private bool spriteFacesRightByDefault = false;
 
@@ -80,10 +83,32 @@ public class EnemyGroundChaseController : MonoBehaviour
     [SerializeField] private float wallProbeDistance = 0.4f;
     [SerializeField] private float ledgeProbeDistance = 0.6f;
 
+    [Header("Combat")]
+    [Tooltip("Açıksa hasar trigger zone içindeyken zıplamaz.")]
+    [SerializeField] private bool blockJumpWhileDamagingPlayer = true;
+
+    [Header("Chase Offset")]
+    [Tooltip("Açıksa her enemy player'ın tam merkezine değil kişisel ofset noktasına yönelir.")]
+    [SerializeField] private bool  usePersonalChaseOffset   = true;
+    [SerializeField] private float minChaseOffsetFromPlayer = 0.35f;
+    [SerializeField] private float maxChaseOffsetFromPlayer = 1.4f;
+    private float _personalChaseOffsetX;
+
+    [Header("Crowd Separation")]
+    [Tooltip("Açıksa yakın enemy'lerden yatay olarak hafifçe uzaklaşır (physics collision gerektirmez).")]
+    [SerializeField] private bool      useCrowdSeparation  = true;
+    [SerializeField] private LayerMask enemyAvoidanceLayers;
+    [SerializeField] private float     separationRadius    = 0.75f;
+    [SerializeField] private float     separationWeight    = 0.75f;
+    [SerializeField] private int       maxNearbyEnemies    = 8;
+    private Collider2D[]  _separationBuffer;
+    private ContactFilter2D _separationFilter;
+
     private Rigidbody2D _rb;
     private Transform _player;
     private Transform _playerGroundCheck;
     private EnemyKnockback _knockback;
+    private DamagePlayer _damagePlayer;
 
     private Vector3 _baseScale;
 
@@ -99,7 +124,18 @@ public class EnemyGroundChaseController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _knockback = GetComponent<EnemyKnockback>();
+        _damagePlayer = GetComponentInChildren<DamagePlayer>();
         _baseScale = transform.localScale;
+
+        if (usePersonalChaseOffset)
+        {
+            float r = Random.Range(minChaseOffsetFromPlayer, maxChaseOffsetFromPlayer);
+            _personalChaseOffsetX = Random.value > 0.5f ? r : -r;
+        }
+        _separationBuffer = new Collider2D[Mathf.Max(1, maxNearbyEnemies)];
+        _separationFilter = new ContactFilter2D();
+        _separationFilter.SetLayerMask(enemyAvoidanceLayers);
+        _separationFilter.useTriggers = true;
     }
 
     void Start()
@@ -152,11 +188,13 @@ public class EnemyGroundChaseController : MonoBehaviour
 
         UpdateSensorState();
 
-        float faceDir = GetFaceDir();
+        float chaseDir = GetFaceDir();
+        float sepInput = GetSeparationInput();
+        float finalDir = Mathf.Clamp(chaseDir + sepInput * separationWeight, -1f, 1f);
 
-        ApplyHorizontalMove(faceDir);
+        ApplyHorizontalMove(finalDir);
 
-        TryJump(faceDir);
+        TryJump(chaseDir);
     }
 
     void TryCachePlayer()
@@ -219,7 +257,10 @@ public class EnemyGroundChaseController : MonoBehaviour
 
     float GetFaceDir()
     {
-        float dx = _player.position.x - transform.position.x;
+        float targetPlayerX = usePersonalChaseOffset
+            ? _player.position.x + _personalChaseOffsetX
+            : _player.position.x;
+        float dx = targetPlayerX - transform.position.x;
         float dy = _player.position.y - transform.position.y;
 
         if (_isCeilingAbove && dy > 1f)
@@ -246,6 +287,23 @@ public class EnemyGroundChaseController : MonoBehaviour
             return GetCurrentFacingDir();
 
         return Mathf.Sign(dx);
+    }
+
+    float GetSeparationInput()
+    {
+        if (!useCrowdSeparation) return 0f;
+        int count = Physics2D.OverlapCircle(
+            transform.position, separationRadius, _separationFilter, _separationBuffer);
+        float sep = 0f;
+        for (int i = 0; i < count; i++)
+        {
+            var col = _separationBuffer[i];
+            if (col == null || col.gameObject == gameObject) continue;
+            float dx = transform.position.x - col.transform.position.x;
+            if (Mathf.Abs(dx) < 0.001f) dx = Random.value > 0.5f ? 0.1f : -0.1f;
+            sep += Mathf.Sign(dx);
+        }
+        return Mathf.Clamp(sep, -1f, 1f);
     }
 
     void ApplyHorizontalMove(float faceDir)
@@ -317,6 +375,11 @@ public class EnemyGroundChaseController : MonoBehaviour
             return false;
 
         if (Time.time < _lastJumpTime + jumpCooldown)
+            return false;
+
+        if (blockJumpWhileDamagingPlayer
+            && _damagePlayer != null
+            && _damagePlayer.IsPlayerInContact)
             return false;
 
         return true;

@@ -1,0 +1,237 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+public struct RunDifficultySnapshot
+{
+    public int   difficultyLevel;
+    public int   totalKills;
+    public int   killsSinceLastIncrease;
+    public int   currentKillsRequired;
+    public float healthMultiplier;
+    public float damageMultiplier;
+    public float speedMultiplier;
+    public float spawnRateMultiplier;
+    public float currentSpawnInterval;
+    public float currentSingleSpawnInterval;
+    public int   currentSpawnCount;
+    public int   currentMaxAliveEnemies;
+}
+
+public class RunDifficultyManager : MonoBehaviour
+{
+    public static RunDifficultyManager instance;
+
+    [Header("Difficulty Progression")]
+    [SerializeField] private int   baseKillsRequired                = 30;
+    [SerializeField] private float killRequirementGrowth            = 1.2f;
+    [SerializeField] private bool  infiniteScaling                  = false;
+    [SerializeField] private int   maxDifficultyLevel               = 10;
+
+    [Header("Enemy Stat Scaling")]
+    [SerializeField] private float healthGrowthPerDifficulty        = 1.10f;
+    [SerializeField] private float damageGrowthPerDifficulty        = 1.07f;
+    [SerializeField] private float speedGrowthPerDifficulty         = 1.03f;
+    [SerializeField] private float maxHealthMultiplier              = 5.0f;
+    [SerializeField] private float maxDamageMultiplier              = 2.5f;
+    [SerializeField] private float maxSpeedMultiplier               = 1.35f;
+
+    [Header("Spawn Settings")]
+    [SerializeField] private float baseSpawnInterval                = 5.0f;
+    [SerializeField] private float spawnRateGrowthPerDifficulty     = 1.08f;
+    [SerializeField] private float minSpawnInterval                 = 2.0f;
+    [SerializeField] private int   baseSpawnCount                   = 2;
+    [SerializeField] private int   spawnCountIncreaseEveryNLevels   = 3;
+    [SerializeField] private int   spawnCountIncreaseAmount         = 1;
+    [SerializeField] private int   maxSpawnCount                    = 5;
+    [Tooltip("Minimum seconds between individual enemy spawns (floor for CurrentSingleSpawnInterval).")]
+    [SerializeField] private float minSingleSpawnInterval           = 0.6f;
+    [SerializeField] private int   baseMaxAliveEnemies              = 20;
+    [SerializeField] private int   maxAliveIncreasePerDifficulty    = 2;
+    [SerializeField] private int   absoluteMaxAliveEnemies          = 60;
+
+    [Header("Scaling Whitelist")]
+    [Tooltip("Bu listedeki prefab'lardan spawn edilen enemy'lere difficulty scaling uygulanır.")]
+    [SerializeField] private List<GameObject> scaledEnemyPrefabs = new();
+
+    [Header("Debug")]
+    [SerializeField] private bool enableDebugLogs = true;
+
+    // Events
+    public event Action<int>                   OnDifficultyIncreased;
+    public event Action<RunDifficultySnapshot> OnDifficultyStatsChanged;
+
+    // Runtime state
+    private int   _currentDifficultyLevel;
+    private int   _totalKills;
+    private int   _killsSinceLastIncrease;
+    private int   _currentKillsRequired;
+
+    // Cached computed values (recalculated on difficulty increase only)
+    public float HealthMultiplier       { get; private set; } = 1f;
+    public float DamageMultiplier       { get; private set; } = 1f;
+    public float SpeedMultiplier        { get; private set; } = 1f;
+    public float SpawnRateMultiplier    { get; private set; } = 1f;
+    public float CurrentSpawnInterval       { get; private set; }
+    public float CurrentSingleSpawnInterval { get; private set; }
+    public int   CurrentSpawnCount          { get; private set; }
+    public int   CurrentMaxAliveEnemies     { get; private set; }
+
+    public int CurrentDifficultyLevel   => _currentDifficultyLevel;
+    public int TotalKills               => _totalKills;
+    public int KillsSinceLastIncrease   => _killsSinceLastIncrease;
+    public int CurrentKillsRequired     => _currentKillsRequired;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        _currentKillsRequired = baseKillsRequired;
+        RecalculateStats();
+    }
+
+    public void RegisterEnemyKill()
+    {
+        _totalKills++;
+        _killsSinceLastIncrease++;
+
+        bool atCap = !infiniteScaling && _currentDifficultyLevel >= maxDifficultyLevel;
+        if (atCap || _killsSinceLastIncrease < _currentKillsRequired) return;
+
+        _killsSinceLastIncrease  = 0;
+        _currentKillsRequired    = Mathf.CeilToInt(_currentKillsRequired * killRequirementGrowth);
+        _currentDifficultyLevel++;
+
+        RecalculateStats();
+
+        if (enableDebugLogs)
+        {
+            Debug.Log(
+                $"[Difficulty] Level {_currentDifficultyLevel} | " +
+                $"HP: {HealthMultiplier:F2}x | DMG: {DamageMultiplier:F2}x | SPD: {SpeedMultiplier:F2}x | " +
+                $"Interval: {CurrentSpawnInterval:F2}s | Count: {CurrentSpawnCount} | " +
+                $"SingleInterval: {CurrentSingleSpawnInterval:F2}s | " +
+                $"MaxAlive: {CurrentMaxAliveEnemies} | NextRequired: {_currentKillsRequired}");
+        }
+
+        OnDifficultyIncreased?.Invoke(_currentDifficultyLevel);
+        OnDifficultyStatsChanged?.Invoke(BuildSnapshot());
+    }
+
+    private void RecalculateStats()
+    {
+        int lvl = _currentDifficultyLevel;
+
+        HealthMultiplier    = Mathf.Min(Mathf.Pow(healthGrowthPerDifficulty, lvl), maxHealthMultiplier);
+        DamageMultiplier    = Mathf.Min(Mathf.Pow(damageGrowthPerDifficulty, lvl), maxDamageMultiplier);
+        SpeedMultiplier     = Mathf.Min(Mathf.Pow(speedGrowthPerDifficulty,  lvl), maxSpeedMultiplier);
+        SpawnRateMultiplier = Mathf.Pow(spawnRateGrowthPerDifficulty, lvl);
+
+        CurrentSpawnInterval = Mathf.Max(baseSpawnInterval / SpawnRateMultiplier, minSpawnInterval);
+
+        int countBonus  = spawnCountIncreaseEveryNLevels > 0
+            ? (lvl / spawnCountIncreaseEveryNLevels) * spawnCountIncreaseAmount
+            : 0;
+        CurrentSpawnCount = Mathf.Min(baseSpawnCount + countBonus, maxSpawnCount);
+
+        CurrentSingleSpawnInterval = Mathf.Max(
+            CurrentSpawnInterval / CurrentSpawnCount,
+            minSingleSpawnInterval);
+
+        CurrentMaxAliveEnemies = Mathf.Min(
+            baseMaxAliveEnemies + lvl * maxAliveIncreasePerDifficulty,
+            absoluteMaxAliveEnemies);
+    }
+
+    public void ApplyScalingIfEligible(GameObject prefabSource, GameObject spawnedInstance)
+    {
+        if (prefabSource == null || spawnedInstance == null) return;
+        if (!scaledEnemyPrefabs.Contains(prefabSource)) return;
+
+        var scaler = spawnedInstance.GetComponent<IDifficultyScalableEnemy>();
+        scaler?.ApplyDifficultyScaling(HealthMultiplier, DamageMultiplier, SpeedMultiplier);
+    }
+
+    public void ResetDifficulty()
+    {
+        _currentDifficultyLevel = 0;
+        _totalKills             = 0;
+        _killsSinceLastIncrease = 0;
+        _currentKillsRequired   = baseKillsRequired;
+        RecalculateStats();
+        OnDifficultyStatsChanged?.Invoke(BuildSnapshot());
+    }
+
+    private RunDifficultySnapshot BuildSnapshot() => new RunDifficultySnapshot
+    {
+        difficultyLevel          = _currentDifficultyLevel,
+        totalKills               = _totalKills,
+        killsSinceLastIncrease   = _killsSinceLastIncrease,
+        currentKillsRequired     = _currentKillsRequired,
+        healthMultiplier         = HealthMultiplier,
+        damageMultiplier         = DamageMultiplier,
+        speedMultiplier          = SpeedMultiplier,
+        spawnRateMultiplier      = SpawnRateMultiplier,
+        currentSpawnInterval         = CurrentSpawnInterval,
+        currentSingleSpawnInterval   = CurrentSingleSpawnInterval,
+        currentSpawnCount            = CurrentSpawnCount,
+        currentMaxAliveEnemies   = CurrentMaxAliveEnemies,
+    };
+
+    private void OnValidate()
+    {
+        baseKillsRequired               = Mathf.Max(1, baseKillsRequired);
+        killRequirementGrowth           = Mathf.Max(1f, killRequirementGrowth);
+        maxDifficultyLevel              = Mathf.Max(1, maxDifficultyLevel);
+        healthGrowthPerDifficulty       = Mathf.Max(1f, healthGrowthPerDifficulty);
+        damageGrowthPerDifficulty       = Mathf.Max(1f, damageGrowthPerDifficulty);
+        speedGrowthPerDifficulty        = Mathf.Max(1f, speedGrowthPerDifficulty);
+        maxHealthMultiplier             = Mathf.Max(1f, maxHealthMultiplier);
+        maxDamageMultiplier             = Mathf.Max(1f, maxDamageMultiplier);
+        maxSpeedMultiplier              = Mathf.Max(1f, maxSpeedMultiplier);
+        baseSpawnInterval               = Mathf.Max(0.1f, baseSpawnInterval);
+        spawnRateGrowthPerDifficulty    = Mathf.Max(1f, spawnRateGrowthPerDifficulty);
+        minSpawnInterval                = Mathf.Clamp(minSpawnInterval, 0.1f, baseSpawnInterval);
+        minSingleSpawnInterval          = Mathf.Clamp(minSingleSpawnInterval, 0.1f, minSpawnInterval);
+        baseSpawnCount                  = Mathf.Max(1, baseSpawnCount);
+        spawnCountIncreaseEveryNLevels  = Mathf.Max(1, spawnCountIncreaseEveryNLevels);
+        spawnCountIncreaseAmount        = Mathf.Max(0, spawnCountIncreaseAmount);
+        maxSpawnCount                   = Mathf.Max(baseSpawnCount, maxSpawnCount);
+        baseMaxAliveEnemies             = Mathf.Max(1, baseMaxAliveEnemies);
+        maxAliveIncreasePerDifficulty   = Mathf.Max(0, maxAliveIncreasePerDifficulty);
+        absoluteMaxAliveEnemies         = Mathf.Max(baseMaxAliveEnemies, absoluteMaxAliveEnemies);
+    }
+
+    // ── Debug helpers ──────────────────────────────────────────────────────────
+
+    [ContextMenu("Debug / Add 1 Kill")]
+    public void Debug_AddKill() => RegisterEnemyKill();
+
+    [ContextMenu("Debug / Add 10 Kills")]
+    public void Debug_AddTenKills() => Debug_AddKills(10);
+
+    [ContextMenu("Debug / Force Increase Difficulty")]
+    public void Debug_ForceIncreaseDifficulty()
+    {
+        _killsSinceLastIncrease = _currentKillsRequired;
+        RegisterEnemyKill();
+    }
+
+    [ContextMenu("Debug / Reset Difficulty")]
+    public void Debug_ResetDifficulty() => ResetDifficulty();
+
+    public void Debug_AddKills(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+            RegisterEnemyKill();
+    }
+}

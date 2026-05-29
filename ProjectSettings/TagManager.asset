@@ -61,5 +61,11 @@ TagManager:
   - name: Shot
     uniqueID: 2860580537
     locked: 0
+  - name: Enemy
+    uniqueID: 1000949147
+    locked: 0
+  - name: EnemyFlyer
+    uniqueID: 1112297635
+    locked: 0
   m_RenderingLayers:
   - Default

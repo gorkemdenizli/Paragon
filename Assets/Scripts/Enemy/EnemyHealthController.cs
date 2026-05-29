@@ -24,6 +24,9 @@ public class EnemyHealthController : MonoBehaviour
     [Tooltip("DamagePopup prefab — the Text object with DamagePopup script.")]
     [SerializeField] private DamagePopup damagePopupPrefab;
 
+    public static int AliveCount { get; private set; }
+    public int BaseMaxHealth => totalHealth;
+
     private int _maxHealth;
     private bool _isDead;
     private HitFlash _hitFlash;
@@ -31,6 +34,8 @@ public class EnemyHealthController : MonoBehaviour
 
     void Awake()
     {
+        AliveCount++;
+
         if (enemyDrops == null)
             enemyDrops = GetComponent<EnemyDrops>();
         _hitFlash = GetComponent<HitFlash>();
@@ -70,6 +75,7 @@ public class EnemyHealthController : MonoBehaviour
                 enemyDrops.TrySpawnDrops(transform.position);
 
             RunLevelManager.instance?.AddXP(xpReward);
+            RunDifficultyManager.instance?.RegisterEnemyKill();
 
             Destroy(gameObject);
             return true;
@@ -78,6 +84,22 @@ public class EnemyHealthController : MonoBehaviour
         ShowHealthBar();
         SpawnDamageNumber(damageAmount, isCrit);
         return false;
+    }
+
+    void OnDestroy()
+    {
+        AliveCount--;
+    }
+
+    public void SetMaxHealth(int newMax, bool refillCurrent = true)
+    {
+        _maxHealth = Mathf.Max(1, newMax);
+        if (refillCurrent) totalHealth = _maxHealth;
+        if (healthBarSlider != null)
+        {
+            healthBarSlider.maxValue = _maxHealth;
+            healthBarSlider.value    = totalHealth;
+        }
     }
 
     void SpawnDamageNumber(int damage, bool isCrit = false)

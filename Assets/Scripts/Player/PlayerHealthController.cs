@@ -33,6 +33,13 @@ public class PlayerHealthController : MonoBehaviour
     private float flashCounter;
     [SerializeField] private SpriteRenderer[] playerSprites;
 
+    [Header("Armor Hit Flash")]
+    [SerializeField] private float armorFlashHold = 0.05f;
+    [SerializeField] private float armorFlashFade = 0.12f;
+    private static readonly Color ArmorFlashColor = new Color(0f, 0.831f, 1f, 1f); // #00D4FF
+    private Color[]   _spriteOriginalColors;
+    private Coroutine _armorFlashRoutine;
+
     [Header("Ammo orb homing")]
     [Tooltip("Orbs fly toward this point (torso center). Falls back to player collider center.")]
     [SerializeField] private Transform ammoAbsorbPoint;
@@ -61,6 +68,10 @@ public class PlayerHealthController : MonoBehaviour
         // Auto-find sprites on the same GameObject if none assigned in Inspector.
         if (playerSprites == null || playerSprites.Length == 0)
             playerSprites = GetComponentsInChildren<SpriteRenderer>();
+
+        _spriteOriginalColors = new Color[playerSprites.Length];
+        for (int i = 0; i < playerSprites.Length; i++)
+            _spriteOriginalColors[i] = playerSprites[i].color;
 
         PlayerStats.instance?.RegisterBaseValue(StatType.MaxHealth, _baseMaxHealth);
         ApplyStatMultipliers();
@@ -112,6 +123,38 @@ public class PlayerHealthController : MonoBehaviour
         }
     }
 
+    void StartArmorFlash()
+    {
+        if (_armorFlashRoutine != null)
+            StopCoroutine(_armorFlashRoutine);
+        _armorFlashRoutine = StartCoroutine(ArmorFlashRoutine());
+    }
+
+    IEnumerator ArmorFlashRoutine()
+    {
+        foreach (var sr in playerSprites)
+            if (sr != null) sr.color = ArmorFlashColor;
+
+        yield return new WaitForSeconds(armorFlashHold);
+
+        float elapsed = 0f;
+        while (elapsed < armorFlashFade)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / armorFlashFade);
+            for (int i = 0; i < playerSprites.Length; i++)
+                if (playerSprites[i] != null)
+                    playerSprites[i].color = Color.Lerp(ArmorFlashColor, _spriteOriginalColors[i], t);
+            yield return null;
+        }
+
+        for (int i = 0; i < playerSprites.Length; i++)
+            if (playerSprites[i] != null)
+                playerSprites[i].color = _spriteOriginalColors[i];
+
+        _armorFlashRoutine = null;
+    }
+
     // Starts the sprite flash. Triggers on health damage only.
     void StartFlash()
     {
@@ -145,6 +188,9 @@ public class PlayerHealthController : MonoBehaviour
         int healthDamage = ArmorController.instance != null
             ? ArmorController.instance.ProcessDamage(damageAmount)
             : damageAmount;
+
+        if (ArmorController.instance != null && healthDamage < damageAmount)
+            StartArmorFlash();
 
         if (healthDamage <= 0)
             return; // armor absorbed all — no health damage, no flash, no iframes

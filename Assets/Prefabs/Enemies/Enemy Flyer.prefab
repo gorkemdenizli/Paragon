@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealthController
   totalHealth: 100
-  xpReward: 100
+  xpReward: 50
   deathEffect: {fileID: 7229356420679481976, guid: 8224ac0032fcaf244b17438b7d3038b1, type: 3}
   enemyDrops: {fileID: 0}
   healthBarGroup: {fileID: 8485660647282370314}

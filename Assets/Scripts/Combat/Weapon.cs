@@ -77,6 +77,10 @@ public class Weapon : MonoBehaviour
     [Tooltip("Precise aim tam açıkken accuracy'ye uygulanacak çarpan. 1.25 = %25 artış.")]
     [SerializeField] private float preciseAimAccuracyMultiplier = 1.25f;
 
+    [Header("Aim Correction")]
+    [Tooltip("Barrel sprite pivot +X'e tam hizalı değilse bu değerle düzelt (derece). Silah crosshair'ın üstüne bakıyorsa negatif yap.")]
+    [SerializeField] private float aimAngleOffset = 0f;
+
     private float _recoilOffset;
     private float _recoilAngleDeg;
     private Vector3 _pivotBaseLocalPos;
@@ -481,7 +485,7 @@ public class Weapon : MonoBehaviour
                 float aimAngle = Mathf.Atan2(toMouse.y, toMouse.x) * Mathf.Rad2Deg;
                 // Y scale -1 (sol nişan) durumunda açıyı tersine çevirerek her yönde yukarı tepme sağlanır.
                 float recoilContrib = mouseLeftOfBody ? -_recoilAngleDeg : _recoilAngleDeg;
-                weaponPivot.rotation = Quaternion.Euler(0f, 0f, aimAngle + recoilContrib);
+                weaponPivot.rotation = Quaternion.Euler(0f, 0f, aimAngle + recoilContrib + aimAngleOffset);
             }
         }
 
@@ -531,12 +535,18 @@ public class Weapon : MonoBehaviour
             return false;
 
         Vector3 mouseWorld = AimPlaneUtil.ScreenToWorldOnPlane(cam, aimPlaneRoot.position);
-        Vector2 muzzlePos = muzzle.position;
-        Vector2 toCursor = (Vector2)mouseWorld - muzzlePos;
-        if (toCursor.sqrMagnitude < 1e-6f)
-            toCursor = mouseWorld.x < aimPlaneRoot.position.x ? Vector2.left : Vector2.right;
-
-        Vector2 dir = toCursor.normalized;
+        // Mermi yönünü pivot'un mevcut rotation'ından al; bu sayede mouse çok yakında olsa bile
+        // silahın baktığı yönde mermi çıkar (muzzle→mouse vektöründeki yakın mesafe sapması olmaz).
+        Vector2 dir;
+        if (weaponPivot != null)
+        {
+            dir = weaponPivot.rotation * Vector2.right;
+        }
+        else
+        {
+            Vector2 toCursor = (Vector2)mouseWorld - (Vector2)muzzle.position;
+            dir = toCursor.sqrMagnitude > 1e-6f ? toCursor.normalized : Vector2.right;
+        }
         float baseDeg = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         float adsBlend = preciseAimController != null ? preciseAimController.AimBlendNormalized : 0f;
         float accuracyMult = PlayerStats.instance?.AccuracyMultiplier ?? 1f;

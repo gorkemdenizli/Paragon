@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponName: Assualt Rifle
   damage: 14
   fireRate: 12
-  accuracy: 4
+  accuracy: 5
   magazineSize: 31
   startingTotalAmmo: 600
   infiniteAmmo: 0

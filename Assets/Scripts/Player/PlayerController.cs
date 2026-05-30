@@ -104,6 +104,7 @@ public class PlayerController : MonoBehaviour
     private float grenadeRegenCounter;
     private bool hasShotFiredParam;
     private bool hasDoubleJumpParam;
+    private PlayerClimbController _climbController;
 
     private InputActionMap embeddedPlayerMap;
     private InputAction embeddedMove;
@@ -171,6 +172,8 @@ public class PlayerController : MonoBehaviour
         currentGrenades = maxGrenades;
         UpdateGrenadeUI();
 
+        _climbController = GetComponent<PlayerClimbController>();
+
         PlayerStats.instance?.RegisterBaseValue(StatType.MovementSpeed, runSpeed);
         PlayerStats.instance?.RegisterBaseValue(StatType.JumpForce, jumpForce);
     }
@@ -218,7 +221,8 @@ public class PlayerController : MonoBehaviour
         }
 
         ApplyHorizontalMove();
-        ApplyJumpGravityTuning();
+        if (_climbController == null || !_climbController.IsClimbing)
+            ApplyJumpGravityTuning();
     }
 
     // --- input setup ---
@@ -486,7 +490,8 @@ public class PlayerController : MonoBehaviour
         bool hasHorizontalInput = Mathf.Abs(inputX) > 0.01f;
         // No deceleration in air when player isn't pressing a horizontal key — prevents W (jump key
         // that's also the Move "Up" composite binding) from zeroing moveInput.x and braking mid-air.
-        float accel = hasHorizontalInput ? groundAcceleration : (isOnGround ? groundDeceleration : 0f);
+        bool isClimbing = _climbController != null && _climbController.IsClimbing;
+        float accel = hasHorizontalInput ? groundAcceleration : ((isOnGround || isClimbing) ? groundDeceleration : 0f);
         float newVx = Mathf.MoveTowards(theRB.linearVelocity.x, targetVx, accel * Time.fixedDeltaTime);
         theRB.linearVelocity = new Vector2(newVx, theRB.linearVelocity.y);
     }
@@ -571,6 +576,7 @@ public class PlayerController : MonoBehaviour
     {
         if (jumpBufferTimer <= 0f || !canMove || groundPoint == null)
             return;
+        if (_climbController != null && _climbController.IsOnLadder) return;
 
         bool canGroundJump = isOnGround || (Time.time - lastGroundedTime <= jumpCoyoteTime);
         if (canGroundJump)

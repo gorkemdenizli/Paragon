@@ -22,6 +22,15 @@ public class EnemyFlyerController : MonoBehaviour
     [SerializeField] private float maxChaseOffsetFromPlayer = 0.8f;
     private float _personalChaseOffsetX;
 
+    [Header("Crowd Separation")]
+    [SerializeField] private bool      useCrowdSeparation  = true;
+    [SerializeField] private LayerMask enemyAvoidanceLayers;
+    [SerializeField] private float     separationRadius    = 1.2f;
+    [SerializeField] private float     separationWeight    = 0.5f;
+    [SerializeField] private int       maxNearbyEnemies    = 6;
+    private Collider2D[]    _separationBuffer;
+    private ContactFilter2D _separationFilter;
+
     private bool isChasing;
     private Transform player;
     private Collider2D _playerHurtbox;
@@ -30,6 +39,11 @@ public class EnemyFlyerController : MonoBehaviour
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+
+        _separationBuffer = new Collider2D[Mathf.Max(1, maxNearbyEnemies)];
+        _separationFilter = new ContactFilter2D();
+        _separationFilter.SetLayerMask(enemyAvoidanceLayers);
+        _separationFilter.useTriggers = true;
     }
 
     void Start()
@@ -105,8 +119,31 @@ public class EnemyFlyerController : MonoBehaviour
         float newAngle     = Mathf.LerpAngle(_rb.rotation, targetAngle, turnSpeed * Time.fixedDeltaTime);
         _rb.MoveRotation(newAngle);
 
-        float rad    = newAngle * Mathf.Deg2Rad;
+        float rad      = newAngle * Mathf.Deg2Rad;
         Vector2 facing = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-        _rb.MovePosition(_rb.position - facing * moveSpeed * Time.fixedDeltaTime);
+
+        Vector2 chaseDir = -facing;
+        Vector2 sepVec   = GetSeparationVector();
+        Vector2 moveDir  = (chaseDir + sepVec * separationWeight).normalized;
+        _rb.MovePosition(_rb.position + moveDir * moveSpeed * Time.fixedDeltaTime);
+    }
+
+    Vector2 GetSeparationVector()
+    {
+        if (!useCrowdSeparation) return Vector2.zero;
+        int count = Physics2D.OverlapCircle(
+            transform.position, separationRadius, _separationFilter, _separationBuffer);
+        Vector2 sep = Vector2.zero;
+        for (int i = 0; i < count; i++)
+        {
+            var col = _separationBuffer[i];
+            if (col == null || col.gameObject == gameObject) continue;
+            Vector2 diff = _rb.position - (Vector2)col.transform.position;
+            float dist   = diff.magnitude;
+            sep += dist < 0.001f
+                ? (Vector2)(Vector3)Random.insideUnitCircle.normalized * 0.1f
+                : diff / dist;
+        }
+        return sep.sqrMagnitude > 1f ? sep.normalized : sep;
     }
 }

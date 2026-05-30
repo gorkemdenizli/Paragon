@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponName: Sub Machine Gun
   damage: 8
   fireRate: 16
-  accuracy: 6
+  accuracy: 4
   magazineSize: 24
   startingTotalAmmo: 600
   infiniteAmmo: 0

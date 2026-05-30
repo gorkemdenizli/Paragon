@@ -28,7 +28,9 @@ public class PlayerHealthController : MonoBehaviour
 
     private int _baseMaxHealth;
     [SerializeField] private float invincibilityLength;
+    [SerializeField] private float iframeCooldown = 2f;
     private float invincibilityCounter;
+    private float _iframeCooldownCounter;
     [SerializeField] private float flashLength = 0.1f;
     private float flashCounter;
     [SerializeField] private SpriteRenderer[] playerSprites;
@@ -98,8 +100,8 @@ public class PlayerHealthController : MonoBehaviour
 
     void Update()
     {
-        if (invincibilityCounter > 0)
-            invincibilityCounter -= Time.deltaTime;
+        if (invincibilityCounter > 0)   invincibilityCounter   -= Time.deltaTime;
+        if (_iframeCooldownCounter > 0) _iframeCooldownCounter -= Time.deltaTime;
 
         if (_flashActiveTimer <= 0f)
             return;
@@ -197,12 +199,17 @@ public class PlayerHealthController : MonoBehaviour
 
         StartFlash();
         currentHealth -= healthDamage;
-        invincibilityCounter = invincibilityLength;
+        if (_iframeCooldownCounter <= 0)
+        {
+            invincibilityCounter   = invincibilityLength;
+            _iframeCooldownCounter = iframeCooldown;
+        }
 
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            RespawnController.instance.Respawn();
+            UpdateHealthSlider(currentHealth, maxHealth);
+            GameOverScreenController.instance?.ShowLoss();
             return;
         }
 

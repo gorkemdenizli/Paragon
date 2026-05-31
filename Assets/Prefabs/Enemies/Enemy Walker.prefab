@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 238622519461813291}
   - component: {fileID: 399019864625277136}
   - component: {fileID: 1472013527980572003}
+  - component: {fileID: -3940534100002950494}
   m_Layer: 16
   m_Name: Enemy Walker
   m_TagString: Enemy
@@ -280,6 +281,33 @@ MonoBehaviour:
   orbAbsorbDistance: 0.35
   orbHomingDelay: 0.4
   orbBurstSpeed: 6
+--- !u!114 &-3940534100002950494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143300284193264156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5421743022657b74382bda814e4463bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyLadderNavigator
+  useLadders: 1
+  ladderSearchInterval: 0.3
+  minVerticalDifferenceToUseLadder: 1.2
+  maxLadderSearchDistance: 25
+  ladderBottomReachDistance: 0.25
+  ladderTopReachDistance: 0.15
+  enemyClimbSpeed: 2.5
+  snapToLadderXWhileClimbing: 1
+  ladderXSnapSpeed: 10
+  disableGravityWhileClimbing: 1
+  stopHorizontalMovementWhileClimbing: 1
+  preventJumpSpamWhenLadderAvailable: 1
+  preventJumpSpamWhenPlayerUnreachable: 1
+  playerGroundCheckDistance: 0.8
+  enableDebugLogs: 0
 --- !u!1 &3688836924083817918
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,8 +533,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1000949147
+  m_SortingLayer: 9
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -3742267620615937493, guid: 94672c82a939e214692c5058d496b38e, type: 3}

@@ -21,6 +21,17 @@ public class EnemyGroundChaseController : MonoBehaviour
     public float BaseMoveSpeed => moveSpeed;
     public void SetMoveSpeed(float newSpeed) { moveSpeed = Mathf.Max(0f, newSpeed); }
 
+    public float MoveSpeed              => moveSpeed;
+    public float HorizontalAcceleration => horizontalAcceleration;
+    public bool  IsGrounded             => _isGrounded;
+
+    public bool ExternalControlActive      { get; set; }
+    public bool SuppressPlayerPlatformJump { get; set; }
+    public bool IsChasing                  => _isChasing;
+    public LayerMask GroundLayers          => groundLayers;
+
+    public void ApplyFacing(float faceDir) => ApplyFacingScale(faceDir);
+
     [Tooltip("Sprite default halinde sağa bakıyorsa aç. Default halinde sola bakıyorsa kapalı kalsın.")]
     [SerializeField] private bool spriteFacesRightByDefault = false;
 
@@ -184,6 +195,9 @@ public class EnemyGroundChaseController : MonoBehaviour
             return;
 
         if (_knockback != null && _knockback.IsActive)
+            return;
+
+        if (ExternalControlActive)
             return;
 
         UpdateSensorState();
@@ -461,6 +475,9 @@ public class EnemyGroundChaseController : MonoBehaviour
     bool TryGetPlayerPlatformJumpHeight(float faceDir, out float jumpHeight)
     {
         jumpHeight = 0f;
+
+        if (SuppressPlayerPlatformJump)
+            return false;
 
         if (!jumpTowardPlayerPlatform)
             return false;

@@ -30,7 +30,7 @@ TagManager:
   - Equipment
   - Background Decor
   - Ladder
-  - 
+  - Platform
   - 
   - 
   - 
@@ -50,9 +50,9 @@ TagManager:
     uniqueID: 2071119459
     locked: 0
   - name: Ground
-    uniqueID: 55944327
+    uniqueID: 3575983859
     locked: 0
-  - name: LadderBackroundGround
+  - name: LadderBackroundPlatform
     uniqueID: 2346188291
     locked: 0
   - name: Ladder

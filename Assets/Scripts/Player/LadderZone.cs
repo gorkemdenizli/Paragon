@@ -1,13 +1,22 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LadderZone : MonoBehaviour
 {
     [SerializeField] public Transform bottomPoint;
     [SerializeField] public Transform topPoint;
-    [SerializeField] public bool  canPlayerUse   = true;
-    [SerializeField] public float enterDistance  = 0.25f;
-    [SerializeField] public float exitDistance   = 0.25f;
+    [SerializeField] public bool  canPlayerUse    = true;
+    [SerializeField] private bool canEnemiesUse   = true;
+    [SerializeField] public float enterDistance   = 0.25f;
+    [SerializeField] public float exitDistance    = 0.25f;
     [SerializeField] public LadderPlatformGate gate;
+    [Tooltip("Enemy'nin durması gereken yükseklik. Boş bırakılırsa TopPoint kullanılır.")]
+    [SerializeField] public Transform enemyTopPoint;
+
+    public static readonly List<LadderZone> All = new();
+
+    void OnEnable()  => All.Add(this);
+    void OnDisable() => All.Remove(this);
 
     public Vector2 BottomPosition => bottomPoint != null
         ? (Vector2)bottomPoint.position
@@ -17,8 +26,13 @@ public class LadderZone : MonoBehaviour
         ? (Vector2)topPoint.position
         : (Vector2)transform.position + Vector2.up * 3f;
 
-    public float LadderX  => transform.position.x;
-    public bool  IsValid  => bottomPoint != null && topPoint != null && canPlayerUse;
+    public Vector2 EnemyTopPosition => enemyTopPoint != null
+        ? (Vector2)enemyTopPoint.position
+        : TopPosition;
+
+    public float LadderX      => transform.position.x;
+    public bool  IsValid       => bottomPoint != null && topPoint != null && canPlayerUse;
+    public bool  CanEnemiesUse => canEnemiesUse;
 
 #if UNITY_EDITOR
     void OnValidate()
@@ -44,6 +58,14 @@ public class LadderZone : MonoBehaviour
         UnityEditor.Handles.color = new Color(1f, 1f, 0f, 0.25f);
         UnityEditor.Handles.Label(top + Vector3.up * 0.2f, "Top");
         UnityEditor.Handles.Label(bot + Vector3.down * 0.25f, "Bot");
+
+        if (enemyTopPoint != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(enemyTopPoint.position, 0.12f);
+            UnityEditor.Handles.color = new Color(1f, 0.3f, 0.3f, 0.8f);
+            UnityEditor.Handles.Label(enemyTopPoint.position + Vector3.up * 0.2f, "EnemyTop");
+        }
     }
 #endif
 }

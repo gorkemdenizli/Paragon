@@ -213,7 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealthController
   totalHealth: 200
-  xpReward: 100
+  xpReward: 150
   deathEffect: {fileID: 7368911382246415065, guid: 3bb37e9dd22c69a41a5ef58b7be7d774, type: 3}
   enemyDrops: {fileID: 0}
   healthBarGroup: {fileID: 2108989407256431776}
@@ -309,6 +309,7 @@ MonoBehaviour:
   preventJumpSpamWhenPlayerUnreachable: 1
   playerGroundCheckDistance: 0.8
   enableDebugLogs: 0
+  minChaseDurationBeforeLadder: 2.5
 --- !u!1 &3688836924083817918
 GameObject:
   m_ObjectHideFlags: 0

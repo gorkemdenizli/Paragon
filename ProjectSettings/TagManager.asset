@@ -49,6 +49,9 @@ TagManager:
   - name: BG
     uniqueID: 2071119459
     locked: 0
+  - name: Gate
+    uniqueID: 4103154213
+    locked: 0
   - name: Ground
     uniqueID: 3575983859
     locked: 0
@@ -69,6 +72,9 @@ TagManager:
     locked: 0
   - name: Weapon
     uniqueID: 1253370059
+    locked: 0
+  - name: Boss
+    uniqueID: 882136341
     locked: 0
   - name: Enemy
     uniqueID: 1000949147

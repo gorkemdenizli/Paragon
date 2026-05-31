@@ -1,0 +1,1677 @@
+fileFormatVersion: 2
+guid: 3c22ba65a6e0ba24d9edb67ee3b48fb2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1549154897897144088
+    second: Portal_Animatet_sheet_0
+  - first:
+      213: -230774645492572124
+    second: Portal_Animatet_sheet_1
+  - first:
+      213: 2690684866708463573
+    second: Portal_Animatet_sheet_2
+  - first:
+      213: 1580976845857675269
+    second: Portal_Animatet_sheet_3
+  - first:
+      213: 6755691173151101508
+    second: Portal_Animatet_sheet_4
+  - first:
+      213: 2388987683728821760
+    second: Portal_Animatet_sheet_5
+  - first:
+      213: -838685245200283251
+    second: Portal_Animatet_sheet_6
+  - first:
+      213: -166448687507384254
+    second: Portal_Animatet_sheet_7
+  - first:
+      213: 3837415426647629386
+    second: Portal_Animatet_sheet_8
+  - first:
+      213: 1798129031895122141
+    second: Portal_Animatet_sheet_9
+  - first:
+      213: 5031797220527218980
+    second: Portal_Animatet_sheet_10
+  - first:
+      213: 2311711387906178907
+    second: Portal_Animatet_sheet_11
+  - first:
+      213: -349818709531515073
+    second: Portal_Animatet_sheet_12
+  - first:
+      213: 8816679200410314391
+    second: Portal_Animatet_sheet_13
+  - first:
+      213: 5436572184912787291
+    second: Portal_Animatet_sheet_14
+  - first:
+      213: 430129547210643641
+    second: Portal_Animatet_sheet_15
+  - first:
+      213: 515722282789813037
+    second: Portal_Animatet_sheet_16
+  - first:
+      213: 8370723260583835663
+    second: Portal_Animatet_sheet_17
+  - first:
+      213: 1502940458410039413
+    second: Portal_Animatet_sheet_18
+  - first:
+      213: 6753766958813025719
+    second: Portal_Animatet_sheet_19
+  - first:
+      213: 884085559170062309
+    second: Portal_Animatet_sheet_20
+  - first:
+      213: -2126535440828059544
+    second: Portal_Animatet_sheet_21
+  - first:
+      213: 3968319645969945205
+    second: Portal_Animatet_sheet_22
+  - first:
+      213: -5328704233857531984
+    second: Portal_Animatet_sheet_23
+  - first:
+      213: 180629466771623367
+    second: Portal_Animatet_sheet_24
+  - first:
+      213: -5825972540878254892
+    second: Portal_Animatet_sheet_25
+  - first:
+      213: -7960526840903632821
+    second: Portal_Animatet_sheet_26
+  - first:
+      213: -4837218817188807899
+    second: Portal_Animatet_sheet_27
+  - first:
+      213: -2584210334692868733
+    second: Portal_Animatet_sheet_28
+  - first:
+      213: 7714315002185660510
+    second: Portal_Animatet_sheet_29
+  - first:
+      213: 2586707308751961349
+    second: Portal_Animatet_sheet_30
+  - first:
+      213: 7037294752191156559
+    second: Portal_Animatet_sheet_31
+  - first:
+      213: 116482561522412600
+    second: Portal_Animatet_sheet_32
+  - first:
+      213: 1610141870285295416
+    second: Portal_Animatet_sheet_33
+  - first:
+      213: 7385370916109774156
+    second: Portal_Animatet_sheet_34
+  - first:
+      213: 7928780640878150310
+    second: Portal_Animatet_sheet_35
+  - first:
+      213: -7377466536666435262
+    second: Portal_Animatet_sheet_36
+  - first:
+      213: -6287852955205096300
+    second: Portal_Animatet_sheet_37
+  - first:
+      213: 6541206523146537814
+    second: Portal_Animatet_sheet_38
+  - first:
+      213: -4041587742389732812
+    second: Portal_Animatet_sheet_39
+  - first:
+      213: 266910457628449134
+    second: Portal_Animatet_sheet_40
+  - first:
+      213: -1159863866840631046
+    second: Portal_Animatet_sheet_41
+  - first:
+      213: -1991536905118083446
+    second: Portal_Animatet_sheet_42
+  - first:
+      213: -8009042289730349474
+    second: Portal_Animatet_sheet_43
+  - first:
+      213: -2813110228067721261
+    second: Portal_Animatet_sheet_44
+  - first:
+      213: 8229905425457397250
+    second: Portal_Animatet_sheet_45
+  - first:
+      213: 3412191931707419296
+    second: Portal_Animatet_sheet_46
+  - first:
+      213: 547746030006122407
+    second: Portal_Animatet_sheet_47
+  - first:
+      213: -5315468052245287855
+    second: Portal_Animatet_sheet_48
+  - first:
+      213: -5629472681271989375
+    second: Portal_Animatet_sheet_49
+  - first:
+      213: -500142654381272665
+    second: Portal_Animatet_sheet_50
+  - first:
+      213: -5724453473773111830
+    second: Portal_Animatet_sheet_51
+  - first:
+      213: -5496250230469953976
+    second: Portal_Animatet_sheet_52
+  - first:
+      213: -6615127475015888361
+    second: Portal_Animatet_sheet_53
+  - first:
+      213: -6542111362776039662
+    second: Portal_Animatet_sheet_54
+  - first:
+      213: 4068121449955732169
+    second: Portal_Animatet_sheet_55
+  - first:
+      213: 5575463940892882983
+    second: Portal_Animatet_sheet_56
+  - first:
+      213: -3924594063885609045
+    second: Portal_Animatet_sheet_57
+  - first:
+      213: 4164257247718699530
+    second: Portal_Animatet_sheet_58
+  - first:
+      213: 7850022536167983992
+    second: Portal_Animatet_sheet_59
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 48
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_0
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 1336
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e0c8c004db408ae0800000000000000
+      internalID: -1549154897897144088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_1
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 1336
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 420af30ceaf1cccf0800000000000000
+      internalID: -230774645492572124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_2
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 1336
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5df5da261ab375520800000000000000
+      internalID: 2690684866708463573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_3
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 1336
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 508d67f9012c0f510800000000000000
+      internalID: 1580976845857675269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_4
+      rect:
+        serializedVersion: 2
+        x: 777
+        y: 1336
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 442d9eb245901cd50800000000000000
+      internalID: 6755691173151101508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_5
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 1336
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00e807514a3672120800000000000000
+      internalID: 2388987683728821760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_6
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 1336
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d89c97986346c54f0800000000000000
+      internalID: -838685245200283251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_7
+      rect:
+        serializedVersion: 2
+        x: 1347
+        y: 1336
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 248dac3fcc7a0bdf0800000000000000
+      internalID: -166448687507384254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_8
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 1146
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4e9fe0cffc314530800000000000000
+      internalID: 3837415426647629386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_9
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 1146
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd00d6ed3dc34f810800000000000000
+      internalID: 1798129031895122141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_10
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 1146
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 421a25799e884d540800000000000000
+      internalID: 5031797220527218980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_11
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 1146
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5f7f536249d41020800000000000000
+      internalID: 2311711387906178907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_12
+      rect:
+        serializedVersion: 2
+        x: 777
+        y: 1146
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f37a692bcb1352bf0800000000000000
+      internalID: -349818709531515073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_13
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 1146
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 796280f15032b5a70800000000000000
+      internalID: 8816679200410314391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_14
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 1146
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b57fe751995927b40800000000000000
+      internalID: 5436572184912787291
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_15
+      rect:
+        serializedVersion: 2
+        x: 1347
+        y: 1146
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b8d3e45b8028f500800000000000000
+      internalID: 430129547210643641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_16
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 956
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2bb07c0fa6382700800000000000000
+      internalID: 515722282789813037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_17
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 956
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f08f23c9478ca2470800000000000000
+      internalID: 8370723260583835663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_18
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 956
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 578d71e42648bd410800000000000000
+      internalID: 1502940458410039413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_19
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 956
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b512db14433abd50800000000000000
+      internalID: 6753766958813025719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_20
+      rect:
+        serializedVersion: 2
+        x: 777
+        y: 956
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e75269c127e44c00800000000000000
+      internalID: 884085559170062309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_21
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 956
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8603a2f88470d72e0800000000000000
+      internalID: -2126535440828059544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_22
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 956
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5721e3561bd421730800000000000000
+      internalID: 3968319645969945205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_23
+      rect:
+        serializedVersion: 2
+        x: 1347
+        y: 956
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bf3dc36bb3ac06b0800000000000000
+      internalID: -5328704233857531984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_24
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 766
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cd04e20b89b18200800000000000000
+      internalID: 180629466771623367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_25
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 766
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dc85c567dcf52fa0800000000000000
+      internalID: -5825972540878254892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_26
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 766
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b48f9fec307868190800000000000000
+      internalID: -7960526840903632821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_27
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 766
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52b30ac4d1fbedcb0800000000000000
+      internalID: -4837218817188807899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_28
+      rect:
+        serializedVersion: 2
+        x: 777
+        y: 766
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38dfcbf646a032cd0800000000000000
+      internalID: -2584210334692868733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_29
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 766
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e583ebe4f90ce0b60800000000000000
+      internalID: 7714315002185660510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_30
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 766
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50d3114a794d5e320800000000000000
+      internalID: 2586707308751961349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_31
+      rect:
+        serializedVersion: 2
+        x: 1347
+        y: 766
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f41131cba4e79a160800000000000000
+      internalID: 7037294752191156559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_32
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 576
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83c2216c544dd9100800000000000000
+      internalID: 116482561522412600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_33
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 576
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83f8658008f585610800000000000000
+      internalID: 1610141870285295416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_34
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 576
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4d693508bb1e7660800000000000000
+      internalID: 7385370916109774156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_35
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 576
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a249810cffa80e60800000000000000
+      internalID: 7928780640878150310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_36
+      rect:
+        serializedVersion: 2
+        x: 777
+        y: 576
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2417aabb549fd9990800000000000000
+      internalID: -7377466536666435262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_37
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 576
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49c2c1d3d0f0db8a0800000000000000
+      internalID: -6287852955205096300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_38
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 576
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65b0e9e0da807ca50800000000000000
+      internalID: 6541206523146537814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_39
+      rect:
+        serializedVersion: 2
+        x: 1347
+        y: 576
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43a794e8c5569e7c0800000000000000
+      internalID: -4041587742389732812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_40
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 386
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e69d7c5a5a144b300800000000000000
+      internalID: 266910457628449134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_41
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 386
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af8372555f557efe0800000000000000
+      internalID: -1159863866840631046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_42
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 386
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a861b558cb3ac54e0800000000000000
+      internalID: -1991536905118083446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_43
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 386
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e569a81a87a2ad090800000000000000
+      internalID: -8009042289730349474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_44
+      rect:
+        serializedVersion: 2
+        x: 777
+        y: 386
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3df510ee623d5f8d0800000000000000
+      internalID: -2813110228067721261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_45
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 386
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20eb27b616f763270800000000000000
+      internalID: 8229905425457397250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_46
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 386
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0aaefdabb7a8a5f20800000000000000
+      internalID: 3412191931707419296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_47
+      rect:
+        serializedVersion: 2
+        x: 1347
+        y: 386
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a735a9bc1cf99700800000000000000
+      internalID: 547746030006122407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_48
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 196
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15c6bf218f9ab36b0800000000000000
+      internalID: -5315468052245287855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_49
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 196
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18b64003c6810e1b0800000000000000
+      internalID: -5629472681271989375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_50
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 196
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a1559cd7e22f09f0800000000000000
+      internalID: -500142654381272665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_51
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 196
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae5b08225e7ae80b0800000000000000
+      internalID: -5724453473773111830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_52
+      rect:
+        serializedVersion: 2
+        x: 777
+        y: 196
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 846fd28298569b3b0800000000000000
+      internalID: -5496250230469953976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_53
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 196
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71250c32c985234a0800000000000000
+      internalID: -6615127475015888361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_54
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 196
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21fffac8060c535a0800000000000000
+      internalID: -6542111362776039662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_55
+      rect:
+        serializedVersion: 2
+        x: 1347
+        y: 196
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ca22c7a7eed47830800000000000000
+      internalID: 4068121449955732169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_56
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 6
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7287be60ae6006d40800000000000000
+      internalID: 5575463940892882983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_57
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 6
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba7dd760e7a0989c0800000000000000
+      internalID: -3924594063885609045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_58
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 6
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a027e9357e96ac930800000000000000
+      internalID: 4164257247718699530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal_Animatet_sheet_59
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 6
+        width: 158
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87b8a1bc7e1e0fc60800000000000000
+      internalID: 7850022536167983992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Portal_Animatet_sheet_0: -1549154897897144088
+      Portal_Animatet_sheet_1: -230774645492572124
+      Portal_Animatet_sheet_10: 5031797220527218980
+      Portal_Animatet_sheet_11: 2311711387906178907
+      Portal_Animatet_sheet_12: -349818709531515073
+      Portal_Animatet_sheet_13: 8816679200410314391
+      Portal_Animatet_sheet_14: 5436572184912787291
+      Portal_Animatet_sheet_15: 430129547210643641
+      Portal_Animatet_sheet_16: 515722282789813037
+      Portal_Animatet_sheet_17: 8370723260583835663
+      Portal_Animatet_sheet_18: 1502940458410039413
+      Portal_Animatet_sheet_19: 6753766958813025719
+      Portal_Animatet_sheet_2: 2690684866708463573
+      Portal_Animatet_sheet_20: 884085559170062309
+      Portal_Animatet_sheet_21: -2126535440828059544
+      Portal_Animatet_sheet_22: 3968319645969945205
+      Portal_Animatet_sheet_23: -5328704233857531984
+      Portal_Animatet_sheet_24: 180629466771623367
+      Portal_Animatet_sheet_25: -5825972540878254892
+      Portal_Animatet_sheet_26: -7960526840903632821
+      Portal_Animatet_sheet_27: -4837218817188807899
+      Portal_Animatet_sheet_28: -2584210334692868733
+      Portal_Animatet_sheet_29: 7714315002185660510
+      Portal_Animatet_sheet_3: 1580976845857675269
+      Portal_Animatet_sheet_30: 2586707308751961349
+      Portal_Animatet_sheet_31: 7037294752191156559
+      Portal_Animatet_sheet_32: 116482561522412600
+      Portal_Animatet_sheet_33: 1610141870285295416
+      Portal_Animatet_sheet_34: 7385370916109774156
+      Portal_Animatet_sheet_35: 7928780640878150310
+      Portal_Animatet_sheet_36: -7377466536666435262
+      Portal_Animatet_sheet_37: -6287852955205096300
+      Portal_Animatet_sheet_38: 6541206523146537814
+      Portal_Animatet_sheet_39: -4041587742389732812
+      Portal_Animatet_sheet_4: 6755691173151101508
+      Portal_Animatet_sheet_40: 266910457628449134
+      Portal_Animatet_sheet_41: -1159863866840631046
+      Portal_Animatet_sheet_42: -1991536905118083446
+      Portal_Animatet_sheet_43: -8009042289730349474
+      Portal_Animatet_sheet_44: -2813110228067721261
+      Portal_Animatet_sheet_45: 8229905425457397250
+      Portal_Animatet_sheet_46: 3412191931707419296
+      Portal_Animatet_sheet_47: 547746030006122407
+      Portal_Animatet_sheet_48: -5315468052245287855
+      Portal_Animatet_sheet_49: -5629472681271989375
+      Portal_Animatet_sheet_5: 2388987683728821760
+      Portal_Animatet_sheet_50: -500142654381272665
+      Portal_Animatet_sheet_51: -5724453473773111830
+      Portal_Animatet_sheet_52: -5496250230469953976
+      Portal_Animatet_sheet_53: -6615127475015888361
+      Portal_Animatet_sheet_54: -6542111362776039662
+      Portal_Animatet_sheet_55: 4068121449955732169
+      Portal_Animatet_sheet_56: 5575463940892882983
+      Portal_Animatet_sheet_57: -3924594063885609045
+      Portal_Animatet_sheet_58: 4164257247718699530
+      Portal_Animatet_sheet_59: 7850022536167983992
+      Portal_Animatet_sheet_6: -838685245200283251
+      Portal_Animatet_sheet_7: -166448687507384254
+      Portal_Animatet_sheet_8: 3837415426647629386
+      Portal_Animatet_sheet_9: 1798129031895122141
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -3,7 +3,14 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyLadderNavigator : MonoBehaviour
 {
-    private enum LadderState { None, MovingToLadder, ClimbingLadder }
+    private enum LadderState
+    {
+        None,
+        MovingToLadderBottom,
+        ClimbingUp,
+        MovingToLadderTop,
+        ClimbingDown
+    }
 
     [Header("Ladder Navigation")]
     [SerializeField] private bool  useLadders                           = true;
@@ -12,6 +19,7 @@ public class EnemyLadderNavigator : MonoBehaviour
     [SerializeField] private float maxLadderSearchDistance              = 25f;
     [SerializeField] private float ladderBottomReachDistance            = 0.25f;
     [SerializeField] private float ladderTopReachDistance               = 0.15f;
+    [SerializeField] private float ladderTopEntryReachDistance          = 0.3f;
     [SerializeField] private float enemyClimbSpeed                      = 2.5f;
     [SerializeField] private bool  snapToLadderXWhileClimbing           = true;
     [SerializeField] private float ladderXSnapSpeed                     = 10f;
@@ -58,8 +66,9 @@ public class EnemyLadderNavigator : MonoBehaviour
 
         switch (_state)
         {
-            case LadderState.None:           TickNone();   break;
-            case LadderState.MovingToLadder: TickMoving(); break;
+            case LadderState.None:                 TickNone();           break;
+            case LadderState.MovingToLadderBottom: TickMovingToBottom(); break;
+            case LadderState.MovingToLadderTop:    TickMovingToTop();    break;
         }
     }
 
@@ -67,23 +76,48 @@ public class EnemyLadderNavigator : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (_state != LadderState.ClimbingLadder) return;
-
-        if (_knockback != null && _knockback.IsActive) { AbortNavigation(); return; }
-        if (_targetLadder == null) { AbortNavigation(); return; }
-
-        float vy = enemyClimbSpeed;
-        float vx = stopHorizontalMovementWhileClimbing ? 0f : _rb.linearVelocity.x;
-        _rb.linearVelocity = new Vector2(vx, vy);
-
-        if (snapToLadderXWhileClimbing)
+        if (_state == LadderState.ClimbingUp)
         {
-            float newX = Mathf.MoveTowards(_rb.position.x, _targetLadder.LadderX, ladderXSnapSpeed * Time.fixedDeltaTime);
-            _rb.position = new Vector2(newX, _rb.position.y);
-        }
+            if (_knockback != null && _knockback.IsActive) { AbortNavigation(); return; }
+            if (_targetLadder == null) { AbortNavigation(); return; }
+            if (_player != null)
+            {
+                float yDiff = _player.position.y - transform.position.y;
+                if (yDiff <= minVerticalDifferenceToUseLadder * 0.5f) { AbortNavigation(); return; }
+            }
 
-        if (_rb.position.y >= _targetLadder.EnemyTopPosition.y - ladderTopReachDistance)
-            FinishClimbing();
+            float vx = stopHorizontalMovementWhileClimbing ? 0f : _rb.linearVelocity.x;
+            _rb.linearVelocity = new Vector2(vx, enemyClimbSpeed);
+
+            if (snapToLadderXWhileClimbing)
+            {
+                float newX = Mathf.MoveTowards(_rb.position.x, _targetLadder.LadderX, ladderXSnapSpeed * Time.fixedDeltaTime);
+                _rb.position = new Vector2(newX, _rb.position.y);
+            }
+
+            if (_rb.position.y >= _targetLadder.EnemyTopPosition.y - ladderTopReachDistance)
+                FinishClimbingUp();
+        }
+        else if (_state == LadderState.ClimbingDown)
+        {
+            if (_knockback != null && _knockback.IsActive) { AbortNavigation(); return; }
+            if (_targetLadder == null) { AbortNavigation(); return; }
+
+            float vx = stopHorizontalMovementWhileClimbing ? 0f : _rb.linearVelocity.x;
+            _rb.linearVelocity = new Vector2(vx, -enemyClimbSpeed);
+
+            if (snapToLadderXWhileClimbing)
+            {
+                float newX = Mathf.MoveTowards(_rb.position.x, _targetLadder.LadderX, ladderXSnapSpeed * Time.fixedDeltaTime);
+                _rb.position = new Vector2(newX, _rb.position.y);
+            }
+
+            float feetY = _bodyCollider != null
+                ? _rb.position.y - _bodyCollider.bounds.extents.y
+                : _rb.position.y - 0.5f;
+            if (feetY <= _targetLadder.BottomPosition.y + ladderBottomReachDistance)
+                FinishClimbingDown();
+        }
     }
 
     // ── State ticks ──────────────────────────────────────────────────────────────
@@ -91,8 +125,6 @@ public class EnemyLadderNavigator : MonoBehaviour
     void TickNone()
     {
         if (_player == null || _reentryBlock > 0f) return;
-
-        // Only activate ladder navigation while actively chasing
         if (_chase != null && !_chase.IsChasing) return;
 
         _ladderSearchTimer -= Time.deltaTime;
@@ -100,35 +132,48 @@ public class EnemyLadderNavigator : MonoBehaviour
         _ladderSearchTimer = ladderSearchInterval;
 
         float yDiff = _player.position.y - transform.position.y;
-        if (yDiff <= minVerticalDifferenceToUseLadder)
+
+        if (yDiff > minVerticalDifferenceToUseLadder)
         {
             if (_chase != null) _chase.SuppressPlayerPlatformJump = false;
-            return;
+            if (!IsPlayerOnGround()) return;
+            LadderZone best = FindBestLadderForGoingUp();
+            if (best != null)
+            {
+                _targetLadder = best;
+                _state        = LadderState.MovingToLadderBottom;
+                if (_chase != null) _chase.ExternalControlActive = preventJumpSpamWhenLadderAvailable;
+                if (enableDebugLogs) Debug.Log($"[LadderNav] Going UP via {best.name}.");
+            }
+            else if (preventJumpSpamWhenPlayerUnreachable && _chase != null)
+            {
+                _chase.SuppressPlayerPlatformJump = true;
+                if (enableDebugLogs) Debug.Log("[LadderNav] No up-ladder found.");
+            }
         }
-
-        // Only use ladder when player is standing on ground, not mid-air
-        if (!IsPlayerOnGround()) return;
-
-        LadderZone best = FindBestLadder();
-        if (best != null)
+        else if (yDiff < -minVerticalDifferenceToUseLadder)
         {
-            _targetLadder = best;
-            _state        = LadderState.MovingToLadder;
-            if (_chase != null) _chase.ExternalControlActive = preventJumpSpamWhenLadderAvailable;
-            if (enableDebugLogs) Debug.Log($"[LadderNav] Moving to {best.name}.");
+            if (_chase != null) _chase.SuppressPlayerPlatformJump = false;
+            if (!IsPlayerOnGround()) return;
+            LadderZone best = FindBestLadderForGoingDown();
+            if (best != null)
+            {
+                _targetLadder = best;
+                _state        = LadderState.MovingToLadderTop;
+                if (_chase != null) _chase.ExternalControlActive = preventJumpSpamWhenLadderAvailable;
+                if (enableDebugLogs) Debug.Log($"[LadderNav] Going DOWN via {best.name}.");
+            }
         }
-        else if (preventJumpSpamWhenPlayerUnreachable && _chase != null)
+        else
         {
-            _chase.SuppressPlayerPlatformJump = true;
-            if (enableDebugLogs) Debug.Log("[LadderNav] No ladder found, suppressing platform jump.");
+            if (_chase != null) _chase.SuppressPlayerPlatformJump = false;
         }
     }
 
-    void TickMoving()
+    void TickMovingToBottom()
     {
         if (_targetLadder == null) { AbortNavigation(); return; }
 
-        // Abort if player came back down to our level
         if (_player != null)
         {
             float yDiff = _player.position.y - transform.position.y;
@@ -138,23 +183,46 @@ public class EnemyLadderNavigator : MonoBehaviour
         float targetX = _targetLadder.BottomPosition.x;
         float dx      = targetX - _rb.position.x;
         float dir     = Mathf.Abs(dx) < 0.01f ? 0f : Mathf.Sign(dx);
-
-        float speed = _chase != null ? _chase.MoveSpeed : 4f;
-        float accel = _chase != null ? _chase.HorizontalAcceleration : 40f;
-        float newVx = Mathf.MoveTowards(_rb.linearVelocity.x, dir * speed, accel * Time.fixedDeltaTime);
+        float speed   = _chase != null ? _chase.MoveSpeed : 4f;
+        float accel   = _chase != null ? _chase.HorizontalAcceleration : 40f;
+        float newVx   = Mathf.MoveTowards(_rb.linearVelocity.x, dir * speed, accel * Time.fixedDeltaTime);
         _rb.linearVelocity = new Vector2(newVx, _rb.linearVelocity.y);
 
         if (Mathf.Abs(dir) > 0.01f) _chase?.ApplyFacing(dir);
 
         if (Mathf.Abs(dx) <= ladderBottomReachDistance)
-            StartClimbing();
+            StartClimbingUp();
+    }
+
+    void TickMovingToTop()
+    {
+        if (_targetLadder == null) { AbortNavigation(); return; }
+
+        if (_player != null)
+        {
+            float yDiff = _player.position.y - transform.position.y;
+            if (yDiff >= -minVerticalDifferenceToUseLadder * 0.5f) { AbortNavigation(); return; }
+        }
+
+        float targetX = _targetLadder.TopEntryPosition.x;
+        float dx      = targetX - _rb.position.x;
+        float dir     = Mathf.Abs(dx) < 0.01f ? 0f : Mathf.Sign(dx);
+        float speed   = _chase != null ? _chase.MoveSpeed : 4f;
+        float accel   = _chase != null ? _chase.HorizontalAcceleration : 40f;
+        float newVx   = Mathf.MoveTowards(_rb.linearVelocity.x, dir * speed, accel * Time.fixedDeltaTime);
+        _rb.linearVelocity = new Vector2(newVx, _rb.linearVelocity.y);
+
+        if (Mathf.Abs(dir) > 0.01f) _chase?.ApplyFacing(dir);
+
+        if (Mathf.Abs(dx) <= ladderTopEntryReachDistance)
+            StartClimbingDown();
     }
 
     // ── Transitions ──────────────────────────────────────────────────────────────
 
-    void StartClimbing()
+    void StartClimbingUp()
     {
-        _state = LadderState.ClimbingLadder;
+        _state = LadderState.ClimbingUp;
         if (disableGravityWhileClimbing)
         {
             _originalGravity = _rb.gravityScale;
@@ -162,14 +230,35 @@ public class EnemyLadderNavigator : MonoBehaviour
         }
         _targetLadder?.gate?.IgnoreForCollider(_bodyCollider);
         if (_chase != null) _chase.SuppressPlayerPlatformJump = false;
-        if (enableDebugLogs) Debug.Log("[LadderNav] Started climbing.");
+        if (enableDebugLogs) Debug.Log("[LadderNav] Started climbing UP.");
     }
 
-    void FinishClimbing()
+    void StartClimbingDown()
+    {
+        _state = LadderState.ClimbingDown;
+        if (disableGravityWhileClimbing)
+        {
+            _originalGravity = _rb.gravityScale;
+            _rb.gravityScale = 0f;
+        }
+        _targetLadder?.gate?.IgnoreForCollider(_bodyCollider);
+        if (_chase != null) { _chase.ExternalControlActive = true; _chase.SuppressPlayerPlatformJump = false; }
+        if (enableDebugLogs) Debug.Log("[LadderNav] Started climbing DOWN.");
+    }
+
+    void FinishClimbingUp()
     {
         RestoreAfterClimb();
         _reentryBlock = 0.6f;
-        if (enableDebugLogs) Debug.Log("[LadderNav] Reached top.");
+        if (enableDebugLogs) Debug.Log("[LadderNav] Finished climbing UP.");
+    }
+
+    void FinishClimbingDown()
+    {
+        _rb.linearVelocity = new Vector2(0f, 0f);
+        RestoreAfterClimb();
+        _reentryBlock = 0.6f;
+        if (enableDebugLogs) Debug.Log("[LadderNav] Finished climbing DOWN.");
     }
 
     void AbortNavigation()
@@ -196,7 +285,7 @@ public class EnemyLadderNavigator : MonoBehaviour
 
     // ── Ladder scoring ───────────────────────────────────────────────────────────
 
-    LadderZone FindBestLadder()
+    LadderZone FindBestLadderForGoingUp()
     {
         LadderZone best  = null;
         float      bestS = float.MaxValue;
@@ -214,6 +303,30 @@ public class EnemyLadderNavigator : MonoBehaviour
             float topToPlayerY = Mathf.Abs(topY - _player.position.y);
             float topToPlayerX = Mathf.Abs(_player.position.x - lz.TopPosition.x);
             float score        = enemyToBot + topToPlayerY * 3f + topToPlayerX * 0.25f;
+
+            if (score < bestS) { bestS = score; best = lz; }
+        }
+
+        return best;
+    }
+
+    LadderZone FindBestLadderForGoingDown()
+    {
+        LadderZone best  = null;
+        float      bestS = float.MaxValue;
+
+        foreach (var lz in LadderZone.All)
+        {
+            if (lz == null || !lz.CanEnemiesUse || !lz.IsValid) continue;
+
+            float enemyToTop = Vector2.Distance(transform.position, lz.TopEntryPosition);
+            if (enemyToTop > maxLadderSearchDistance) continue;
+
+            if (lz.BottomPosition.y >= transform.position.y - minVerticalDifferenceToUseLadder) continue;
+
+            float botToPlayerY = Mathf.Abs(lz.BottomPosition.y - _player.position.y);
+            float botToPlayerX = Mathf.Abs(_player.position.x - lz.BottomPosition.x);
+            float score        = enemyToTop + botToPlayerY * 3f + botToPlayerX * 0.25f;
 
             if (score < bestS) { bestS = score; best = lz; }
         }
@@ -241,9 +354,16 @@ public class EnemyLadderNavigator : MonoBehaviour
     void OnDrawGizmos()
     {
         if (_targetLadder == null) return;
-        Gizmos.color = _state == LadderState.ClimbingLadder ? Color.green : Color.yellow;
-        Gizmos.DrawLine(transform.position, _targetLadder.BottomPosition);
-        Gizmos.DrawWireSphere(_targetLadder.BottomPosition, 0.15f);
+        bool goingDown = _state == LadderState.ClimbingDown || _state == LadderState.MovingToLadderTop;
+        Gizmos.color = (_state == LadderState.ClimbingUp || _state == LadderState.ClimbingDown)
+            ? Color.green
+            : (goingDown ? Color.blue : Color.yellow);
+
+        Vector3 target = goingDown
+            ? (Vector3)_targetLadder.TopEntryPosition
+            : (Vector3)_targetLadder.BottomPosition;
+        Gizmos.DrawLine(transform.position, target);
+        Gizmos.DrawWireSphere(target, 0.15f);
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(_targetLadder.TopPosition, 0.15f);
     }

@@ -12,6 +12,8 @@ public class LadderZone : MonoBehaviour
     [SerializeField] public LadderPlatformGate gate;
     [Tooltip("Enemy'nin durması gereken yükseklik. Boş bırakılırsa TopPoint kullanılır.")]
     [SerializeField] public Transform enemyTopPoint;
+    [Tooltip("Enemy yukarıdan aşağı inerken yürüyeceği nokta. Boş bırakılırsa topPoint kullanılır.")]
+    [SerializeField] private Transform topEntryPoint;
 
     public static readonly List<LadderZone> All = new();
 
@@ -28,6 +30,10 @@ public class LadderZone : MonoBehaviour
 
     public Vector2 EnemyTopPosition => enemyTopPoint != null
         ? (Vector2)enemyTopPoint.position
+        : TopPosition;
+
+    public Vector2 TopEntryPosition => topEntryPoint != null
+        ? (Vector2)topEntryPoint.position
         : TopPosition;
 
     public float LadderX      => transform.position.x;
@@ -65,6 +71,14 @@ public class LadderZone : MonoBehaviour
             Gizmos.DrawSphere(enemyTopPoint.position, 0.12f);
             UnityEditor.Handles.color = new Color(1f, 0.3f, 0.3f, 0.8f);
             UnityEditor.Handles.Label(enemyTopPoint.position + Vector3.up * 0.2f, "EnemyTop");
+        }
+
+        if (topEntryPoint != null)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawSphere(topEntryPoint.position, 0.12f);
+            UnityEditor.Handles.color = new Color(0.2f, 0.8f, 1f, 0.8f);
+            UnityEditor.Handles.Label(topEntryPoint.position + Vector3.up * 0.2f, "TopEntry");
         }
     }
 #endif

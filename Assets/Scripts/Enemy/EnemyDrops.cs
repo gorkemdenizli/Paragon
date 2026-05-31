@@ -52,7 +52,10 @@ public class EnemyDrops : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            int ammo = Random.Range(minAmmoPerOrb, maxAmmoPerOrb + 1);
+            int bossMin = EnemySpawnManager.BossAmmoDropMin;
+            int ammo = bossMin > 0
+                ? Random.Range(bossMin, EnemySpawnManager.BossAmmoDropMax + 1)
+                : Random.Range(minAmmoPerOrb, maxAmmoPerOrb + 1);
 
             GameObject orbObj = Instantiate(ammoOrbPrefab, position, Quaternion.identity);
             if (orbObj.TryGetComponent(out AmmoOrbPickup orb))

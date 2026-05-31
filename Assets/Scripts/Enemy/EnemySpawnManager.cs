@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class EnemySpawnManager : MonoBehaviour
 {
+    public static EnemySpawnManager instance;
+
     [Header("Spawn Points")]
     [SerializeField] private EnemySpawnPoint[] spawnPoints;
 
@@ -13,6 +15,10 @@ public class EnemySpawnManager : MonoBehaviour
     [Tooltip("Layers checked for overlap at spawn position (e.g. Enemy + Ground + Obstacle).")]
     [SerializeField] private LayerMask spawnBlockingLayers;
 
+    [Header("Boss Battle")]
+    [Tooltip("During boss battle, proximity spawn stops when this many enemies are alive (regardless of RunDifficultyManager's cap).")]
+    [SerializeField] private int bossBattleMaxAlive = 20;
+
     [Header("Player Proximity Spawn")]
     [SerializeField] private bool enableProximitySpawn = true;
     [SerializeField] private GameObject proximityEnemyPrefab;
@@ -23,13 +29,28 @@ public class EnemySpawnManager : MonoBehaviour
     [SerializeField] private Vector2 noEnemyBoxSize = new Vector2(24f, 10f);
     [Tooltip("Seconds without nearby enemies before proximity spawn triggers.")]
     [SerializeField] private float noEnemyTimeout = 5f;
-    [Tooltip("Horizontal distance from player where proximity enemies spawn.")]
-    [SerializeField] private float proximitySpawnDistance = 4f;
+    [Tooltip("Minimum horizontal distance from player where proximity enemies spawn.")]
+    [SerializeField] private float proximitySpawnMinDistance = 5f;
+    [Tooltip("Maximum horizontal distance from player where proximity enemies spawn.")]
+    [SerializeField] private float proximitySpawnMaxDistance = 9f;
     [SerializeField] private LayerMask enemyLayer;
 
     private Transform _player;
     private float _noEnemyTimer;
     private float _proximityCooldown;
+
+    // Boss battle state
+    private bool _bossBattleMode;
+    private int  _bossAmmoDropMin;
+    private int  _bossAmmoDropMax;
+
+    public static int BossAmmoDropMin => instance != null && instance._bossBattleMode ? instance._bossAmmoDropMin : -1;
+    public static int BossAmmoDropMax => instance != null && instance._bossBattleMode ? instance._bossAmmoDropMax : -1;
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
@@ -42,6 +63,19 @@ public class EnemySpawnManager : MonoBehaviour
             if (sp != null)
                 sp._timer = Random.Range(0f, sp.GetCurrentSingleInterval());
         }
+    }
+
+    public void StartBossBattleMode(int ammoMin, int ammoMax, float firstSpawnDelay = 6f)
+    {
+        _bossBattleMode  = true;
+        _bossAmmoDropMin = ammoMin;
+        _bossAmmoDropMax = ammoMax;
+
+        foreach (var sp in spawnPoints)
+            if (sp != null) sp.isEnabled = false;
+
+        enableProximitySpawn = true;
+        _proximityCooldown   = firstSpawnDelay;
     }
 
     void Update()
@@ -84,16 +118,18 @@ public class EnemySpawnManager : MonoBehaviour
             return;
         }
 
-        bool hasNearbyEnemies = Physics2D.OverlapBox(_player.position, noEnemyBoxSize, 0f, enemyLayer);
-
-        if (hasNearbyEnemies)
+        // Boss battle mode: skip "no nearby enemies" check entirely
+        if (!_bossBattleMode)
         {
-            _noEnemyTimer = 0f;
-            return;
+            bool hasNearbyEnemies = Physics2D.OverlapBox(_player.position, noEnemyBoxSize, 0f, enemyLayer);
+            if (hasNearbyEnemies)
+            {
+                _noEnemyTimer = 0f;
+                return;
+            }
+            _noEnemyTimer += Time.deltaTime;
+            if (_noEnemyTimer < noEnemyTimeout) return;
         }
-
-        _noEnemyTimer += Time.deltaTime;
-        if (_noEnemyTimer < noEnemyTimeout) return;
 
         _proximityCooldown -= Time.deltaTime;
         if (_proximityCooldown > 0f) return;
@@ -106,17 +142,22 @@ public class EnemySpawnManager : MonoBehaviour
     {
         if (proximityEnemyPrefab == null) return;
 
-        int maxAlive = RunDifficultyManager.instance?.CurrentMaxAliveEnemies ?? int.MaxValue;
-        if (EnemyHealthController.AliveCount >= maxAlive) return;
+        int effectiveMax = _bossBattleMode
+            ? bossBattleMaxAlive
+            : (RunDifficultyManager.instance?.CurrentMaxAliveEnemies ?? int.MaxValue);
 
-        float dir = Random.value > 0.5f ? 1f : -1f;
-        Vector2 spawnPos = (Vector2)_player.position + new Vector2(dir * proximitySpawnDistance, 0f);
+        if (EnemyHealthController.AliveCount >= effectiveMax) return;
 
         for (int i = 0; i < proximityEnemiesPerSpawn; i++)
         {
-            if (EnemyHealthController.AliveCount >= maxAlive) break;
-            var inst = Instantiate(proximityEnemyPrefab, spawnPos, Quaternion.identity);
+            if (EnemyHealthController.AliveCount >= effectiveMax) break;
+            float eachDir  = Random.value > 0.5f ? 1f : -1f;
+            float eachDist = Random.Range(proximitySpawnMinDistance, proximitySpawnMaxDistance);
+            Vector2 eachPos = (Vector2)_player.position + new Vector2(eachDir * eachDist, 0f);
+            var inst = Instantiate(proximityEnemyPrefab, eachPos, Quaternion.identity);
             RunDifficultyManager.instance?.ApplyScalingIfEligible(proximityEnemyPrefab, inst);
+            if (_bossBattleMode)
+                inst.GetComponent<EnemyLadderNavigator>()?.SetUseLadders(false);
         }
     }
 

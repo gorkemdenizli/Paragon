@@ -31,7 +31,7 @@ TagManager:
   - Background Decor
   - Ladder
   - Platform
-  - 
+  - Gate
   - 
   - 
   - 
@@ -63,6 +63,9 @@ TagManager:
     locked: 0
   - name: Decor
     uniqueID: 1870837175
+    locked: 0
+  - name: Pickup
+    uniqueID: 3904589911
     locked: 0
   - name: Player
     uniqueID: 2226482431

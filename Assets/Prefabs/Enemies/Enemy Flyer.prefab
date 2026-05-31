@@ -277,6 +277,13 @@ MonoBehaviour:
   usePersonalChaseOffset: 1
   minChaseOffsetFromPlayer: 0.35
   maxChaseOffsetFromPlayer: 1.4
+  useCrowdSeparation: 1
+  enemyAvoidanceLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  separationRadius: 1.2
+  separationWeight: 0.5
+  maxNearbyEnemies: 6
 --- !u!114 &8395143723609493639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,7 +422,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1112297635
-  m_SortingLayer: 6
+  m_SortingLayer: 13
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2641295596324315248, guid: 177ced63b0ffba5469c2842fd6f5d860, type: 3}
@@ -531,7 +538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa0b8a4675fa9bc498fcb2917c350c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DamagePlayer
-  damageAmount: 10
+  damageAmount: 15
   destroyOnDamage: 0
   destroyEffect: {fileID: 0}
   damageTickInterval: 1

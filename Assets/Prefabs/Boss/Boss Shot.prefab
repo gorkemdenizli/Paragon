@@ -81,8 +81,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 882136341
+  m_SortingLayer: 11
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -5009484654584983362, guid: d762e3f43ad23c546ae0c3f2d6a4444a, type: 3}
@@ -206,3 +206,4 @@ MonoBehaviour:
   theRB: {fileID: 8840482105928687621}
   impactEffect: {fileID: 793485701807386139, guid: 40c29baf784dc32478fc56a471496eeb, type: 3}
   damageAmount: 10
+  aimOffset: {x: 0, y: -1.5}

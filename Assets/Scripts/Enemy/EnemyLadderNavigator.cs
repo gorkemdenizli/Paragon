@@ -30,6 +30,8 @@ public class EnemyLadderNavigator : MonoBehaviour
     [Tooltip("Downward ray length used to check whether the player is standing on ground.")]
     [SerializeField] private float playerGroundCheckDistance            = 0.8f;
     [SerializeField] private bool  enableDebugLogs                      = false;
+    [Tooltip("Enemy must chase directly this many seconds before considering a ladder. Prevents freshly-spawned enemies from immediately running to a ladder instead of chasing on foot.")]
+    [SerializeField] private float minChaseDurationBeforeLadder         = 2.5f;
 
     private Rigidbody2D                _rb;
     private EnemyGroundChaseController _chase;
@@ -42,6 +44,7 @@ public class EnemyLadderNavigator : MonoBehaviour
     private float       _ladderSearchTimer;
     private float       _originalGravity;
     private float       _reentryBlock;
+    private float       _chaseDuration;
 
     void Awake()
     {
@@ -63,6 +66,11 @@ public class EnemyLadderNavigator : MonoBehaviour
         if (_reentryBlock > 0f) _reentryBlock -= Time.deltaTime;
 
         TryCachePlayer();
+
+        // Track time spent actively chasing on foot (not mid-ladder).
+        // Only count when in None state and currently chasing the player.
+        if (_state == LadderState.None && _chase != null && _chase.IsChasing)
+            _chaseDuration += Time.deltaTime;
 
         switch (_state)
         {
@@ -126,6 +134,7 @@ public class EnemyLadderNavigator : MonoBehaviour
     {
         if (_player == null || _reentryBlock > 0f) return;
         if (_chase != null && !_chase.IsChasing) return;
+        if (_chaseDuration < minChaseDurationBeforeLadder) return;
 
         _ladderSearchTimer -= Time.deltaTime;
         if (_ladderSearchTimer > 0f) return;
@@ -278,7 +287,10 @@ public class EnemyLadderNavigator : MonoBehaviour
         }
         _state        = LadderState.None;
         _targetLadder = null;
+        _chaseDuration = 0f;
     }
+
+    public void SetUseLadders(bool value) => useLadders = value;
 
     void OnDisable()  { if (_state != LadderState.None) RestoreAfterClimb(); }
     void OnDestroy()  { if (_state != LadderState.None) RestoreAfterClimb(); }

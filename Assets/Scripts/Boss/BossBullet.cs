@@ -6,11 +6,13 @@ public class BossBullet : MonoBehaviour
     [SerializeField] private Rigidbody2D theRB;
     [SerializeField] private GameObject impactEffect;
     [SerializeField] private int damageAmount;
+    [Tooltip("World-space offset added to the player's transform position before aiming. Increase Y to target the player's center or chest instead of feet.")]
+    [SerializeField] private Vector2 aimOffset = Vector2.zero;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Vector3 directionToPlayer = transform.position - PlayerHealthController.instance.transform.position;
+        Vector3 target = PlayerHealthController.instance.transform.position + (Vector3)aimOffset;
+        Vector3 directionToPlayer = transform.position - target;
         float angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
@@ -21,7 +23,9 @@ public class BossBullet : MonoBehaviour
         theRB.linearVelocity = -transform.right * bulletSpeed;
     }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        public void SetDamage(int dmg) => damageAmount = dmg;
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {

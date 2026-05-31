@@ -80,7 +80,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -2068484865
-  m_SortingLayer: 6
+  m_SortingLayer: 8
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2311659948842064771, guid: 7189afe59e1c9324bbcfa0e1e7aebca9, type: 3}
@@ -264,7 +264,7 @@ MonoBehaviour:
   runSpeed: 6
   groundAcceleration: 80
   groundDeceleration: 70
-  jumpForce: 19
+  jumpForce: 12
   jumpCoyoteTime: 0.12
   jumpBufferTime: 0.15
   maxExtraJumps: 1
@@ -498,7 +498,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1253370059
-  m_SortingLayer: 8
+  m_SortingLayer: 10
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 0}

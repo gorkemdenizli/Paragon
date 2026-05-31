@@ -11,10 +11,11 @@ public class RespawnController : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            if (transform.parent != null) transform.SetParent(null);
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
-        } 
-        else 
+        }
+        else
         {
             Destroy(gameObject);
         }

@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
 
     private Camera mainCam;
     private float originalGravity;
-    private GateController gate;
+    private BossSpawnerController gate;
 
     private Vector2 moveInput;
     private float lastGroundedTime = -100f;
@@ -157,7 +157,7 @@ public class PlayerController : MonoBehaviour
             SetAllReferenceActionsEnabled(true);
 
         canMove = true;
-        gate = FindFirstObjectByType<GateController>();
+        gate = FindFirstObjectByType<BossSpawnerController>();
     }
 
     // cache camera gravity abilities gate jump charges
@@ -166,7 +166,7 @@ public class PlayerController : MonoBehaviour
         mainCam = Camera.main;
         originalGravity = theRB.gravityScale;
         abilities = GetComponent<PlayerAbilityTracker>();
-        gate = FindFirstObjectByType<GateController>();
+        gate = FindFirstObjectByType<BossSpawnerController>();
         canMove = true;
         extraJumpsLeft = maxExtraJumps;
         currentGrenades = maxGrenades;
@@ -576,7 +576,7 @@ public class PlayerController : MonoBehaviour
     {
         if (jumpBufferTimer <= 0f || !canMove || groundPoint == null)
             return;
-        if (_climbController != null && _climbController.IsOnLadder) return;
+        if (_climbController != null && _climbController.IsClimbing) return;
 
         bool canGroundJump = isOnGround || (Time.time - lastGroundedTime <= jumpCoyoteTime);
         if (canGroundJump)

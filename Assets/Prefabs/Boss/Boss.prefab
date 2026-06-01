@@ -246,8 +246,8 @@ MonoBehaviour:
   bullet: {fileID: 1847370571156216257, guid: ff075d8e8d8625f41a1f06f84ceca41b, type: 3}
   shotPoint: {fileID: 8791104022528094661}
   spawnAbovePlayerYMin: 3
-  spawnAbovePlayerYMax: 7
-  spawnXRange: 10
+  spawnAbovePlayerYMax: 5
+  spawnXRange: 8
 --- !u!114 &8541236288222862346
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -46,6 +46,7 @@ public class EnemyLadderNavigator : MonoBehaviour
     private LadderZone  _targetLadder;
     private float       _ladderSearchTimer;
     private float       _originalGravity;
+    private bool        _gravityCached;
     private float       _reentryBlock;
     private float       _chaseDuration;
     private float       _approachTimer;
@@ -59,6 +60,11 @@ public class EnemyLadderNavigator : MonoBehaviour
 
         foreach (var col in GetComponentsInChildren<Collider2D>())
             if (!col.isTrigger) { _bodyCollider = col; break; }
+
+        // Gerçek gravity'yi bir kez, daha 0'lanmadan cache'le. Böylece ladder'a yürürken
+        // (climb başlamadan) abort olsa bile restore gerçek değere döner, 0'a değil.
+        _originalGravity = _rb != null ? _rb.gravityScale : 1f;
+        _gravityCached   = true;
     }
 
     void Start() => TryCachePlayer();
@@ -241,11 +247,7 @@ public class EnemyLadderNavigator : MonoBehaviour
     void StartClimbingUp()
     {
         _state = LadderState.ClimbingUp;
-        if (disableGravityWhileClimbing)
-        {
-            _originalGravity = _rb.gravityScale;
-            _rb.gravityScale = 0f;
-        }
+        SetClimbingPhysics();
         _targetLadder?.gate?.IgnoreForCollider(_bodyCollider);
         if (_chase != null) _chase.SuppressPlayerPlatformJump = false;
         if (enableDebugLogs) Debug.Log("[LadderNav] Started climbing UP.");
@@ -254,11 +256,7 @@ public class EnemyLadderNavigator : MonoBehaviour
     void StartClimbingDown()
     {
         _state = LadderState.ClimbingDown;
-        if (disableGravityWhileClimbing)
-        {
-            _originalGravity = _rb.gravityScale;
-            _rb.gravityScale = 0f;
-        }
+        SetClimbingPhysics();
         _targetLadder?.gate?.IgnoreForCollider(_bodyCollider);
         if (_chase != null) { _chase.ExternalControlActive = true; _chase.SuppressPlayerPlatformJump = false; }
         if (enableDebugLogs) Debug.Log("[LadderNav] Started climbing DOWN.");
@@ -288,7 +286,7 @@ public class EnemyLadderNavigator : MonoBehaviour
     void RestoreAfterClimb()
     {
         _targetLadder?.gate?.RestoreForCollider(_bodyCollider);
-        if (disableGravityWhileClimbing && _rb != null) _rb.gravityScale = _originalGravity;
+        RestoreNormalPhysics();
         if (_chase != null)
         {
             _chase.ExternalControlActive      = false;
@@ -297,6 +295,29 @@ public class EnemyLadderNavigator : MonoBehaviour
         _state        = LadderState.None;
         _targetLadder = null;
         _chaseDuration = 0f;
+    }
+
+    // ── Climb fizik yardımcıları (gravity'yi asla 0'da bırakma) ───────────────────
+
+    void CacheOriginalGravityIfNeeded()
+    {
+        if (_gravityCached || _rb == null) return;
+        _originalGravity = _rb.gravityScale;
+        _gravityCached   = true;
+    }
+
+    void SetClimbingPhysics()
+    {
+        if (!disableGravityWhileClimbing || _rb == null) return;
+        CacheOriginalGravityIfNeeded();
+        _rb.gravityScale = 0f;
+    }
+
+    void RestoreNormalPhysics()
+    {
+        if (_rb != null && _gravityCached && disableGravityWhileClimbing)
+            _rb.gravityScale = _originalGravity;   // her zaman GERÇEK değere döner, asla 0'a değil
+        if (enableDebugLogs) Debug.Log($"[LadderNav] Gravity restored → {_originalGravity}.", this);
     }
 
     public void SetUseLadders(bool value) => useLadders = value;

@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
+// Walker düşman: SADECE yatay chase + küçük basamak/tek-tile engel zıplaması.
+// Üst/alt platforma geçiş (kat değiştirme) EnemyLadderNavigator'ın işidir; burada
+// player platformuna körlemesine zıplama, stuck-recovery veya Y-velocity sıfırlama YOK.
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyGroundChaseController : MonoBehaviour
 {
@@ -26,7 +29,10 @@ public class EnemyGroundChaseController : MonoBehaviour
     public bool  IsGrounded             => _isGrounded;
 
     public bool ExternalControlActive      { get; set; }
+
+    // Vestigial — ladder navigator hâlâ set ediyor; API uyumu için tutuldu.
     public bool SuppressPlayerPlatformJump { get; set; }
+
     public bool IsChasing                  => _isChasing;
     public LayerMask GroundLayers          => groundLayers;
 
@@ -45,33 +51,35 @@ public class EnemyGroundChaseController : MonoBehaviour
     [SerializeField] private float minHeightToJump = 0.35f;
     [SerializeField] private float jumpCooldown = 0.35f;
 
-    [Tooltip("Platformun üzerine rahatça çıkabilmesi için eklenen ekstra yükseklik payı.")]
-    [SerializeField] private float jumpHeightBuffer = 0.6f;
+    [Tooltip("Engelin üzerine rahatça çıkabilmesi için eklenen ekstra yükseklik payı.")]
+    [SerializeField] private float jumpHeightBuffer = 0.35f;
 
-    [Tooltip("Oyuncu platformu path'i açıksa yatay yakınlık eşiği.")]
-    [SerializeField] private float jumpWhenCloseHorizontalDistance = 1.5f;
+    [Tooltip("Zıplama bu süreden önce 'landed' sayılmaz; jump başında ground ray hâlâ zemini görürse erken iniş bug'ını önler.")]
+    [SerializeField] private float minJumpTimeBeforeLanding = 0.12f;
 
     [Header("Obstacle Jump")]
-    [Tooltip("Açıksa düşman, önündeki tırmanılabilir duvar/basamak için player'dan bağımsız zıplar.")]
+    [Tooltip("Açıksa düşman, önündeki tırmanılabilir küçük duvar/basamak için zıplar.")]
     [SerializeField] private bool jumpOverFrontObstacles = true;
-
-    [Tooltip("Açıksa önünde duvar olmasa bile oyuncu yukarıdaki platformdaysa yaklaştığında zıplar.")]
-    [SerializeField] private bool jumpTowardPlayerPlatform = false;
 
     [Tooltip("Bundan daha alçak engeller için zıplama denemez.")]
     [SerializeField] private float minObstacleHeightToJump = 0.08f;
 
-    [Tooltip("Düşmanın önündeki engel için deneyeceği maksimum yükseklik.")]
-    [SerializeField] private float maxObstacleJumpHeight = 2.5f;
+    [Tooltip("Düşmanın önündeki engel için deneyeceği maksimum yükseklik. Kat değiştirme ladder işi olduğundan küçük tutulur.")]
+    [SerializeField] private float maxObstacleJumpHeight = 1.6f;
 
     [Tooltip("Duvar hit noktasının biraz ilerisine, üst yüzeyi bulmak için atılan dikey ray offset'i.")]
     [SerializeField] private float obstacleTopProbeForwardOffset = 0.2f;
 
-    [Tooltip("Üst yüzeyi arayan ray'in duvar yüzünden başlayacağı ekstra yükseklik payı.")]
-    [SerializeField] private float obstacleTopProbeExtraHeight = 0.15f;
-
     [Tooltip("Wall ray origin'i facing yönünde bu kadar geri çekilir (collider içinden çıkmak için).")]
     [SerializeField] private float wallRayStartInset = 0.08f;
+
+    [Header("Air Control")]
+    [Tooltip("Açıksa düşman havadayken de (sınırlı) yön kontrolü yapar. Default kapalı: havada chase yok.")]
+    [SerializeField] private bool  allowAirSteering     = false;
+    [Tooltip("allowAirSteering açıksa havadaki yatay kontrol çarpanı (0 = yok).")]
+    [SerializeField] private float airControlMultiplier = 0f;
+    [Tooltip("allowAirSteering kapalıyken havada X hızını 0'a çeken damping (0 = momentum aynen korunur).")]
+    [SerializeField] private float airHorizontalDamping = 0f;
 
     [Header("Platforms")]
     [Tooltip("Sadece gerçekten üzerinde durulabilen zemin/platform layer'ları olmalı. Player/Enemy/Hitbox ekleme.")]
@@ -80,19 +88,23 @@ public class EnemyGroundChaseController : MonoBehaviour
     [Tooltip("Düşmanın kafasını çarpacağı katı tavan layer'ları. Boş bırakılırsa groundLayers kullanılır.")]
     [SerializeField] private LayerMask ceilingBlockLayers;
 
-    [SerializeField] private float playerGroundProbeDistance = 20f;
-    [SerializeField] private float playerFeetProbeOffset = 0.6f;
-
     [Header("Raycasts")]
+    [Tooltip("Enemy'nin ayak hizasında / hemen altında olmalı. Çok yukarıdaysa düşman havadayken yanlışlıkla grounded sayılır.")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private Transform ceilingCheck;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private Transform ledgeCheck;
 
-    [SerializeField] private float groundCheckDistance = 0.5f;
+    [SerializeField] private float groundCheckDistance = 0.2f;
     [SerializeField] private float ceilingCheckDistance = 0.5f;
-    [SerializeField] private float wallProbeDistance = 0.4f;
+    [SerializeField] private float wallProbeDistance = 0.45f;
     [SerializeField] private float ledgeProbeDistance = 0.6f;
+
+    [Tooltip("Açıksa grounded kontrolü tek ray yerine ayak altında küçük bir box overlap ile yapılır (daire collider için daha stabil). groundCheck foot hizasında olmalı; değilse yanlış grounded verebilir.")]
+    [SerializeField] private bool    useBoxGroundCheck = false;
+    [SerializeField] private Vector2 groundBoxSize     = new Vector2(0.45f, 0.08f);
+    [Tooltip("Box merkezinin groundCheck'e göre dikey ofseti (negatif = aşağı).")]
+    [SerializeField] private float   groundBoxOffsetY  = -0.05f;
 
     [Header("Combat")]
     [Tooltip("Açıksa hasar trigger zone içindeyken zıplamaz.")]
@@ -114,20 +126,13 @@ public class EnemyGroundChaseController : MonoBehaviour
     [SerializeField] private int       maxNearbyEnemies    = 8;
     private Collider2D[]  _separationBuffer;
     private ContactFilter2D _separationFilter;
-    private Collider2D    _bodyCollider;
 
-    [Header("Stuck Recovery")]
-    [Tooltip("Açıksa duvara dayanıp ilerleyemeyen düşman, üstü açıksa kurtarma zıplaması dener.")]
-    [SerializeField] private bool  enableStuckHopRecovery = true;
-    [Tooltip("Duvara dayalı ve yatayda ilerlemeden bu kadar saniye geçince kurtarma zıplaması denenir.")]
-    [SerializeField] private float stuckRecoverTime       = 0.6f;
-    [Tooltip("Kurtarma zıplamasının hedef yüksekliği (ulaşılabilir sınırla kırpılır).")]
-    [SerializeField] private float stuckHopHeight         = 2f;
-    private float _stuckTimer;
+    [Header("Debug")]
+    [Tooltip("Açıksa obstacle jump kararları (başarı + ret nedeni) Console'a loglanır.")]
+    [SerializeField] private bool enableJumpDebugLogs = false;
 
     private Rigidbody2D _rb;
     private Transform _player;
-    private Transform _playerGroundCheck;
     private EnemyKnockback _knockback;
     private DamagePlayer _damagePlayer;
 
@@ -136,11 +141,17 @@ public class EnemyGroundChaseController : MonoBehaviour
     private bool _isChasing;
     private bool _isJumping;
     private float _lastJumpTime = -100f;
+    private float _jumpStartTime = -100f;
+    private float _jumpMoveDir;
     private bool _isGrounded;
     private bool _isCeilingAbove;
 
     private bool _isEscapingCeiling;
     private float _lockedFaceDir;
+
+    private string _jumpRejectReason;
+    private bool _groundCheckWarned;
+    private float _normalGravityScale = 1f;
 
     void Awake()
     {
@@ -159,17 +170,16 @@ public class EnemyGroundChaseController : MonoBehaviour
         _separationFilter.SetLayerMask(enemyAvoidanceLayers);
         _separationFilter.useTriggers = true;
 
-        // Crowd separation, enemy↔enemy fiziksel çarpışmanın YERİNE geçer (yatay steering).
-        // Gövde collider'ının diğer enemy'lerle fiziksel çarpışmasını kapat ki kalabalıkta
-        // üst üste binip yukarı fırlama (uçma) olmasın. Sadece gövde etkilenir; trigger zone,
-        // ground ve player çarpışmaları aynı kalır.
-        if (useCrowdSeparation)
-        {
-            foreach (var col in GetComponentsInChildren<Collider2D>())
-                if (!col.isTrigger) { _bodyCollider = col; break; }
-            if (_bodyCollider != null)
-                _bodyCollider.excludeLayers |= enemyAvoidanceLayers;
-        }
+        // Gerçek gravity'yi cache'le — Update'teki sanity-net, gravity yanlışlıkla 0'da
+        // takılırsa (örn. bir ladder abort sızıntısı) buna geri döner.
+        _normalGravityScale = _rb != null ? _rb.gravityScale : 1f;
+
+        // NOT: Enemy↔Enemy fiziksel çarpışması Physics2D Layer Collision Matrix'ten yönetilir.
+        // Runtime'da collider.excludeLayers DEĞİŞTİRİLMEZ — yanlış bir maske Ground/Platform
+        // collision'ını kapatıp "havada yürüme"ye yol açabilirdi. Crowd separation yalnız
+        // OverlapCircle steering ile çalışır; fiziksel collision'a dokunmaz.
+        if (useCrowdSeparation && (enemyAvoidanceLayers.value & groundLayers.value) != 0)
+            Debug.LogWarning("[EnemyWalker] enemyAvoidanceLayers contains GroundLayers. This can break ground collision.", this);
     }
 
     void Start()
@@ -180,6 +190,16 @@ public class EnemyGroundChaseController : MonoBehaviour
     void Update()
     {
         TryCachePlayer();
+
+        // Gravity sanity-net: ladder kontrolde DEĞİLKEN gravity 0'da takılı kalmışsa düzelt.
+        // ("Havada yürüme"yi kesen kalkan; ladder climb'da gravity 0 normal olduğundan
+        // yalnız !ExternalControlActive iken müdahale eder → ladder ile çakışmaz.)
+        if (!ExternalControlActive && _rb != null && _normalGravityScale > 0f
+            && Mathf.Approximately(_rb.gravityScale, 0f))
+        {
+            _rb.gravityScale = _normalGravityScale;
+            Debug.LogWarning("[EnemyWalker] gravityScale is 0 while not climbing — restored (hover guard).", this);
+        }
 
         if (_player == null)
         {
@@ -220,16 +240,20 @@ public class EnemyGroundChaseController : MonoBehaviour
         if (_knockback != null && _knockback.IsActive)
             return;
 
+        // Ladder navigator kontrolü aldıysa ground chase tamamen pasif.
         if (ExternalControlActive)
             return;
 
         UpdateSensorState();
+        UpdateJumpLandingState();
 
-        if (_isJumping && _isGrounded && _rb.linearVelocity.y <= 0.05f)
-            _isJumping = false;
-
-        if (_isGrounded && !_isJumping && _rb.linearVelocity.y > 0.5f)
-            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0f);
+        // Havadayken chase/separation/jump YOK — düşman havada player'a yönelmesin,
+        // mevcut X momentumuyla (veya hafif damping) balistik düşsün.
+        if (!_isGrounded)
+        {
+            ApplyAirBehavior();
+            return;
+        }
 
         float chaseDir = GetFaceDir();
         float sepInput = GetSeparationInput();
@@ -238,7 +262,40 @@ public class EnemyGroundChaseController : MonoBehaviour
         ApplyHorizontalMove(finalDir);
 
         TryJump(chaseDir);
-        TryStuckHopRecovery(chaseDir);
+    }
+
+    // Jump 'landed' kontrolü — min süre geçmeden tetiklenmez (jump başında ground ray
+    // hâlâ zemini görüyor olabilir; bu da _isJumping'i erken false yapardı).
+    void UpdateJumpLandingState()
+    {
+        if (_isJumping
+            && Time.time >= _jumpStartTime + minJumpTimeBeforeLanding
+            && _isGrounded
+            && _rb.linearVelocity.y <= 0.05f)
+        {
+            _isJumping = false;
+            if (enableJumpDebugLogs) Debug.Log("[GroundChase] Jump landed.", this);
+        }
+    }
+
+    // Havadaki yatay davranış. Default: hiç müdahale yok (X momentumu korunur).
+    void ApplyAirBehavior()
+    {
+        if (!allowAirSteering)
+        {
+            if (airHorizontalDamping > 0f)
+            {
+                float nx = Mathf.MoveTowards(_rb.linearVelocity.x, 0f, airHorizontalDamping * Time.fixedDeltaTime);
+                _rb.linearVelocity = new Vector2(nx, _rb.linearVelocity.y);
+            }
+            return;
+        }
+
+        // Air steering açıksa bile player'a göre DEĞİL, mevcut bakış yönüne göre ve çok sınırlı.
+        float dir = GetCurrentFacingDir();
+        float tx  = dir * moveSpeed * airControlMultiplier;
+        float nax = Mathf.MoveTowards(_rb.linearVelocity.x, tx, horizontalAcceleration * airControlMultiplier * Time.fixedDeltaTime);
+        _rb.linearVelocity = new Vector2(nax, _rb.linearVelocity.y);
     }
 
     void TryCachePlayer()
@@ -247,10 +304,7 @@ public class EnemyGroundChaseController : MonoBehaviour
             return;
 
         if (PlayerHealthController.instance != null)
-        {
             _player = PlayerHealthController.instance.transform;
-            _playerGroundCheck = _player.Find("Ground Check Point");
-        }
     }
 
     void StartChasing()
@@ -284,12 +338,15 @@ public class EnemyGroundChaseController : MonoBehaviour
         Vector2 groundOrigin = GetGroundRayOrigin();
         Vector2 ceilingOrigin = GetCeilingRayOrigin();
 
-        _isGrounded = Physics2D.Raycast(
-            groundOrigin,
-            Vector2.down,
-            groundCheckDistance,
-            groundLayers
-        );
+        if (useBoxGroundCheck)
+        {
+            Vector2 boxCenter = groundOrigin + new Vector2(0f, groundBoxOffsetY);
+            _isGrounded = Physics2D.OverlapBox(boxCenter, groundBoxSize, 0f, groundLayers);
+        }
+        else
+        {
+            _isGrounded = Physics2D.Raycast(groundOrigin, Vector2.down, groundCheckDistance, groundLayers);
+        }
 
         _isCeilingAbove = Physics2D.Raycast(
             ceilingOrigin,
@@ -307,6 +364,8 @@ public class EnemyGroundChaseController : MonoBehaviour
         float dx = targetPlayerX - transform.position.x;
         float dy = _player.position.y - transform.position.y;
 
+        // Tavan altındayken ve player yukarıdayken: önündeki aşılamaz duvara dayanıp donmamak
+        // için yön kilitle/çevir. Böylece düşman platform altından çıkıp ladder'a yönelebilir.
         if (_isCeilingAbove && dy > 1f)
         {
             if (!_isEscapingCeiling)
@@ -393,38 +452,34 @@ public class EnemyGroundChaseController : MonoBehaviour
         return facingRight ? 1f : -1f;
     }
 
+    // ── Obstacle jump (tek zıplama yolu) ─────────────────────────────────────────
+
     void TryJump(float faceDir)
     {
         if (!CanStartJump())
-            return;
-
-        float jumpHeight;
-
-        if (TryGetFrontObstacleJumpHeight(faceDir, out jumpHeight))
         {
-            ApplyJumpForHeight(jumpHeight);
+            if (enableJumpDebugLogs && IsWallAhead(faceDir))
+                Debug.Log($"[GroundChase] Jump blocked: {_jumpRejectReason}", this);
             return;
         }
 
-        if (TryGetPlayerPlatformJumpHeight(faceDir, out jumpHeight))
-            ApplyJumpForHeight(jumpHeight);
+        if (TryGetFrontObstacleJumpHeight(faceDir, out float jumpHeight))
+            ApplyJumpForHeight(jumpHeight, faceDir);
+        else if (enableJumpDebugLogs && IsWallAhead(faceDir))
+            Debug.Log($"[GroundChase] Obstacle jump rejected: {_jumpRejectReason}", this);
     }
 
     bool CanStartJump()
     {
-        if (!_isGrounded)
-            return false;
-
-        if (Mathf.Abs(_rb.linearVelocity.y) > 0.05f)
-            return false;
-
-        if (Time.time < _lastJumpTime + jumpCooldown)
-            return false;
+        if (!_isGrounded)            { _jumpRejectReason = "not grounded"; return false; }
+        if (Mathf.Abs(_rb.linearVelocity.y) > 0.05f) { _jumpRejectReason = "vy not settled"; return false; }
+        if (Time.time < _lastJumpTime + jumpCooldown) { _jumpRejectReason = "cooldown"; return false; }
+        if (_isCeilingAbove)        { _jumpRejectReason = "ceiling blocked"; return false; }
 
         if (blockJumpWhileDamagingPlayer
             && _damagePlayer != null
             && _damagePlayer.IsPlayerInContact)
-            return false;
+        { _jumpRejectReason = "damaging player"; return false; }
 
         return true;
     }
@@ -434,28 +489,26 @@ public class EnemyGroundChaseController : MonoBehaviour
         jumpHeight = 0f;
 
         if (!jumpOverFrontObstacles)
-            return false;
+        { _jumpRejectReason = "obstacle jump disabled"; return false; }
 
-        RaycastHit2D wallHit;
-
-        if (!TryGetWallHitAhead(faceDir, out wallHit))
-            return false;
+        if (!TryGetWallHitAhead(faceDir, out RaycastHit2D wallHit))
+        { _jumpRejectReason = "no wall ahead"; return false; }
 
         float feetY = GetFeetY();
 
         if (!TryFindObstacleTopY(wallHit, faceDir, feetY, out float topY))
-            return false;
+        { _jumpRejectReason = "no obstacle top found"; return false; }
 
         float obstacleHeight = topY - feetY;
 
         if (obstacleHeight < minObstacleHeightToJump)
-            return false;
+        { _jumpRejectReason = "obstacle too low"; return false; }
 
         if (obstacleHeight > maxObstacleJumpHeight)
-            return false;
+        { _jumpRejectReason = "obstacle too high (ladder işi)"; return false; }
 
         if (!CanReachJumpHeight(obstacleHeight))
-            return false;
+        { _jumpRejectReason = "cannot reach"; return false; }
 
         jumpHeight = Mathf.Max(obstacleHeight, minHeightToJump);
         return true;
@@ -500,47 +553,7 @@ public class EnemyGroundChaseController : MonoBehaviour
             bestY = hit.point.y;
     }
 
-    bool TryGetPlayerPlatformJumpHeight(float faceDir, out float jumpHeight)
-    {
-        jumpHeight = 0f;
-
-        if (SuppressPlayerPlatformJump)
-            return false;
-
-        if (!jumpTowardPlayerPlatform)
-            return false;
-
-        if (_player == null)
-            return false;
-
-        if (_isCeilingAbove)
-            return false;
-
-        if (!IsPlayerOnChaseSide(faceDir))
-            return false;
-
-        float feetY = GetFeetY();
-        float platformY = GetPlayerPlatformY();
-        float heightDelta = platformY - feetY;
-
-        if (heightDelta < minHeightToJump)
-            return false;
-
-        bool shouldJumpForPlayer =
-            IsAtLedge(faceDir) ||
-            Mathf.Abs(_player.position.x - transform.position.x) < jumpWhenCloseHorizontalDistance;
-
-        if (!shouldJumpForPlayer)
-            return false;
-
-        if (!CanReachJumpHeight(heightDelta))
-            return false;
-
-        jumpHeight = heightDelta;
-        return true;
-    }
-
-    bool ApplyJumpForHeight(float height)
+    bool ApplyJumpForHeight(float height, float jumpDir)
     {
         float gravity = Mathf.Abs(Physics2D.gravity.y * _rb.gravityScale);
 
@@ -556,9 +569,16 @@ public class EnemyGroundChaseController : MonoBehaviour
         float requiredJumpVelocity = Mathf.Sqrt(2f * gravity * targetHeight);
         float finalJumpVelocity = Mathf.Min(requiredJumpVelocity, maxJumpVelocity);
 
-        _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, finalJumpVelocity);
-        _lastJumpTime = Time.time;
-        _isJumping = true;
+        // Kalkışta X momentumunu zıplama yönüne kilitle; havada ApplyAirBehavior bunu korur
+        // (player yönüne göre değişmez).
+        _jumpMoveDir = Mathf.Abs(jumpDir) < 0.01f ? GetCurrentFacingDir() : Mathf.Sign(jumpDir);
+        _rb.linearVelocity = new Vector2(_jumpMoveDir * moveSpeed, finalJumpVelocity);
+        _lastJumpTime  = Time.time;
+        _jumpStartTime = Time.time;
+        _isJumping     = true;
+
+        if (enableJumpDebugLogs)
+            Debug.Log($"[GroundChase] Obstacle jump: height {height:F2}, velocity {finalJumpVelocity:F2}, dir {_jumpMoveDir:F0}", this);
 
         return true;
     }
@@ -585,48 +605,7 @@ public class EnemyGroundChaseController : MonoBehaviour
         return (maxJumpVelocity * maxJumpVelocity) / (2f * gravity) - jumpHeightBuffer;
     }
 
-    // Emniyet ağı: önünde duvar olup yatayda ilerleyemeyen düşman, üstü gerçekten açıksa
-    // bir kurtarma zıplaması yapar. Üstü kapalı (gerçekten çok yüksek duvar) ise boşa
-    // zıplayıp toslamamak için hiç denemez.
-    void TryStuckHopRecovery(float chaseDir)
-    {
-        if (!enableStuckHopRecovery || Mathf.Abs(chaseDir) < 0.01f)
-        {
-            _stuckTimer = 0f;
-            return;
-        }
-
-        bool blocked = _isGrounded
-                       && !_isJumping
-                       && IsWallAhead(chaseDir)
-                       && Mathf.Abs(_rb.linearVelocity.x) < 0.15f;
-
-        if (!blocked)
-        {
-            _stuckTimer = 0f;
-            return;
-        }
-
-        _stuckTimer += Time.fixedDeltaTime;
-        if (_stuckTimer < stuckRecoverTime)
-            return;
-
-        if (!CanStartJump() || _isCeilingAbove)
-            return;
-
-        float hop = Mathf.Min(stuckHopHeight, MaxReachableJumpHeight());
-        if (hop < minHeightToJump)
-            return;
-
-        // Hop apex yüksekliğinde önümüz açık mı? Açıksa duvar bu yükseklikten alçak demektir → zıpla.
-        // Kapalıysa duvar çok yüksek → boşuna zıplama.
-        Vector2 clearOrigin = GetWallRayOrigin(chaseDir) + Vector2.up * (hop + jumpHeightBuffer);
-        if (Physics2D.Raycast(clearOrigin, Vector2.right * chaseDir, wallProbeDistance, groundLayers))
-            return;
-
-        ApplyJumpForHeight(hop);
-        _stuckTimer = 0f;
-    }
+    // ── Sensör yardımcıları ──────────────────────────────────────────────────────
 
     bool TryGetWallHitAhead(float faceDir, out RaycastHit2D hit)
     {
@@ -649,61 +628,12 @@ public class EnemyGroundChaseController : MonoBehaviour
 
     bool IsWallAhead(float faceDir)
     {
-        RaycastHit2D hit;
-        return TryGetWallHitAhead(faceDir, out hit);
+        return TryGetWallHitAhead(faceDir, out _);
     }
 
     bool CanJumpOverFrontObstacle(float faceDir)
     {
-        float jumpHeight;
-        return TryGetFrontObstacleJumpHeight(faceDir, out jumpHeight);
-    }
-
-    bool IsAtLedge(float faceDir)
-    {
-        if (Mathf.Abs(faceDir) < 0.01f)
-            return false;
-
-        Vector2 origin = GetLedgeRayOrigin(faceDir);
-
-        return !Physics2D.Raycast(
-            origin,
-            Vector2.down,
-            ledgeProbeDistance,
-            groundLayers
-        );
-    }
-
-    bool IsPlayerOnChaseSide(float faceDir)
-    {
-        float dx = _player.position.x - transform.position.x;
-
-        return Mathf.Abs(dx) < 0.3f || Mathf.Sign(dx) == faceDir;
-    }
-
-    float GetPlayerPlatformY()
-    {
-        Vector2 probeOrigin = GetPlayerFeetPosition();
-
-        RaycastHit2D hit = Physics2D.Raycast(
-            probeOrigin,
-            Vector2.down,
-            playerGroundProbeDistance,
-            groundLayers
-        );
-
-        if (hit.collider != null)
-            return hit.point.y;
-
-        return probeOrigin.y;
-    }
-
-    Vector2 GetPlayerFeetPosition()
-    {
-        if (_playerGroundCheck != null)
-            return _playerGroundCheck.position;
-
-        return (Vector2)_player.position + Vector2.down * playerFeetProbeOffset;
+        return TryGetFrontObstacleJumpHeight(faceDir, out _);
     }
 
     float GetFeetY()
@@ -711,12 +641,17 @@ public class EnemyGroundChaseController : MonoBehaviour
         if (groundCheck != null)
             return groundCheck.position.y;
 
-        return transform.position.y - playerFeetProbeOffset;
+        WarnNoGroundCheck();
+        return transform.position.y - 0.9f;
     }
 
     Vector2 GetGroundRayOrigin()
     {
-        return groundCheck != null ? groundCheck.position : (Vector2)transform.position;
+        if (groundCheck != null)
+            return groundCheck.position;
+
+        WarnNoGroundCheck();
+        return transform.position;
     }
 
     Vector2 GetCeilingRayOrigin()
@@ -751,44 +686,50 @@ public class EnemyGroundChaseController : MonoBehaviour
         return ceilingBlockLayers.value == 0 ? groundLayers : ceilingBlockLayers;
     }
 
-    void DrawFrontObstacleTopProbeGizmo(float faceDir)
+    void WarnNoGroundCheck()
     {
-        if (!jumpOverFrontObstacles)
+        if (_groundCheckWarned) return;
+        _groundCheckWarned = true;
+        Debug.LogWarning($"[GroundChase] {name}: groundCheck atanmamış — transform.position fallback kullanılıyor (daha az güvenilir).", this);
+    }
+
+    // ── Gizmos ───────────────────────────────────────────────────────────────────
+
+    void DrawObstacleTopProbeGizmo(float faceDir)
+    {
+        if (!jumpOverFrontObstacles || Mathf.Abs(faceDir) < 0.01f)
             return;
 
-        if (Mathf.Abs(faceDir) < 0.01f)
-            return;
-
-        RaycastHit2D wallHit;
-
-        if (!TryGetWallHitAhead(faceDir, out wallHit))
+        if (!TryGetWallHitAhead(faceDir, out RaycastHit2D wallHit))
             return;
 
         float feetY = GetFeetY();
+        float reach = Mathf.Min(MaxReachableJumpHeight(), maxObstacleJumpHeight);
+        if (reach < minObstacleHeightToJump)
+            return;
 
-        Vector2 topProbeOrigin = new Vector2(
-            wallHit.point.x + faceDir * obstacleTopProbeForwardOffset,
-            wallHit.point.y + obstacleTopProbeExtraHeight
-        );
+        float startY = feetY + reach + jumpHeightBuffer + 0.35f;
+        float dist   = startY - (feetY - 0.5f);
+        float baseOff = obstacleTopProbeForwardOffset;
 
-        float probeDistance = maxObstacleJumpHeight + jumpHeightBuffer + 0.5f;
+        Gizmos.color = new Color(0f, 0.4f, 1f, 0.5f);
+        DrawProbeLine(wallHit, faceDir, 0.05f,           startY, dist);
+        DrawProbeLine(wallHit, faceDir, baseOff,         startY, dist);
+        DrawProbeLine(wallHit, faceDir, baseOff + 0.25f, startY, dist);
 
-        RaycastHit2D[] hits = Physics2D.RaycastAll(
-            topProbeOrigin,
-            Vector2.down,
-            probeDistance,
-            groundLayers
-        );
+        if (TryFindObstacleTopY(wallHit, faceDir, feetY, out float topY))
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(new Vector2(wallHit.point.x + faceDir * baseOff, topY), 0.08f);
+        }
+    }
 
-        Vector2 end = topProbeOrigin + Vector2.down * probeDistance;
-        bool foundTop = TryFindObstacleTopY(wallHit, faceDir, feetY, out float topY);
-
-        if (foundTop)
-            end = new Vector2(topProbeOrigin.x, topY);
-
-        Gizmos.color = foundTop ? Color.blue : new Color(0f, 0f, 1f, 0.35f);
-        Gizmos.DrawLine(topProbeOrigin, end);
-        Gizmos.DrawWireSphere(end, 0.07f);
+    void DrawProbeLine(RaycastHit2D wallHit, float faceDir, float forwardOffset, float startY, float dist)
+    {
+        Vector2 o = new Vector2(wallHit.point.x + faceDir * forwardOffset, startY);
+        RaycastHit2D h = Physics2D.Raycast(o, Vector2.down, dist, groundLayers);
+        Vector2 e = h.collider != null ? h.point : o + Vector2.down * dist;
+        Gizmos.DrawLine(o, e);
     }
 
     void OnDrawGizmos()
@@ -799,29 +740,13 @@ public class EnemyGroundChaseController : MonoBehaviour
         Vector2 groundEnd = groundOrigin + Vector2.down * groundCheckDistance;
         Vector2 ceilingEnd = ceilingOrigin + Vector2.up * ceilingCheckDistance;
 
-        RaycastHit2D groundHit = Physics2D.Raycast(
-            groundOrigin,
-            Vector2.down,
-            groundCheckDistance,
-            groundLayers
-        );
-
+        RaycastHit2D groundHit = Physics2D.Raycast(groundOrigin, Vector2.down, groundCheckDistance, groundLayers);
         bool grounded = groundHit.collider != null;
+        if (grounded) groundEnd = groundHit.point;
 
-        if (grounded)
-            groundEnd = groundHit.point;
-
-        RaycastHit2D ceilingHit = Physics2D.Raycast(
-            ceilingOrigin,
-            Vector2.up,
-            ceilingCheckDistance,
-            GetCeilingMask()
-        );
-
+        RaycastHit2D ceilingHit = Physics2D.Raycast(ceilingOrigin, Vector2.up, ceilingCheckDistance, GetCeilingMask());
         bool ceilingAbove = ceilingHit.collider != null;
-
-        if (ceilingAbove)
-            ceilingEnd = ceilingHit.point;
+        if (ceilingAbove) ceilingEnd = ceilingHit.point;
 
         Gizmos.color = grounded ? Color.green : new Color(0f, 1f, 0f, 0.35f);
         Gizmos.DrawLine(groundOrigin, groundEnd);
@@ -836,7 +761,6 @@ public class EnemyGroundChaseController : MonoBehaviour
         if (_player != null)
         {
             float dx = _player.position.x - transform.position.x;
-
             if (Mathf.Abs(dx) > 0.01f)
                 faceDir = Mathf.Sign(dx);
         }
@@ -844,15 +768,8 @@ public class EnemyGroundChaseController : MonoBehaviour
         Vector2 wallOrigin = GetWallRayOrigin(faceDir);
         Vector2 wallEnd = wallOrigin + Vector2.right * faceDir * wallProbeDistance;
 
-        RaycastHit2D wallHit = Physics2D.Raycast(
-            wallOrigin,
-            Vector2.right * faceDir,
-            wallProbeDistance,
-            groundLayers
-        );
-
-        if (wallHit.collider != null)
-            wallEnd = wallHit.point;
+        RaycastHit2D wallHit = Physics2D.Raycast(wallOrigin, Vector2.right * faceDir, wallProbeDistance, groundLayers);
+        if (wallHit.collider != null) wallEnd = wallHit.point;
 
         Gizmos.color = wallHit.collider != null ? Color.cyan : new Color(0f, 1f, 1f, 0.35f);
         Gizmos.DrawLine(wallOrigin, wallEnd);
@@ -861,42 +778,14 @@ public class EnemyGroundChaseController : MonoBehaviour
         Vector2 ledgeOrigin = GetLedgeRayOrigin(faceDir);
         Vector2 ledgeEnd = ledgeOrigin + Vector2.down * ledgeProbeDistance;
 
-        RaycastHit2D ledgeHit = Physics2D.Raycast(
-            ledgeOrigin,
-            Vector2.down,
-            ledgeProbeDistance,
-            groundLayers
-        );
-
-        if (ledgeHit.collider != null)
-            ledgeEnd = ledgeHit.point;
+        RaycastHit2D ledgeHit = Physics2D.Raycast(ledgeOrigin, Vector2.down, ledgeProbeDistance, groundLayers);
+        if (ledgeHit.collider != null) ledgeEnd = ledgeHit.point;
 
         Gizmos.color = ledgeHit.collider == null ? Color.yellow : new Color(1f, 1f, 0f, 0.35f);
         Gizmos.DrawLine(ledgeOrigin, ledgeEnd);
         Gizmos.DrawWireSphere(ledgeEnd, 0.06f);
 
-        DrawFrontObstacleTopProbeGizmo(faceDir);
-
-        if (_player != null && jumpTowardPlayerPlatform)
-        {
-            Vector2 playerProbeOrigin = GetPlayerFeetPosition();
-            Vector2 playerProbeEnd = playerProbeOrigin + Vector2.down * playerGroundProbeDistance;
-
-            RaycastHit2D playerGroundHit = Physics2D.Raycast(
-                playerProbeOrigin,
-                Vector2.down,
-                playerGroundProbeDistance,
-                groundLayers
-            );
-
-            if (playerGroundHit.collider != null)
-                playerProbeEnd = playerGroundHit.point;
-
-            Gizmos.color = Color.magenta;
-            Gizmos.DrawWireSphere(playerProbeOrigin, 0.06f);
-            Gizmos.DrawLine(playerProbeOrigin, playerProbeEnd);
-            Gizmos.DrawWireSphere(playerProbeEnd, 0.08f);
-        }
+        DrawObstacleTopProbeGizmo(faceDir);
     }
 
 #if UNITY_EDITOR
@@ -919,20 +808,19 @@ public class EnemyGroundChaseController : MonoBehaviour
         minHeightToJump = Mathf.Max(0f, minHeightToJump);
         jumpCooldown = Mathf.Max(0f, jumpCooldown);
         jumpHeightBuffer = Mathf.Max(0f, jumpHeightBuffer);
-        jumpWhenCloseHorizontalDistance = Mathf.Max(0f, jumpWhenCloseHorizontalDistance);
 
         minObstacleHeightToJump = Mathf.Max(0f, minObstacleHeightToJump);
         maxObstacleJumpHeight = Mathf.Max(minObstacleHeightToJump, maxObstacleJumpHeight);
         obstacleTopProbeForwardOffset = Mathf.Max(0.01f, obstacleTopProbeForwardOffset);
-        obstacleTopProbeExtraHeight = Mathf.Max(0f, obstacleTopProbeExtraHeight);
         wallRayStartInset = Mathf.Max(0f, wallRayStartInset);
-
-        playerGroundProbeDistance = Mathf.Max(0.01f, playerGroundProbeDistance);
-        playerFeetProbeOffset = Mathf.Max(0f, playerFeetProbeOffset);
 
         groundCheckDistance = Mathf.Max(0.01f, groundCheckDistance);
         ceilingCheckDistance = Mathf.Max(0.01f, ceilingCheckDistance);
         wallProbeDistance = Mathf.Max(0.01f, wallProbeDistance);
         ledgeProbeDistance = Mathf.Max(0.01f, ledgeProbeDistance);
+
+        minJumpTimeBeforeLanding = Mathf.Max(0f, minJumpTimeBeforeLanding);
+        airControlMultiplier = Mathf.Max(0f, airControlMultiplier);
+        airHorizontalDamping = Mathf.Max(0f, airHorizontalDamping);
     }
 }

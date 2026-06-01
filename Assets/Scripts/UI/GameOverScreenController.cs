@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,6 +27,20 @@ public class GameOverScreenController : MonoBehaviour
 
     public void ShowLoss()    => Show("Loss",    Color.red);
     public void ShowVictory() => Show("Victory", Color.green);
+
+    // Boss ölüm animasyonu için gecikmeli zafer ekranı. ShowVictory Time.timeScale=0 yaptığından
+    // bekleme realtime; GameOverScreenController persistent olduğundan coroutine güvenle çalışır.
+    public void ShowVictoryAfter(float seconds)
+    {
+        if (seconds <= 0f) { ShowVictory(); return; }
+        StartCoroutine(VictoryDelay(seconds));
+    }
+
+    IEnumerator VictoryDelay(float seconds)
+    {
+        yield return new WaitForSecondsRealtime(seconds);
+        ShowVictory();
+    }
 
     void Show(string text, Color color)
     {

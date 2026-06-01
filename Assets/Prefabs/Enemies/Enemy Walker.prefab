@@ -475,7 +475,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealthController
   totalHealth: 200
-  xpReward: 200
+  xpReward: 250
   deathEffect: {fileID: 7368911382246415065, guid: 3bb37e9dd22c69a41a5ef58b7be7d774, type: 3}
   enemyDrops: {fileID: 0}
   healthBarGroup: {fileID: 837761970677481163}
@@ -689,7 +689,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa0b8a4675fa9bc498fcb2917c350c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DamagePlayer
-  damageAmount: 10
+  damageAmount: 8
   destroyOnDamage: 0
   destroyEffect: {fileID: 0}
   damageTickInterval: 1

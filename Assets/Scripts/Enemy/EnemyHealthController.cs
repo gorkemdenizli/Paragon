@@ -25,16 +25,21 @@ public class EnemyHealthController : MonoBehaviour
     [SerializeField] private DamagePopup damagePopupPrefab;
 
     public static int AliveCount { get; private set; }
+    public static int AliveWalkers { get; private set; }
+    public static int AliveFlyers  { get; private set; }
     public int BaseMaxHealth => totalHealth;
 
     private int _maxHealth;
     private bool _isDead;
+    private bool _isFlyer;
     private HitFlash _hitFlash;
     private Coroutine _hideRoutine;
 
     void Awake()
     {
+        _isFlyer = GetComponent<EnemyFlyerController>() != null;
         AliveCount++;
+        if (_isFlyer) AliveFlyers++; else AliveWalkers++;
 
         if (enemyDrops == null)
             enemyDrops = GetComponent<EnemyDrops>();
@@ -89,6 +94,7 @@ public class EnemyHealthController : MonoBehaviour
     void OnDestroy()
     {
         AliveCount--;
+        if (_isFlyer) AliveFlyers--; else AliveWalkers--;
     }
 
     public void SetMaxHealth(int newMax, bool refillCurrent = true)

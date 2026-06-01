@@ -18,6 +18,8 @@ public class EnemySpawnManager : MonoBehaviour
     [Header("Boss Battle")]
     [Tooltip("During boss battle, proximity spawn stops when this many enemies are alive (regardless of RunDifficultyManager's cap).")]
     [SerializeField] private int bossBattleMaxAlive = 20;
+    [Tooltip("Açıksa boss savaşında spawn olan düşmanların ladder kullanımı kapatılır. Default kapalı = boss savaşında da merdiven kullanırlar.")]
+    [SerializeField] private bool disableLaddersDuringBossBattle = false;
 
     [Header("Player Proximity Spawn")]
     [SerializeField] private bool enableProximitySpawn = true;
@@ -74,14 +76,16 @@ public class EnemySpawnManager : MonoBehaviour
         foreach (var sp in spawnPoints)
             if (sp != null) sp.isEnabled = false;
 
+        // Boss başlayınca arenadaki tüm mevcut düşmanları (walker + flyer) temizle.
+        foreach (var e in FindObjectsByType<EnemyHealthController>(FindObjectsSortMode.None))
+            Destroy(e.gameObject);
+
         enableProximitySpawn = true;
         _proximityCooldown   = firstSpawnDelay;
     }
 
     void Update()
     {
-        int maxAlive = RunDifficultyManager.instance?.CurrentMaxAliveEnemies ?? int.MaxValue;
-
         foreach (var sp in spawnPoints)
         {
             if (!sp.isEnabled || sp.enemyPrefab == null) continue;
@@ -89,7 +93,7 @@ public class EnemySpawnManager : MonoBehaviour
             sp._timer -= Time.deltaTime;
             if (sp._timer > 0f) continue;
 
-            if (EnemyHealthController.AliveCount < maxAlive)
+            if (TypeBelowCap(sp.enemyPrefab))
                 TrySpawnFrom(sp);
 
             sp._timer = sp.GetCurrentSingleInterval();
@@ -142,23 +146,33 @@ public class EnemySpawnManager : MonoBehaviour
     {
         if (proximityEnemyPrefab == null) return;
 
-        int effectiveMax = _bossBattleMode
-            ? bossBattleMaxAlive
-            : (RunDifficultyManager.instance?.CurrentMaxAliveEnemies ?? int.MaxValue);
-
-        if (EnemyHealthController.AliveCount >= effectiveMax) return;
-
         for (int i = 0; i < proximityEnemiesPerSpawn; i++)
         {
-            if (EnemyHealthController.AliveCount >= effectiveMax) break;
+            // Boss-mode toplam tavanı + her zaman per-type cap. (AliveCount/AliveWalkers/AliveFlyers
+            // her Instantiate'te anında güncellendiğinden her iterasyonda yeniden kontrol edilir.)
+            if (_bossBattleMode && EnemyHealthController.AliveCount >= bossBattleMaxAlive) break;
+            if (!TypeBelowCap(proximityEnemyPrefab)) break;
+
             float eachDir  = Random.value > 0.5f ? 1f : -1f;
             float eachDist = Random.Range(proximitySpawnMinDistance, proximitySpawnMaxDistance);
             Vector2 eachPos = (Vector2)_player.position + new Vector2(eachDir * eachDist, 0f);
             var inst = Instantiate(proximityEnemyPrefab, eachPos, Quaternion.identity);
             RunDifficultyManager.instance?.ApplyScalingIfEligible(proximityEnemyPrefab, inst);
-            if (_bossBattleMode)
+            if (_bossBattleMode && disableLaddersDuringBossBattle)
                 inst.GetComponent<EnemyLadderNavigator>()?.SetUseLadders(false);
         }
+    }
+
+    // Verilen prefab'ın tipine (walker/flyer) göre o tipin alive sayısı cap'in altında mı?
+    bool TypeBelowCap(GameObject prefab)
+    {
+        var rdm    = RunDifficultyManager.instance;
+        bool flyer = prefab.GetComponent<EnemyFlyerController>() != null;
+        int alive  = flyer ? EnemyHealthController.AliveFlyers : EnemyHealthController.AliveWalkers;
+        int max    = flyer
+            ? (rdm != null ? rdm.CurrentMaxAliveFlyers  : int.MaxValue)
+            : (rdm != null ? rdm.CurrentMaxAliveWalkers : int.MaxValue);
+        return alive < max;
     }
 
 #if UNITY_EDITOR

@@ -12,6 +12,12 @@ public class BossHealthController : MonoBehaviour
     {
         instance = this;
         _hitFlash = GetComponent<HitFlash>();
+
+        // Damage number canvas'ını her zaman aktif kök objeye taşı. Aksi halde boss ışınlanırken
+        // (BossBattle, Sprite Boss child'ını SetActive(false) yapıyor) canvas deaktive olup
+        // içindeki DamagePopup coroutine'leri ölüyor → popuplar donup boss üstünde birikiyor.
+        if (damageNumbersCanvas != null)
+            damageNumbersCanvas.SetParent(transform, worldPositionStays: true);
     }
 
     [SerializeField] private Slider bossHealthSlider;
@@ -19,6 +25,8 @@ public class BossHealthController : MonoBehaviour
     [SerializeField] public int currentHealth;
     [SerializeField] private int maxHealth;
     [SerializeField] private BossBattle theBoss;
+    [Tooltip("Boss ölünce zafer ekranı bu kadar saniye sonra gelir (ölüm animasyonuna pay).")]
+    [SerializeField] private float victoryDelay = 1.5f;
 
     [Header("Damage Numbers")]
     [Tooltip("World Space Canvas (RectTransform) on the boss — damage popups spawn here.")]
@@ -72,6 +80,7 @@ public class BossHealthController : MonoBehaviour
         {
             currentHealth = 0;
             theBoss.EndBattle();
+            GameOverScreenController.instance?.ShowVictoryAfter(victoryDelay);
             killed = true;
         }
 
@@ -82,12 +91,20 @@ public class BossHealthController : MonoBehaviour
     void SpawnDamageNumber(int damage)
     {
         if (damagePopupPrefab == null || damageNumbersCanvas == null) return;
+
+        DamagePopup popup = Instantiate(damagePopupPrefab, damageNumbersCanvas);
+        var rt = popup.GetComponent<RectTransform>();
+
+        // Canvas artık kök objede (hep aktif). Popup'ı boss'un anlık görsel konumunda doğur,
+        // sonra küçük rastgele bir yayılma ekle. Popup bağımsız süzülüp kendini yok eder.
+        Transform vis = theBoss != null ? theBoss.Visual : transform;
+        rt.position = vis.position;
+
         Rect r = damageNumbersCanvas.rect;
-        Vector2 pos = new Vector2(
+        rt.anchoredPosition += new Vector2(
             Random.Range(-r.width  * 0.5f, r.width  * 0.5f),
             Random.Range(-r.height * 0.5f, r.height * 0.5f));
-        DamagePopup popup = Instantiate(damagePopupPrefab, damageNumbersCanvas);
-        popup.GetComponent<RectTransform>().anchoredPosition = pos;
+
         popup.Init(damage);
     }
 }

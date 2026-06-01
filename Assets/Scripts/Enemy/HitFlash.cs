@@ -30,7 +30,8 @@ public class HitFlash : MonoBehaviour
     private Color[]           _originalColors;
     private GameObject[]      _outlineObjects;
     private Material[]        _outlineMaterials;
-    private Coroutine         _routine;
+    private float             _flash;   // 1 = tam flash, 0 = yok
+    private float             _hold;    // tam flash'ta kalan bekleme süresi
 
     static readonly int PropColor  = Shader.PropertyToID("_Color");
     static readonly int PropRadius = Shader.PropertyToID("_Radius");
@@ -85,10 +86,11 @@ public class HitFlash : MonoBehaviour
 
     public void Flash()
     {
-        if (_routine != null)
-            StopCoroutine(_routine);
         SyncOutlineSprites();
-        _routine = StartCoroutine(FlashRoutine());
+        SetAll(flashColor);
+        SetOutlineAlpha(1f);
+        _flash = 1f;
+        _hold  = holdDuration;
     }
 
     // Syncs the current animation frame sprite so the outline always matches.
@@ -102,30 +104,41 @@ public class HitFlash : MonoBehaviour
         }
     }
 
-    IEnumerator FlashRoutine()
+    // Zaman tabanlı flash: sürekli ateşte Flash() her vuruşta _flash'ı yeniden 1'e çeker;
+    // ateş kesilince fade her zaman tamamlanır → tint/outline takılı kalmaz.
+    void Update()
     {
-        SetAll(flashColor);
-        SetOutlineAlpha(1f);
+        if (_flash <= 0f) return;
 
-        yield return new WaitForSeconds(holdDuration);
-
-        float elapsed = 0f;
-        while (elapsed < fadeDuration)
+        if (_hold > 0f)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / fadeDuration);
-
-            for (int i = 0; i < _renderers.Length; i++)
-                if (_renderers[i] != null)
-                    _renderers[i].color = Color.Lerp(flashColor, _originalColors[i], t);
-
-            SetOutlineAlpha(1f - t);
-            yield return null;
+            _hold -= Time.deltaTime;
+            return;
         }
 
-        RestoreAll();
+        _flash -= (fadeDuration > 0f) ? Time.deltaTime / fadeDuration : 1f;
+
+        if (_flash <= 0f)
+        {
+            _flash = 0f;
+            RestoreAll();
+            SetOutlineAlpha(0f);
+            return;
+        }
+
+        for (int i = 0; i < _renderers.Length; i++)
+            if (_renderers[i] != null)
+                _renderers[i].color = Color.Lerp(_originalColors[i], flashColor, _flash);
+
+        SetOutlineAlpha(_flash);
+    }
+
+    void OnDisable()
+    {
+        _flash = 0f;
+        _hold  = 0f;
+        if (_renderers != null) RestoreAll();
         SetOutlineAlpha(0f);
-        _routine = null;
     }
 
     void SetOutlineAlpha(float alpha)

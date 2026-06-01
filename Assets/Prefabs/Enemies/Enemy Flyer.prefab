@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealthController
   totalHealth: 100
-  xpReward: 100
+  xpReward: 200
   deathEffect: {fileID: 7229356420679481976, guid: 8224ac0032fcaf244b17438b7d3038b1, type: 3}
   enemyDrops: {fileID: 0}
   healthBarGroup: {fileID: 8485660647282370314}
@@ -271,7 +271,7 @@ MonoBehaviour:
   rangeToStartChase: 10000
   stopChaseWhenOutOfRange: 0
   rangeToStopChase: 14
-  moveSpeed: 5
+  moveSpeed: 4
   turnSpeed: 5
   anim: {fileID: 9155641181103888522}
   usePersonalChaseOffset: 1
@@ -335,10 +335,10 @@ MonoBehaviour:
   dropAmmoOrbs: 1
   ammoOrbPrefab: {fileID: 3847291056382749101, guid: e7c4a91b2f3d5860491e7b3c5a8d2f16, type: 3}
   minOrbCount: 1
-  maxOrbCount: 2
+  maxOrbCount: 3
   spawnSpreadRadius: 1
-  minAmmoPerOrb: 1
-  maxAmmoPerOrb: 10
+  minAmmoPerOrb: 8
+  maxAmmoPerOrb: 12
   orbHomingSpeed: 40
   orbAbsorbDistance: 0.35
   orbHomingDelay: 0.4
@@ -538,7 +538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa0b8a4675fa9bc498fcb2917c350c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DamagePlayer
-  damageAmount: 15
+  damageAmount: 12
   destroyOnDamage: 0
   destroyEffect: {fileID: 0}
   damageTickInterval: 1

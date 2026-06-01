@@ -39,9 +39,15 @@ public class RunDifficultyManager : MonoBehaviour
     [SerializeField] private int   spawnCountIncreaseAmount         = 1;
     [Tooltip("Minimum seconds between individual enemy spawns across all spawn points.")]
     [SerializeField] private float minSingleSpawnInterval           = 0.6f;
-    [SerializeField] private int   baseMaxAliveEnemies              = 20;
-    [SerializeField] private int   maxAliveIncreasePerDifficulty    = 2;
-    [SerializeField] private int   absoluteMaxAliveEnemies          = 60;
+    [Header("Walker Alive Cap")]
+    [SerializeField] private int   baseMaxAliveWalkers           = 10;
+    [SerializeField] private int   maxAliveWalkersPerDifficulty  = 1;
+    [SerializeField] private int   absoluteMaxAliveWalkers       = 30;
+
+    [Header("Flyer Alive Cap")]
+    [SerializeField] private int   baseMaxAliveFlyers            = 10;
+    [SerializeField] private int   maxAliveFlyersPerDifficulty   = 1;
+    [SerializeField] private int   absoluteMaxAliveFlyers        = 30;
 
     [Header("Scaling Whitelist")]
     [Tooltip("Bu listedeki prefab'lardan spawn edilen enemy'lere difficulty scaling uygulanır.")]
@@ -66,6 +72,8 @@ public class RunDifficultyManager : MonoBehaviour
     public float SpeedMultiplier        { get; private set; } = 1f;
     public float SpawnRateMultiplier    { get; private set; } = 1f;
     public int   CurrentMaxAliveEnemies { get; private set; }
+    public int   CurrentMaxAliveWalkers { get; private set; }
+    public int   CurrentMaxAliveFlyers  { get; private set; }
 
     // Per-point spawn helpers (consumed by EnemySpawnPoint.GetCurrentSingleInterval)
     public float MinSingleSpawnInterval => minSingleSpawnInterval;
@@ -132,9 +140,9 @@ public class RunDifficultyManager : MonoBehaviour
         SpeedMultiplier     = Mathf.Min(Mathf.Pow(speedGrowthPerDifficulty,  lvl), maxSpeedMultiplier);
         SpawnRateMultiplier = Mathf.Pow(spawnRateGrowthPerDifficulty, lvl);
 
-        CurrentMaxAliveEnemies = Mathf.Min(
-            baseMaxAliveEnemies + lvl * maxAliveIncreasePerDifficulty,
-            absoluteMaxAliveEnemies);
+        CurrentMaxAliveWalkers = Mathf.Min(baseMaxAliveWalkers + lvl * maxAliveWalkersPerDifficulty, absoluteMaxAliveWalkers);
+        CurrentMaxAliveFlyers  = Mathf.Min(baseMaxAliveFlyers  + lvl * maxAliveFlyersPerDifficulty,  absoluteMaxAliveFlyers);
+        CurrentMaxAliveEnemies = CurrentMaxAliveWalkers + CurrentMaxAliveFlyers;
     }
 
     public void ApplyScalingIfEligible(GameObject prefabSource, GameObject spawnedInstance)
@@ -184,9 +192,12 @@ public class RunDifficultyManager : MonoBehaviour
         minSingleSpawnInterval          = Mathf.Max(0.1f, minSingleSpawnInterval);
         spawnCountIncreaseEveryNLevels  = Mathf.Max(1, spawnCountIncreaseEveryNLevels);
         spawnCountIncreaseAmount        = Mathf.Max(0, spawnCountIncreaseAmount);
-        baseMaxAliveEnemies             = Mathf.Max(1, baseMaxAliveEnemies);
-        maxAliveIncreasePerDifficulty   = Mathf.Max(0, maxAliveIncreasePerDifficulty);
-        absoluteMaxAliveEnemies         = Mathf.Max(baseMaxAliveEnemies, absoluteMaxAliveEnemies);
+        baseMaxAliveWalkers          = Mathf.Max(1, baseMaxAliveWalkers);
+        maxAliveWalkersPerDifficulty = Mathf.Max(0, maxAliveWalkersPerDifficulty);
+        absoluteMaxAliveWalkers      = Mathf.Max(baseMaxAliveWalkers, absoluteMaxAliveWalkers);
+        baseMaxAliveFlyers           = Mathf.Max(1, baseMaxAliveFlyers);
+        maxAliveFlyersPerDifficulty  = Mathf.Max(0, maxAliveFlyersPerDifficulty);
+        absoluteMaxAliveFlyers       = Mathf.Max(baseMaxAliveFlyers, absoluteMaxAliveFlyers);
     }
 
     // ── Debug helpers ──────────────────────────────────────────────────────────

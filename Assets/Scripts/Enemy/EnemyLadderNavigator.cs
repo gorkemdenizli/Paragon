@@ -161,12 +161,16 @@ public class EnemyLadderNavigator : MonoBehaviour
         if (_ladderSearchTimer > 0f) return;
         _ladderSearchTimer = ladderSearchInterval;
 
-        float yDiff = _player.position.y - transform.position.y;
+        // Enemy havadayken (kendi obstacle-jump'ı sırasında) ladder kararı verme.
+        if (_chase != null && !_chase.IsGrounded) return;
 
-        if (yDiff > minVerticalDifferenceToUseLadder)
+        // Karar anlık pozisyona değil, platform/zemin seviyesine göre verilir (player zıplaması etkilemez).
+        if (!TryGetPlayerLevelY(out float playerLevelY)) return;
+        float levelDiff = playerLevelY - GetEnemyFeetY();
+
+        if (levelDiff > minVerticalDifferenceToUseLadder)
         {
             if (_chase != null) _chase.SuppressPlayerPlatformJump = false;
-            if (!IsPlayerGroundedOrClimbing()) return;
             LadderZone best = FindBestLadderForGoingUp();
             if (best != null)
             {
@@ -182,10 +186,9 @@ public class EnemyLadderNavigator : MonoBehaviour
                 if (enableDebugLogs) Debug.Log("[LadderNav] No up-ladder found.");
             }
         }
-        else if (yDiff < -minVerticalDifferenceToUseLadder)
+        else if (levelDiff < -minVerticalDifferenceToUseLadder)
         {
             if (_chase != null) _chase.SuppressPlayerPlatformJump = false;
-            if (!IsPlayerGroundedOrClimbing()) return;
             LadderZone best = FindBestLadderForGoingDown();
             if (best != null)
             {
@@ -458,13 +461,21 @@ public class EnemyLadderNavigator : MonoBehaviour
         return false;
     }
 
-    bool IsPlayerGroundedOrClimbing()
+    // Player'ın bulunduğu seviye Y'si. Tırmanıyorsa anlık Y; yerdeyse altındaki platform yüzeyi.
+    // Havadayken (zıplama / menzilde zemin yok) false → o tick ladder kararı verilmez (transient'e tepki yok).
+    bool TryGetPlayerLevelY(out float levelY)
     {
+        levelY = _player != null ? _player.position.y : 0f;
         if (_player == null) return false;
+
         if (_playerClimb != null && (_playerClimb.IsClimbing || _playerClimb.IsOnLadder))
             return true;
+
         LayerMask layers = _chase != null ? _chase.GroundLayers : (LayerMask)(-1);
-        return Physics2D.Raycast((Vector2)_player.position, Vector2.down, playerGroundCheckDistance, layers);
+        RaycastHit2D hit = Physics2D.Raycast((Vector2)_player.position, Vector2.down, playerGroundCheckDistance, layers);
+        if (hit.collider == null) return false;   // player havada → karar erteleniyor
+        levelY = hit.point.y;
+        return true;
     }
 
     void TryCachePlayer()

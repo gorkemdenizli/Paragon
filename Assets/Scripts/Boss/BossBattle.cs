@@ -23,6 +23,10 @@ public class BossBattle : MonoBehaviour
     [Tooltip("Player'a göre maksimum yatay (X) sapma.")]
     [SerializeField] private float spawnXRange = 4f;
 
+    // Boss'un görsel (ışınlanırken hareket eden) transform'u. Damage number'lar bunun
+    // anlık world konumunda doğsun diye dışarı açılır.
+    public Transform Visual => theBoss;
+
     private float shotCounter;
     private float activeCounter;
     private float fadeOutCounter;

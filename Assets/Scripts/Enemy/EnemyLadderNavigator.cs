@@ -32,12 +32,15 @@ public class EnemyLadderNavigator : MonoBehaviour
     [SerializeField] private bool  enableDebugLogs                      = false;
     [Tooltip("Enemy must chase directly this many seconds before considering a ladder. Prevents freshly-spawned enemies from immediately running to a ladder instead of chasing on foot.")]
     [SerializeField] private float minChaseDurationBeforeLadder         = 2.5f;
+    [Tooltip("Ladder'a yürürken hedefe yatay ilerleme olmadan bu süre geçerse vazgeçip normal chase'e döner (engele takılıp donmayı önler).")]
+    [SerializeField] private float ladderApproachTimeout                = 3f;
 
     private Rigidbody2D                _rb;
     private EnemyGroundChaseController _chase;
     private EnemyKnockback             _knockback;
     private Collider2D                 _bodyCollider;
     private Transform                  _player;
+    private PlayerClimbController      _playerClimb;
 
     private LadderState _state;
     private LadderZone  _targetLadder;
@@ -45,6 +48,8 @@ public class EnemyLadderNavigator : MonoBehaviour
     private float       _originalGravity;
     private float       _reentryBlock;
     private float       _chaseDuration;
+    private float       _approachTimer;
+    private float       _approachBestDx;
 
     void Awake()
     {
@@ -145,12 +150,13 @@ public class EnemyLadderNavigator : MonoBehaviour
         if (yDiff > minVerticalDifferenceToUseLadder)
         {
             if (_chase != null) _chase.SuppressPlayerPlatformJump = false;
-            if (!IsPlayerOnGround()) return;
+            if (!IsPlayerGroundedOrClimbing()) return;
             LadderZone best = FindBestLadderForGoingUp();
             if (best != null)
             {
                 _targetLadder = best;
                 _state        = LadderState.MovingToLadderBottom;
+                BeginApproach();
                 if (_chase != null) _chase.ExternalControlActive = preventJumpSpamWhenLadderAvailable;
                 if (enableDebugLogs) Debug.Log($"[LadderNav] Going UP via {best.name}.");
             }
@@ -163,12 +169,13 @@ public class EnemyLadderNavigator : MonoBehaviour
         else if (yDiff < -minVerticalDifferenceToUseLadder)
         {
             if (_chase != null) _chase.SuppressPlayerPlatformJump = false;
-            if (!IsPlayerOnGround()) return;
+            if (!IsPlayerGroundedOrClimbing()) return;
             LadderZone best = FindBestLadderForGoingDown();
             if (best != null)
             {
                 _targetLadder = best;
                 _state        = LadderState.MovingToLadderTop;
+                BeginApproach();
                 if (_chase != null) _chase.ExternalControlActive = preventJumpSpamWhenLadderAvailable;
                 if (enableDebugLogs) Debug.Log($"[LadderNav] Going DOWN via {best.name}.");
             }
@@ -191,6 +198,7 @@ public class EnemyLadderNavigator : MonoBehaviour
 
         float targetX = _targetLadder.BottomPosition.x;
         float dx      = targetX - _rb.position.x;
+        if (CheckApproachTimeout(dx)) return;
         float dir     = Mathf.Abs(dx) < 0.01f ? 0f : Mathf.Sign(dx);
         float speed   = _chase != null ? _chase.MoveSpeed : 4f;
         float accel   = _chase != null ? _chase.HorizontalAcceleration : 40f;
@@ -215,6 +223,7 @@ public class EnemyLadderNavigator : MonoBehaviour
 
         float targetX = _targetLadder.TopEntryPosition.x;
         float dx      = targetX - _rb.position.x;
+        if (CheckApproachTimeout(dx)) return;
         float dir     = Mathf.Abs(dx) < 0.01f ? 0f : Mathf.Sign(dx);
         float speed   = _chase != null ? _chase.MoveSpeed : 4f;
         float accel   = _chase != null ? _chase.HorizontalAcceleration : 40f;
@@ -348,9 +357,39 @@ public class EnemyLadderNavigator : MonoBehaviour
 
     // ── Helpers ──────────────────────────────────────────────────────────────────
 
-    bool IsPlayerOnGround()
+    void BeginApproach()
+    {
+        _approachTimer  = 0f;
+        _approachBestDx = float.MaxValue;
+    }
+
+    // Ladder'a yürürken yatay ilerleme takibi. Hedefe yaklaşıyorsa timer sıfırlanır;
+    // ilerleme yoksa (engele takılı) timeout'ta navigasyon iptal edilir. true → abort edildi.
+    bool CheckApproachTimeout(float dx)
+    {
+        float adx = Mathf.Abs(dx);
+        if (adx < _approachBestDx - 0.05f)
+        {
+            _approachBestDx = adx;
+            _approachTimer  = 0f;
+            return false;
+        }
+
+        _approachTimer += Time.deltaTime;
+        if (_approachTimer >= ladderApproachTimeout)
+        {
+            if (enableDebugLogs) Debug.Log("[LadderNav] Approach timed out — aborting.");
+            AbortNavigation();
+            return true;
+        }
+        return false;
+    }
+
+    bool IsPlayerGroundedOrClimbing()
     {
         if (_player == null) return false;
+        if (_playerClimb != null && (_playerClimb.IsClimbing || _playerClimb.IsOnLadder))
+            return true;
         LayerMask layers = _chase != null ? _chase.GroundLayers : (LayerMask)(-1);
         return Physics2D.Raycast((Vector2)_player.position, Vector2.down, playerGroundCheckDistance, layers);
     }
@@ -359,7 +398,10 @@ public class EnemyLadderNavigator : MonoBehaviour
     {
         if (_player != null) return;
         if (PlayerHealthController.instance != null)
+        {
             _player = PlayerHealthController.instance.transform;
+            _playerClimb = _player.GetComponent<PlayerClimbController>();
+        }
     }
 
 #if UNITY_EDITOR

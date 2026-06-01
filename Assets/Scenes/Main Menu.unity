@@ -921,7 +921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b17704acf2c1746b667aedcd07a291, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenu
-  newGameScene: SampleScene
+  newGameScene: Stage1
   mainMenuCanvas: {fileID: 164971847}
   loadoutCanvas: {fileID: 1202723650}
   mainMenuWeaponRenderer: {fileID: 8757948397222523962}
@@ -14908,7 +14908,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -2068484865
-  m_SortingLayer: 1
+  m_SortingLayer: 8
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2311659948842064771, guid: 7189afe59e1c9324bbcfa0e1e7aebca9, type: 3}
@@ -15207,7 +15207,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1253370059
-  m_SortingLayer: 3
+  m_SortingLayer: 10
   m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: 0}

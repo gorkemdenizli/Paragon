@@ -1,4 +1,8 @@
-﻿=== C:\A\unity\Paragon\Assets\Scripts\Boss\BossActivator.cs ===
+PARAGON - Tum Scriptler (68 dosya) - 2026-06-01 07:10
+
+========================================================================
+// FILE: Assets\Scripts\Boss\BossActivator.cs
+========================================================================
 using UnityEngine;
 
 public class BossActivator : MonoBehaviour
@@ -16,7 +20,10 @@ public class BossActivator : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Boss\BossBattle.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Boss\BossBattle.cs
+========================================================================
 using UnityEngine;
 
 public class BossBattle : MonoBehaviour
@@ -35,11 +42,11 @@ public class BossBattle : MonoBehaviour
     [SerializeField] private Transform shotPoint;
 
     [Header("Player-Relative Positioning")]
-    [Tooltip("Player'ın Y'sinin kaç birim üstüne minimum konumlanılsın.")]
+    [Tooltip("Player'Ä±n Y'sinin kaÃ§ birim Ã¼stÃ¼ne minimum konumlanÄ±lsÄ±n.")]
     [SerializeField] private float spawnAbovePlayerYMin = 2f;
-    [Tooltip("Player'ın Y'sinin kaç birim üstüne maksimum konumlanılsın.")]
+    [Tooltip("Player'Ä±n Y'sinin kaÃ§ birim Ã¼stÃ¼ne maksimum konumlanÄ±lsÄ±n.")]
     [SerializeField] private float spawnAbovePlayerYMax = 5f;
-    [Tooltip("Player'a göre maksimum yatay (X) sapma.")]
+    [Tooltip("Player'a gÃ¶re maksimum yatay (X) sapma.")]
     [SerializeField] private float spawnXRange = 4f;
 
     private float shotCounter;
@@ -105,7 +112,7 @@ public class BossBattle : MonoBehaviour
         }
     }
 
-    // Phase 1 + Phase 2: ışınlan → ateş et → ışınlan
+    // Phase 1 + Phase 2: Ä±ÅŸÄ±nlan â†’ ateÅŸ et â†’ Ä±ÅŸÄ±nlan
     void TeleportPhaseUpdate(bool inPhase2)
     {
         float shotInterval = (inPhase2 && PlayerHealthController.instance.currentHealth <= treshold2)
@@ -149,7 +156,7 @@ public class BossBattle : MonoBehaviour
         }
     }
 
-    // Phase 3'e ilk girişte çağrılır
+    // Phase 3'e ilk giriÅŸte Ã§aÄŸrÄ±lÄ±r
     void EnterPhase3()
     {
         activeCounter   = 0f;
@@ -159,7 +166,7 @@ public class BossBattle : MonoBehaviour
         _glideTarget = GetAbovePlayerPos();
     }
 
-    // Phase 3: süzül (sessiz) → var → ateş et → fade → inactive → yeni hedef → tekrar
+    // Phase 3: sÃ¼zÃ¼l (sessiz) â†’ var â†’ ateÅŸ et â†’ fade â†’ inactive â†’ yeni hedef â†’ tekrar
     void GlidePhaseUpdate()
     {
         if (activeCounter > 0)
@@ -198,7 +205,7 @@ public class BossBattle : MonoBehaviour
         }
         else
         {
-            // Hedefe doğru süzülme — bu sırada ateş yok
+            // Hedefe doÄŸru sÃ¼zÃ¼lme â€” bu sÄ±rada ateÅŸ yok
             if (Vector3.Distance(theBoss.position, _glideTarget) > 0.2f)
             {
                 theBoss.position = Vector3.MoveTowards(
@@ -206,7 +213,7 @@ public class BossBattle : MonoBehaviour
             }
             else
             {
-                // Hedere vardı → ateş fazı başlar
+                // Hedere vardÄ± â†’ ateÅŸ fazÄ± baÅŸlar
                 activeCounter = activeTime;
                 shotCounter   = timeBetweenShots2;
             }
@@ -227,7 +234,10 @@ public class BossBattle : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Boss\BossBullet.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Boss\BossBullet.cs
+========================================================================
 using UnityEngine;
 
 public class BossBullet : MonoBehaviour
@@ -271,7 +281,10 @@ public class BossBullet : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Boss\BossHealthController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Boss\BossHealthController.cs
+========================================================================
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -295,9 +308,9 @@ public class BossHealthController : MonoBehaviour
     [SerializeField] private BossBattle theBoss;
 
     [Header("Damage Numbers")]
-    [Tooltip("World Space Canvas (RectTransform) on the boss — damage popups spawn here.")]
+    [Tooltip("World Space Canvas (RectTransform) on the boss â€” damage popups spawn here.")]
     [SerializeField] private RectTransform damageNumbersCanvas;
-    [Tooltip("DamagePopup prefab — same as used by EnemyHealthController.")]
+    [Tooltip("DamagePopup prefab â€” same as used by EnemyHealthController.")]
     [SerializeField] private DamagePopup   damagePopupPrefab;
 
     private bool _initialized;
@@ -366,7 +379,10 @@ public class BossHealthController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Boss\BossSpawnerController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Boss\BossSpawnerController.cs
+========================================================================
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -375,12 +391,12 @@ using TMPro;
 public class BossSpawnerController : MonoBehaviour
 {
     [Header("UI")]
-    [Tooltip("'Press E to spawn boss' yazısı — aktif/inaktif edilir.")]
+    [Tooltip("'Press E to spawn boss' yazÄ±sÄ± â€” aktif/inaktif edilir.")]
     [SerializeField] private GameObject promptText;
 
     [Header("Portal")]
     [SerializeField] private Animator portalAnimator;
-    [Tooltip("E basıldıktan kaç saniye sonra boss spawn olur.")]
+    [Tooltip("E basÄ±ldÄ±ktan kaÃ§ saniye sonra boss spawn olur.")]
     [SerializeField] private float spawnDelay = 3.5f;
 
     [Header("Boss")]
@@ -388,11 +404,11 @@ public class BossSpawnerController : MonoBehaviour
     [SerializeField] private Transform  bossSpawnPoint;
 
     [Header("Boss UI (Scene References)")]
-    [Tooltip("Sahnede varsayılan olarak inaktif olan boss health bar root. Boss spawn olunca aktif edilir.")]
+    [Tooltip("Sahnede varsayÄ±lan olarak inaktif olan boss health bar root. Boss spawn olunca aktif edilir.")]
     [SerializeField] private GameObject bossHealthBarRoot;
-    [Tooltip("Sahnedeki boss health slider. Inspector'dan atanır, prefab'a bağlı olması gerekmez.")]
+    [Tooltip("Sahnedeki boss health slider. Inspector'dan atanÄ±r, prefab'a baÄŸlÄ± olmasÄ± gerekmez.")]
     [SerializeField] private Slider   bossHealthSlider;
-    [Tooltip("Sahnedeki 'X / X' health text. Inspector'dan atanır.")]
+    [Tooltip("Sahnedeki 'X / X' health text. Inspector'dan atanÄ±r.")]
     [SerializeField] private TMP_Text bossHealthText;
 
     [Header("Boss Health Scaling")]
@@ -406,23 +422,23 @@ public class BossSpawnerController : MonoBehaviour
     [SerializeField] private float bossDamageMaxMultiplier        = 2.5f;
 
     [Header("Phase Thresholds (scaled max health fraction, 0-1)")]
-    [Tooltip("Bu canın altında Phase 2 başlar. Varsayılan: ~%83")]
+    [Tooltip("Bu canÄ±n altÄ±nda Phase 2 baÅŸlar. VarsayÄ±lan: ~%83")]
     [SerializeField] private float phase2HealthFraction = 0.833f;
-    [Tooltip("Bu canın altında Phase 3 başlar. Varsayılan: ~%33")]
+    [Tooltip("Bu canÄ±n altÄ±nda Phase 3 baÅŸlar. VarsayÄ±lan: ~%33")]
     [SerializeField] private float phase3HealthFraction = 0.333f;
 
     [Header("Boss Battle Ammo Drop")]
-    [Tooltip("Boss spawn olduktan kaç saniye sonra ilk EnemyWalker gelsin.")]
+    [Tooltip("Boss spawn olduktan kaÃ§ saniye sonra ilk EnemyWalker gelsin.")]
     [SerializeField] private float bossFirstSpawnDelay = 6f;
-    [Tooltip("Boss battle'da EnemyWalker orb'larından alınacak minimum mermi.")]
+    [Tooltip("Boss battle'da EnemyWalker orb'larÄ±ndan alÄ±nacak minimum mermi.")]
     [SerializeField] private int ammoDropMin = 20;
-    [Tooltip("Boss battle'da EnemyWalker orb'larından alınacak maksimum mermi.")]
+    [Tooltip("Boss battle'da EnemyWalker orb'larÄ±ndan alÄ±nacak maksimum mermi.")]
     [SerializeField] private int ammoDropMax = 30;
 
     private bool _playerInRange;
     private bool _bossSpawned;
 
-    // ── Trigger zone ─────────────────────────────────────────────────────────────
+    // â”€â”€ Trigger zone â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -440,7 +456,7 @@ public class BossSpawnerController : MonoBehaviour
             promptText.SetActive(false);
     }
 
-    // ── Called by PlayerController on Interact press ─────────────────────────────
+    // â”€â”€ Called by PlayerController on Interact press â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     public void HandlePlayerInteract()
     {
@@ -448,7 +464,7 @@ public class BossSpawnerController : MonoBehaviour
         TriggerBossSpawn();
     }
 
-    // ── Spawn sequence ────────────────────────────────────────────────────────────
+    // â”€â”€ Spawn sequence â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void TriggerBossSpawn()
     {
@@ -469,7 +485,7 @@ public class BossSpawnerController : MonoBehaviour
     {
         if (bossPrefab == null || bossSpawnPoint == null)
         {
-            Debug.LogError("[BossSpawner] bossPrefab veya bossSpawnPoint atanmamış!", this);
+            Debug.LogError("[BossSpawner] bossPrefab veya bossSpawnPoint atanmamÄ±ÅŸ!", this);
             return;
         }
 
@@ -480,7 +496,7 @@ public class BossSpawnerController : MonoBehaviour
         int scaledDamage = Mathf.RoundToInt(bossBaseDamage *
             Mathf.Min(Mathf.Pow(bossDamageGrowthPerDifficulty, level), bossDamageMaxMultiplier));
 
-        Debug.Log($"[BossSpawner] Difficulty {level} → Health {scaledHealth}, Damage {scaledDamage}");
+        Debug.Log($"[BossSpawner] Difficulty {level} â†’ Health {scaledHealth}, Damage {scaledDamage}");
 
         if (bossHealthBarRoot != null) bossHealthBarRoot.SetActive(true);
 
@@ -489,18 +505,21 @@ public class BossSpawnerController : MonoBehaviour
         if (go.TryGetComponent<BossHealthController>(out var hc))
             hc.Initialize(scaledHealth, bossHealthSlider, bossHealthText);
         else
-            Debug.LogWarning("[BossSpawner] Boss prefab'da BossHealthController bulunamadı!", this);
+            Debug.LogWarning("[BossSpawner] Boss prefab'da BossHealthController bulunamadÄ±!", this);
 
         if (go.TryGetComponent<BossBattle>(out var battle))
             battle.SetupDifficulty(scaledHealth, phase2HealthFraction, phase3HealthFraction, scaledDamage);
         else
-            Debug.LogWarning("[BossSpawner] Boss prefab'da BossBattle bulunamadı!", this);
+            Debug.LogWarning("[BossSpawner] Boss prefab'da BossBattle bulunamadÄ±!", this);
 
         EnemySpawnManager.instance?.StartBossBattleMode(ammoDropMin, ammoDropMax, bossFirstSpawnDelay);
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Camera\CameraController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Camera\CameraController.cs
+========================================================================
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -543,7 +562,10 @@ public class CameraController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Camera\CameraMouseOffset.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Camera\CameraMouseOffset.cs
+========================================================================
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -555,7 +577,7 @@ public class CameraMouseOffset : MonoBehaviour
     [SerializeField] private Camera gameplayCamera;
 
     [Header("Dead Zone")]
-    [Tooltip("Merkezden uzaklık (centered vektörü, tipik max ~1.41). 0.08 civarı uygundur. Eski sahnelerde 2 gibi büyük değerler tüm offseti sıfırlıyordu.")]
+    [Tooltip("Merkezden uzaklÄ±k (centered vektÃ¶rÃ¼, tipik max ~1.41). 0.08 civarÄ± uygundur. Eski sahnelerde 2 gibi bÃ¼yÃ¼k deÄŸerler tÃ¼m offseti sÄ±fÄ±rlÄ±yordu.")]
     [SerializeField] private float deadZoneRadius = 0.08f;
 
     [Header("Offset")]
@@ -569,7 +591,7 @@ public class CameraMouseOffset : MonoBehaviour
     float _externalMaxOffsetYScale = 1f;
 
     /// <summary>
-    /// Harici sistemler (precise aim vb.) tarafından her kare veya hedef değişince ayarlanır; varsayılan 1.
+    /// Harici sistemler (precise aim vb.) tarafÄ±ndan her kare veya hedef deÄŸiÅŸince ayarlanÄ±r; varsayÄ±lan 1.
     /// </summary>
     public void SetExternalMaxOffsetXScale(float scale)
     {
@@ -577,7 +599,7 @@ public class CameraMouseOffset : MonoBehaviour
     }
 
     /// <summary>
-    /// maxOffsetY (mouse dikey) ile çarpılır; varsayılan 1.
+    /// maxOffsetY (mouse dikey) ile Ã§arpÄ±lÄ±r; varsayÄ±lan 1.
     /// </summary>
     public void SetExternalMaxOffsetYScale(float scale)
     {
@@ -606,14 +628,14 @@ public class CameraMouseOffset : MonoBehaviour
         // Viewport (0-1)
         Vector2 viewport = cam.ScreenToViewportPoint(mouseScreen);
 
-        // Clamp → dışarı çıksa bile 0-1 arası kalır
+        // Clamp â†’ dÄ±ÅŸarÄ± Ã§Ä±ksa bile 0-1 arasÄ± kalÄ±r
         viewport.x = Mathf.Clamp01(viewport.x);
         viewport.y = Mathf.Clamp01(viewport.y);
 
-        // -1 ile +1 arası merkez bazlı değer
+        // -1 ile +1 arasÄ± merkez bazlÄ± deÄŸer
         Vector2 centered = (viewport - new Vector2(0.5f, 0.5f)) * 2f;
 
-        // Dead zone: centered magnitude en fazla ~sqrt(2) ≈ 1.41; 1'den büyük inspector değerleri eski hataydı
+        // Dead zone: centered magnitude en fazla ~sqrt(2) â‰ˆ 1.41; 1'den bÃ¼yÃ¼k inspector deÄŸerleri eski hataydÄ±
         float dz = deadZoneRadius > 1f ? 0.08f : Mathf.Max(0f, deadZoneRadius);
         dz = Mathf.Min(dz, 0.45f);
         if (centered.magnitude < dz)
@@ -650,7 +672,10 @@ public class CameraMouseOffset : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Camera\CameraShake.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Camera\CameraShake.cs
+========================================================================
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -683,7 +708,10 @@ public class CameraShake : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Camera\ParallaxBackground.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Camera\ParallaxBackground.cs
+========================================================================
 using System.Collections.Generic;
 using UnityEngine;
  
@@ -728,7 +756,10 @@ public class ParallaxBackground : MonoBehaviour
         }
     }
 }
-=== C:\A\unity\Paragon\Assets\Scripts\Camera\ParallaxCamera.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Camera\ParallaxCamera.cs
+========================================================================
 using UnityEngine;
  
 [ExecuteInEditMode]
@@ -758,7 +789,10 @@ public class ParallaxCamera : MonoBehaviour
         }
     }
 }
-=== C:\A\unity\Paragon\Assets\Scripts\Camera\ParallaxLayer.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Camera\ParallaxLayer.cs
+========================================================================
 using UnityEngine;
  
 [ExecuteInEditMode]
@@ -775,7 +809,10 @@ public class ParallaxLayer : MonoBehaviour
     }
  
 }
-=== C:\A\unity\Paragon\Assets\Scripts\Combat\BombController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Combat\BombController.cs
+========================================================================
 using UnityEngine;
 
 public class BombController : MonoBehaviour
@@ -784,7 +821,7 @@ public class BombController : MonoBehaviour
     [SerializeField] private GameObject explosion;
     [SerializeField] private float blastRange = 2f;
     [SerializeField] private float damageAmount = 50f;
-    [Tooltip("Patlama sınırındaki hedeflere verilecek hasarın oranı (0-1). 0.5 = yarım hasar.")]
+    [Tooltip("Patlama sÄ±nÄ±rÄ±ndaki hedeflere verilecek hasarÄ±n oranÄ± (0-1). 0.5 = yarÄ±m hasar.")]
     [SerializeField] [Range(0f, 1f)] private float edgeDamageRatio = 0.5f;
     [SerializeField] private LayerMask whatIsDamageable;
 
@@ -823,7 +860,10 @@ public class BombController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Combat\Bullet.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Combat\Bullet.cs
+========================================================================
 using UnityEngine;
 
 // Straight-line projectile; initialized by Weapon.TryShoot via Initialize().
@@ -903,7 +943,10 @@ public class Bullet : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Combat\DamagePopup.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Combat\DamagePopup.cs
+========================================================================
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -968,7 +1011,10 @@ public class DamagePopup : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Combat\HitmarkerController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Combat\HitmarkerController.cs
+========================================================================
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -980,7 +1026,7 @@ public class HitmarkerController : MonoBehaviour
 {
     public static HitmarkerController instance;
 
-    [Tooltip("CanvasGroup on the hitmarker root — controls visibility.")]
+    [Tooltip("CanvasGroup on the hitmarker root â€” controls visibility.")]
     [SerializeField] private CanvasGroup canvasGroup;
 
     [Tooltip("How long the hitmarker stays fully visible (seconds).")]
@@ -1047,7 +1093,10 @@ public class HitmarkerController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Combat\Weapon.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Combat\Weapon.cs
+========================================================================
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -1073,7 +1122,7 @@ public class Weapon : MonoBehaviour
     [Tooltip("Optional extra transform; if no SpriteRenderer is found for flip, scale.y is used only when muzzle is NOT a child of this.")]
     [SerializeField] private Transform weaponVisual;
 
-    [Tooltip("Gun sprite; flipY used when aiming left (does not mirror child transforms — keep Shot Point under Pivot, not under this sprite if possible).")]
+    [Tooltip("Gun sprite; flipY used when aiming left (does not mirror child transforms â€” keep Shot Point under Pivot, not under this sprite if possible).")]
     [SerializeField] private SpriteRenderer weaponSpriteRenderer;
 
     [Header("Muzzle clearance (aim left)")]
@@ -1084,51 +1133,51 @@ public class Weapon : MonoBehaviour
     [SerializeField] private Vector3 localOffsetWhenAimLeft;
 
     [Header("Ammo UI (TMP)")]
-    [Tooltip("Şarjördeki mermi. Total TMP atanmadıysa eski gibi \"mag / total\" tek satırda burada gösterilir.")]
+    [Tooltip("ÅarjÃ¶rdeki mermi. Total TMP atanmadÄ±ysa eski gibi \"mag / total\" tek satÄ±rda burada gÃ¶sterilir.")]
     [FormerlySerializedAs("combinedAmmoText")]
     [FormerlySerializedAs("ammoCountText")]
     [SerializeField] private TMP_Text ammoMagazineText;
-    [Tooltip("Genelde sabit \"/\"; ayrı TMP istemezsen boş bırak.")]
+    [Tooltip("Genelde sabit \"/\"; ayrÄ± TMP istemezsen boÅŸ bÄ±rak.")]
     [SerializeField] private TMP_Text ammoSeparatorText;
-    [Tooltip("Sağdaki toplam sayı (_displayTotalAmmo). Reload bitene kadar mag boşken gecikmeli güncellenme aynı.")]
+    [Tooltip("SaÄŸdaki toplam sayÄ± (_displayTotalAmmo). Reload bitene kadar mag boÅŸken gecikmeli gÃ¼ncellenme aynÄ±.")]
     [SerializeField] private TMP_Text ammoTotalText;
 
-    [Tooltip("Optional UI Image next to ammo text — shows WeaponData.weaponSprite (static icon).")]
+    [Tooltip("Optional UI Image next to ammo text â€” shows WeaponData.weaponSprite (static icon).")]
     [SerializeField] private Image ammoHudWeaponImage;
 
-    [Tooltip("Optional SpriteRenderer on HUD (if not using UI Image) — same sprite.")]
+    [Tooltip("Optional SpriteRenderer on HUD (if not using UI Image) â€” same sprite.")]
     [SerializeField] private SpriteRenderer ammoHudWeaponSprite;
 
-    [Tooltip("Aktif olmayan (diğer) silahı gösteren HUD image.")]
+    [Tooltip("Aktif olmayan (diÄŸer) silahÄ± gÃ¶steren HUD image.")]
     [SerializeField] private Image inactiveWeaponHudImage;
 
-    [Tooltip("Aktif olmayan silah image'ının altındaki tuş etiketi (ör. '2').")]
+    [Tooltip("Aktif olmayan silah image'Ä±nÄ±n altÄ±ndaki tuÅŸ etiketi (Ã¶r. '2').")]
     [SerializeField] private TMP_Text inactiveWeaponKeyText;
 
     [Header("Reload UI")]
-    [Tooltip("Reload sırasında görünür; süre boyunca 0 → 1 dolar, bitince kapanır.")]
+    [Tooltip("Reload sÄ±rasÄ±nda gÃ¶rÃ¼nÃ¼r; sÃ¼re boyunca 0 â†’ 1 dolar, bitince kapanÄ±r.")]
     [SerializeField] private Slider reloadProgressSlider;
 
     [Header("Weapon Slots")]
-    [Tooltip("Sırayla 1, 2, 3… tuşlarına atanan silah verileri. Boş bırakılırsa tek silah modu.")]
+    [Tooltip("SÄ±rayla 1, 2, 3â€¦ tuÅŸlarÄ±na atanan silah verileri. BoÅŸ bÄ±rakÄ±lÄ±rsa tek silah modu.")]
     [SerializeField] private WeaponData[] weaponSlots;
 
     [Header("Kickback")]
-    [Tooltip("Ateş edildiğinde silahın geri gideceği mesafe (pivot yerel X ekseninde). Örnek: 0.15–0.35.")]
+    [Tooltip("AteÅŸ edildiÄŸinde silahÄ±n geri gideceÄŸi mesafe (pivot yerel X ekseninde). Ã–rnek: 0.15â€“0.35.")]
     [SerializeField] private float kickbackDistance = 0.25f;
-    [Tooltip("Ateş edildiğinde silahın geri teptiği açı (derece). 0 = sadece pozisyon, >0 = yukarı tepme eklenir.")]
+    [Tooltip("AteÅŸ edildiÄŸinde silahÄ±n geri teptiÄŸi aÃ§Ä± (derece). 0 = sadece pozisyon, >0 = yukarÄ± tepme eklenir.")]
     [SerializeField] private float kickbackAngle = 8f;
-    [Tooltip("Geri tepkinin orijinal konuma dönüş hızı. Yüksek = sert/hızlı, düşük = yumuşak.")]
+    [Tooltip("Geri tepkinin orijinal konuma dÃ¶nÃ¼ÅŸ hÄ±zÄ±. YÃ¼ksek = sert/hÄ±zlÄ±, dÃ¼ÅŸÃ¼k = yumuÅŸak.")]
     [SerializeField] private float kickbackReturnSpeed = 14f;
 
     [Header("Precise Aim")]
-    [Tooltip("Sağ tık precise aim bileşeni. Atanırsa tam ADS'te accuracy artar.")]
+    [Tooltip("SaÄŸ tÄ±k precise aim bileÅŸeni. AtanÄ±rsa tam ADS'te accuracy artar.")]
     [SerializeField] private PreciseAimController preciseAimController;
-    [Tooltip("Precise aim tam açıkken accuracy'ye uygulanacak çarpan. 1.25 = %25 artış.")]
+    [Tooltip("Precise aim tam aÃ§Ä±kken accuracy'ye uygulanacak Ã§arpan. 1.25 = %25 artÄ±ÅŸ.")]
     [SerializeField] private float preciseAimAccuracyMultiplier = 1.25f;
 
     [Header("Aim Correction")]
-    [Tooltip("Barrel sprite pivot +X'e tam hizalı değilse bu değerle düzelt (derece). Silah crosshair'ın üstüne bakıyorsa negatif yap.")]
+    [Tooltip("Barrel sprite pivot +X'e tam hizalÄ± deÄŸilse bu deÄŸerle dÃ¼zelt (derece). Silah crosshair'Ä±n Ã¼stÃ¼ne bakÄ±yorsa negatif yap.")]
     [SerializeField] private float aimAngleOffset = 0f;
 
     private float _recoilOffset;
@@ -1262,8 +1311,8 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    // Mermi alındığında total ammo text'i büyütüp küçülten animasyon.
-    // AddReserveAmmo çağrısı timer'ı sıfırlayarak animasyonu yeniden başlatır.
+    // Mermi alÄ±ndÄ±ÄŸÄ±nda total ammo text'i bÃ¼yÃ¼tÃ¼p kÃ¼Ã§Ã¼lten animasyon.
+    // AddReserveAmmo Ã§aÄŸrÄ±sÄ± timer'Ä± sÄ±fÄ±rlayarak animasyonu yeniden baÅŸlatÄ±r.
     void TickAmmoTextPunch()
     {
         if (!_ammoTextPunching || ammoTotalText == null)
@@ -1278,7 +1327,7 @@ public class Weapon : MonoBehaviour
             return;
         }
 
-        // t: 1 → 0 olarak azalır; Sin(t*PI) ile 0→max→0 eğrisi oluşturur.
+        // t: 1 â†’ 0 olarak azalÄ±r; Sin(t*PI) ile 0â†’maxâ†’0 eÄŸrisi oluÅŸturur.
         float t = _ammoTextPunchTimer / AmmoTextPunchDuration;
         float scale = 1f + (AmmoTextPunchScale - 1f) * Mathf.Sin(t * Mathf.PI);
         ammoTotalText.transform.localScale = _ammoTextBaseScale * scale;
@@ -1290,7 +1339,7 @@ public class Weapon : MonoBehaviour
             reloadProgressSlider.gameObject.SetActive(false);
     }
 
-    // Slot 0'dan başlayarak tüm slotları başlatır; yoksa tek silah moduna düşer.
+    // Slot 0'dan baÅŸlayarak tÃ¼m slotlarÄ± baÅŸlatÄ±r; yoksa tek silah moduna dÃ¼ÅŸer.
     void InitSlots()
     {
         // Apply the loadout-selected primary weapon to slot 0 if available.
@@ -1319,7 +1368,7 @@ public class Weapon : MonoBehaviour
             ApplyWeaponSprite();
     }
 
-    // WeaponData'dan başlangıç mermi değerini hesaplar ve ilgili slota yazar.
+    // WeaponData'dan baÅŸlangÄ±Ã§ mermi deÄŸerini hesaplar ve ilgili slota yazar.
     void ComputeSlotAmmo(int index)
     {
         if (_slotStates == null || weaponSlots == null || index >= weaponSlots.Length) return;
@@ -1346,7 +1395,7 @@ public class Weapon : MonoBehaviour
         _displayTotalAmmo = _slotStates[index].displayTotal;
     }
 
-    // Aktif slotu kaydeder, yeni slota geçer ve HUD'ı günceller.
+    // Aktif slotu kaydeder, yeni slota geÃ§er ve HUD'Ä± gÃ¼nceller.
     public void SwitchToSlot(int index)
     {
         if (_slotStates == null || index < 0 || index >= _slotStates.Length) return;
@@ -1422,7 +1471,7 @@ public class Weapon : MonoBehaviour
         _displayTotalAmmo += amount;
         RefreshAmmoUi();
 
-        // Her mermi alımında total text'i büyüt-küçült (timer sıfırlanarak animasyon yenilenir).
+        // Her mermi alÄ±mÄ±nda total text'i bÃ¼yÃ¼t-kÃ¼Ã§Ã¼lt (timer sÄ±fÄ±rlanarak animasyon yenilenir).
         if (ammoTotalText != null)
         {
             _ammoTextPunchTimer = AmmoTextPunchDuration;
@@ -1449,7 +1498,7 @@ public class Weapon : MonoBehaviour
     void ApplyLeftAimVisual(bool mouseLeftOfBody)
     {
         // When weaponPivot is present, localScale.y flip on the pivot mirrors both the sprite
-        // and all child transforms (including muzzle) automatically — no flipY or manual offset needed.
+        // and all child transforms (including muzzle) automatically â€” no flipY or manual offset needed.
         if (weaponPivot != null)
         {
             SpriteRenderer sr = weaponSpriteRenderer;
@@ -1511,7 +1560,7 @@ public class Weapon : MonoBehaviour
             : _baseShiftLocalPos;
 
         // Flip pivot Y scale so both the sprite and all child transforms (muzzle included) are
-        // mirrored automatically when aiming left — no per-axis manual offset required.
+        // mirrored automatically when aiming left â€” no per-axis manual offset required.
         if (weaponPivot != null)
             weaponPivot.localScale = new Vector3(1f, mouseLeftOfBody ? -1f : 1f, 1f);
 
@@ -1521,8 +1570,8 @@ public class Weapon : MonoBehaviour
         {
             CachePivotBasePos();
 
-            // Sadece X eksenini yönet: Y'yi (PreciseAimController'ın lift değeri) koruyarak
-            // pivot'u aim yönünün tersine kaydır. Sola nişanda işaret tersine döner.
+            // Sadece X eksenini yÃ¶net: Y'yi (PreciseAimController'Ä±n lift deÄŸeri) koruyarak
+            // pivot'u aim yÃ¶nÃ¼nÃ¼n tersine kaydÄ±r. Sola niÅŸanda iÅŸaret tersine dÃ¶ner.
             float recoilSign = mouseLeftOfBody ? 1f : -1f;
             Vector3 pivotPos = weaponPivot.localPosition;
             pivotPos.x = _pivotBaseLocalPos.x + recoilSign * _recoilOffset;
@@ -1533,7 +1582,7 @@ public class Weapon : MonoBehaviour
             if (toMouse.sqrMagnitude > 1e-6f)
             {
                 float aimAngle = Mathf.Atan2(toMouse.y, toMouse.x) * Mathf.Rad2Deg;
-                // Y scale -1 (sol nişan) durumunda açıyı tersine çevirerek her yönde yukarı tepme sağlanır.
+                // Y scale -1 (sol niÅŸan) durumunda aÃ§Ä±yÄ± tersine Ã§evirerek her yÃ¶nde yukarÄ± tepme saÄŸlanÄ±r.
                 float recoilContrib = mouseLeftOfBody ? -_recoilAngleDeg : _recoilAngleDeg;
                 weaponPivot.rotation = Quaternion.Euler(0f, 0f, aimAngle + recoilContrib + aimAngleOffset);
             }
@@ -1560,7 +1609,7 @@ public class Weapon : MonoBehaviour
 
         if (_reloading)
         {
-            // Shell reload kesilirse yüklü shell'lerle ateş edilebilir.
+            // Shell reload kesilirse yÃ¼klÃ¼ shell'lerle ateÅŸ edilebilir.
             if (!weaponData.shellReload || _magAmmo <= 0)
                 return false;
 
@@ -1585,8 +1634,8 @@ public class Weapon : MonoBehaviour
             return false;
 
         Vector3 mouseWorld = AimPlaneUtil.ScreenToWorldOnPlane(cam, aimPlaneRoot.position);
-        // Mermi yönünü pivot'un mevcut rotation'ından al; bu sayede mouse çok yakında olsa bile
-        // silahın baktığı yönde mermi çıkar (muzzle→mouse vektöründeki yakın mesafe sapması olmaz).
+        // Mermi yÃ¶nÃ¼nÃ¼ pivot'un mevcut rotation'Ä±ndan al; bu sayede mouse Ã§ok yakÄ±nda olsa bile
+        // silahÄ±n baktÄ±ÄŸÄ± yÃ¶nde mermi Ã§Ä±kar (muzzleâ†’mouse vektÃ¶rÃ¼ndeki yakÄ±n mesafe sapmasÄ± olmaz).
         Vector2 dir;
         if (weaponPivot != null)
         {
@@ -1663,7 +1712,7 @@ public class Weapon : MonoBehaviour
         RefreshInactiveWeaponHud();
     }
 
-    // Aktif olmayan slotun image'ını ve tuş etiketini günceller.
+    // Aktif olmayan slotun image'Ä±nÄ± ve tuÅŸ etiketini gÃ¼nceller.
     void RefreshInactiveWeaponHud()
     {
         if (weaponSlots == null || weaponSlots.Length < 2) return;
@@ -1679,7 +1728,7 @@ public class Weapon : MonoBehaviour
             if (inactiveWeaponKeyText != null)
                 inactiveWeaponKeyText.text = (i + 1).ToString();
 
-            break; // ilk aktif-olmayan slot yeterli (2 silah için)
+            break; // ilk aktif-olmayan slot yeterli (2 silah iÃ§in)
         }
     }
 
@@ -1751,8 +1800,8 @@ public class Weapon : MonoBehaviour
         RefreshAmmoUi();
     }
 
-    // Shell shell doldurma: her shell reloadSpeed kadar sürer, slider her shell için 0→1 döngüsü yapar.
-    // Ateş edilince kesilir (TryShoot içinde _reloading=false yapılır), yüklü shell'lerle devam edilir.
+    // Shell shell doldurma: her shell reloadSpeed kadar sÃ¼rer, slider her shell iÃ§in 0â†’1 dÃ¶ngÃ¼sÃ¼ yapar.
+    // AteÅŸ edilince kesilir (TryShoot iÃ§inde _reloading=false yapÄ±lÄ±r), yÃ¼klÃ¼ shell'lerle devam edilir.
     IEnumerator ShellReloadRoutine()
     {
         _reloading = true;
@@ -1797,7 +1846,10 @@ public class Weapon : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Combat\WeaponData.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Combat\WeaponData.cs
+========================================================================
 using UnityEngine;
 
 // Scriptable stats for a gun; assign to Weapon component.
@@ -1811,12 +1863,12 @@ public class WeaponData : ScriptableObject
     [Tooltip("Shots per second.")]
     public float fireRate = 6f;
     [Range(0f, 10f)]
-    [Tooltip("Nişan hassasiyeti (0–10). 10 = tam isabet (sapma yok), 0 = maksimum sapma (±10°).")]
+    [Tooltip("NiÅŸan hassasiyeti (0â€“10). 10 = tam isabet (sapma yok), 0 = maksimum sapma (Â±10Â°).")]
     public float accuracy = 8f;
     [Min(1)] public int magazineSize = 12;
     [Tooltip("Total rounds at spawn (mag fills first, rest is reserve).")]
     [Min(0)] public int startingTotalAmmo = 120;
-    [Tooltip("Sınırsız toplam mermi; şarjör yine de azalır ve dolar, toplam mermi asla tükenmez.")]
+    [Tooltip("SÄ±nÄ±rsÄ±z toplam mermi; ÅŸarjÃ¶r yine de azalÄ±r ve dolar, toplam mermi asla tÃ¼kenmez.")]
     public bool infiniteAmmo = false;
     [Tooltip("Seconds to refill magazine.")]
     public float reloadSpeed = 1.5f;
@@ -1824,9 +1876,9 @@ public class WeaponData : ScriptableObject
     public Sprite weaponSprite;
 
     [Header("Shotgun")]
-    [Tooltip("Her ateşlemede kaç pellet fırlatılır. 1 = normal. Her zaman 1 mermi tüketir.")]
+    [Tooltip("Her ateÅŸlemede kaÃ§ pellet fÄ±rlatÄ±lÄ±r. 1 = normal. Her zaman 1 mermi tÃ¼ketir.")]
     [Min(1)] public int pelletsPerShot = 1;
-    [Tooltip("Aktifse şarjör tek seferde değil shell shell dolar; her shell reloadSpeed kadar sürer. Ateş basılınca kesebilirsiniz.")]
+    [Tooltip("Aktifse ÅŸarjÃ¶r tek seferde deÄŸil shell shell dolar; her shell reloadSpeed kadar sÃ¼rer. AteÅŸ basÄ±lÄ±nca kesebilirsiniz.")]
     public bool shellReload = false;
 
     [Header("Screen Shake")]
@@ -1837,7 +1889,10 @@ public class WeaponData : ScriptableObject
 
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Core\DestroyOverTime.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Core\DestroyOverTime.cs
+========================================================================
 using UnityEngine;
 
 public class DestroyOverTime : MonoBehaviour
@@ -1850,7 +1905,10 @@ public class DestroyOverTime : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Core\StatValueFormatter.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Core\StatValueFormatter.cs
+========================================================================
 using UnityEngine;
 
 public static class StatValueFormatter
@@ -1874,7 +1932,10 @@ public static class StatValueFormatter
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Enemy\DamagePlayer.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Enemy\DamagePlayer.cs
+========================================================================
 using System.Collections;
 using UnityEngine;
 
@@ -1939,7 +2000,10 @@ public class DamagePlayer : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Enemy\EnemyDifficultyScaler.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Enemy\EnemyDifficultyScaler.cs
+========================================================================
 using UnityEngine;
 
 public interface IDifficultyScalableEnemy
@@ -1947,8 +2011,8 @@ public interface IDifficultyScalableEnemy
     void ApplyDifficultyScaling(float healthMultiplier, float damageMultiplier, float speedMultiplier);
 }
 
-// Enemy prefab'larına ekle. Base değerleri Awake'te sibling component'lerden otomatik okur.
-// RunDifficultyManager.ApplyScalingIfEligible() tarafından spawn sonrası bir kere çağrılır.
+// Enemy prefab'larÄ±na ekle. Base deÄŸerleri Awake'te sibling component'lerden otomatik okur.
+// RunDifficultyManager.ApplyScalingIfEligible() tarafÄ±ndan spawn sonrasÄ± bir kere Ã§aÄŸrÄ±lÄ±r.
 public class EnemyDifficultyScaler : MonoBehaviour, IDifficultyScalableEnemy
 {
     private int   _baseHealth;
@@ -1957,7 +2021,7 @@ public class EnemyDifficultyScaler : MonoBehaviour, IDifficultyScalableEnemy
 
     private void Awake()
     {
-        // Serialized field değerleri Awake order'ından bağımsız olarak hazır gelir.
+        // Serialized field deÄŸerleri Awake order'Ä±ndan baÄŸÄ±msÄ±z olarak hazÄ±r gelir.
         var health = GetComponent<EnemyHealthController>();
         if (health != null) _baseHealth = health.BaseMaxHealth;
 
@@ -1987,7 +2051,10 @@ public class EnemyDifficultyScaler : MonoBehaviour, IDifficultyScalableEnemy
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Enemy\EnemyDrops.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Enemy\EnemyDrops.cs
+========================================================================
 using UnityEngine;
 
 public class EnemyDrops : MonoBehaviour
@@ -2064,7 +2131,10 @@ public class EnemyDrops : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Enemy\EnemyFlyerController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Enemy\EnemyFlyerController.cs
+========================================================================
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -2215,20 +2285,26 @@ public class EnemyFlyerController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Enemy\EnemyGroundChaseController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Enemy\EnemyGroundChaseController.cs
+========================================================================
 using UnityEngine;
 using UnityEngine.Serialization;
 
+// Walker dÃ¼ÅŸman: SADECE yatay chase + kÃ¼Ã§Ã¼k basamak/tek-tile engel zÄ±plamasÄ±.
+// Ãœst/alt platforma geÃ§iÅŸ (kat deÄŸiÅŸtirme) EnemyLadderNavigator'Ä±n iÅŸidir; burada
+// player platformuna kÃ¶rlemesine zÄ±plama, stuck-recovery veya Y-velocity sÄ±fÄ±rlama YOK.
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyGroundChaseController : MonoBehaviour
 {
     [Header("Chase")]
-    [Tooltip("Kapalıysa oyuncuyu takip etmez.")]
+    [Tooltip("KapalÄ±ysa oyuncuyu takip etmez.")]
     [SerializeField] private bool chasePlayer = true;
 
     [SerializeField] private float rangeToStartChase = 10f;
 
-    [Tooltip("Açıksa oyuncu bu mesafeden uzaklaşınca takip bırakılır.")]
+    [Tooltip("AÃ§Ä±ksa oyuncu bu mesafeden uzaklaÅŸÄ±nca takip bÄ±rakÄ±lÄ±r.")]
     [SerializeField] private bool stopChaseWhenOutOfRange = true;
 
     [SerializeField] private float rangeToStopChase = 14f;
@@ -2244,87 +2320,96 @@ public class EnemyGroundChaseController : MonoBehaviour
     public bool  IsGrounded             => _isGrounded;
 
     public bool ExternalControlActive      { get; set; }
+
+    // Vestigial â€” ladder navigator hÃ¢lÃ¢ set ediyor; API uyumu iÃ§in tutuldu.
     public bool SuppressPlayerPlatformJump { get; set; }
+
     public bool IsChasing                  => _isChasing;
     public LayerMask GroundLayers          => groundLayers;
 
     public void ApplyFacing(float faceDir) => ApplyFacingScale(faceDir);
 
-    [Tooltip("Sprite default halinde sağa bakıyorsa aç. Default halinde sola bakıyorsa kapalı kalsın.")]
+    [Tooltip("Sprite default halinde saÄŸa bakÄ±yorsa aÃ§. Default halinde sola bakÄ±yorsa kapalÄ± kalsÄ±n.")]
     [SerializeField] private bool spriteFacesRightByDefault = false;
 
     [SerializeField] private Animator anim;
 
     [Header("Jump")]
-    [Tooltip("Düşmanın ulaşabileceği maksimum dikey başlangıç hızı. Bu force değil velocity'dir.")]
+    [Tooltip("DÃ¼ÅŸmanÄ±n ulaÅŸabileceÄŸi maksimum dikey baÅŸlangÄ±Ã§ hÄ±zÄ±. Bu force deÄŸil velocity'dir.")]
     [FormerlySerializedAs("maxJumpForce")]
     [SerializeField] private float maxJumpVelocity = 14f;
 
     [SerializeField] private float minHeightToJump = 0.35f;
     [SerializeField] private float jumpCooldown = 0.35f;
 
-    [Tooltip("Platformun üzerine rahatça çıkabilmesi için eklenen ekstra yükseklik payı.")]
-    [SerializeField] private float jumpHeightBuffer = 0.6f;
+    [Tooltip("Engelin Ã¼zerine rahatÃ§a Ã§Ä±kabilmesi iÃ§in eklenen ekstra yÃ¼kseklik payÄ±.")]
+    [SerializeField] private float jumpHeightBuffer = 0.35f;
 
-    [Tooltip("Oyuncu platformu path'i açıksa yatay yakınlık eşiği.")]
-    [SerializeField] private float jumpWhenCloseHorizontalDistance = 1.5f;
+    [Tooltip("ZÄ±plama bu sÃ¼reden Ã¶nce 'landed' sayÄ±lmaz; jump baÅŸÄ±nda ground ray hÃ¢lÃ¢ zemini gÃ¶rÃ¼rse erken iniÅŸ bug'Ä±nÄ± Ã¶nler.")]
+    [SerializeField] private float minJumpTimeBeforeLanding = 0.12f;
 
     [Header("Obstacle Jump")]
-    [Tooltip("Açıksa düşman, önündeki tırmanılabilir duvar/basamak için player'dan bağımsız zıplar.")]
+    [Tooltip("AÃ§Ä±ksa dÃ¼ÅŸman, Ã¶nÃ¼ndeki tÄ±rmanÄ±labilir kÃ¼Ã§Ã¼k duvar/basamak iÃ§in zÄ±plar.")]
     [SerializeField] private bool jumpOverFrontObstacles = true;
 
-    [Tooltip("Açıksa önünde duvar olmasa bile oyuncu yukarıdaki platformdaysa yaklaştığında zıplar.")]
-    [SerializeField] private bool jumpTowardPlayerPlatform = false;
-
-    [Tooltip("Bundan daha alçak engeller için zıplama denemez.")]
+    [Tooltip("Bundan daha alÃ§ak engeller iÃ§in zÄ±plama denemez.")]
     [SerializeField] private float minObstacleHeightToJump = 0.08f;
 
-    [Tooltip("Düşmanın önündeki engel için deneyeceği maksimum yükseklik.")]
-    [SerializeField] private float maxObstacleJumpHeight = 2.5f;
+    [Tooltip("DÃ¼ÅŸmanÄ±n Ã¶nÃ¼ndeki engel iÃ§in deneyeceÄŸi maksimum yÃ¼kseklik. Kat deÄŸiÅŸtirme ladder iÅŸi olduÄŸundan kÃ¼Ã§Ã¼k tutulur.")]
+    [SerializeField] private float maxObstacleJumpHeight = 1.6f;
 
-    [Tooltip("Duvar hit noktasının biraz ilerisine, üst yüzeyi bulmak için atılan dikey ray offset'i.")]
+    [Tooltip("Duvar hit noktasÄ±nÄ±n biraz ilerisine, Ã¼st yÃ¼zeyi bulmak iÃ§in atÄ±lan dikey ray offset'i.")]
     [SerializeField] private float obstacleTopProbeForwardOffset = 0.2f;
 
-    [Tooltip("Üst yüzeyi arayan ray'in duvar yüzünden başlayacağı ekstra yükseklik payı.")]
-    [SerializeField] private float obstacleTopProbeExtraHeight = 0.15f;
-
-    [Tooltip("Wall ray origin'i facing yönünde bu kadar geri çekilir (collider içinden çıkmak için).")]
+    [Tooltip("Wall ray origin'i facing yÃ¶nÃ¼nde bu kadar geri Ã§ekilir (collider iÃ§inden Ã§Ä±kmak iÃ§in).")]
     [SerializeField] private float wallRayStartInset = 0.08f;
 
+    [Header("Air Control")]
+    [Tooltip("AÃ§Ä±ksa dÃ¼ÅŸman havadayken de (sÄ±nÄ±rlÄ±) yÃ¶n kontrolÃ¼ yapar. Default kapalÄ±: havada chase yok.")]
+    [SerializeField] private bool  allowAirSteering     = false;
+    [Tooltip("allowAirSteering aÃ§Ä±ksa havadaki yatay kontrol Ã§arpanÄ± (0 = yok).")]
+    [SerializeField] private float airControlMultiplier = 0f;
+    [Tooltip("allowAirSteering kapalÄ±yken havada X hÄ±zÄ±nÄ± 0'a Ã§eken damping (0 = momentum aynen korunur).")]
+    [SerializeField] private float airHorizontalDamping = 0f;
+
     [Header("Platforms")]
-    [Tooltip("Sadece gerçekten üzerinde durulabilen zemin/platform layer'ları olmalı. Player/Enemy/Hitbox ekleme.")]
+    [Tooltip("Sadece gerÃ§ekten Ã¼zerinde durulabilen zemin/platform layer'larÄ± olmalÄ±. Player/Enemy/Hitbox ekleme.")]
     [SerializeField] private LayerMask groundLayers;
 
-    [Tooltip("Düşmanın kafasını çarpacağı katı tavan layer'ları. Boş bırakılırsa groundLayers kullanılır.")]
+    [Tooltip("DÃ¼ÅŸmanÄ±n kafasÄ±nÄ± Ã§arpacaÄŸÄ± katÄ± tavan layer'larÄ±. BoÅŸ bÄ±rakÄ±lÄ±rsa groundLayers kullanÄ±lÄ±r.")]
     [SerializeField] private LayerMask ceilingBlockLayers;
 
-    [SerializeField] private float playerGroundProbeDistance = 20f;
-    [SerializeField] private float playerFeetProbeOffset = 0.6f;
-
     [Header("Raycasts")]
+    [Tooltip("Enemy'nin ayak hizasÄ±nda / hemen altÄ±nda olmalÄ±. Ã‡ok yukarÄ±daysa dÃ¼ÅŸman havadayken yanlÄ±ÅŸlÄ±kla grounded sayÄ±lÄ±r.")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private Transform ceilingCheck;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private Transform ledgeCheck;
 
-    [SerializeField] private float groundCheckDistance = 0.5f;
+    [SerializeField] private float groundCheckDistance = 0.2f;
     [SerializeField] private float ceilingCheckDistance = 0.5f;
-    [SerializeField] private float wallProbeDistance = 0.4f;
+    [SerializeField] private float wallProbeDistance = 0.45f;
     [SerializeField] private float ledgeProbeDistance = 0.6f;
 
+    [Tooltip("AÃ§Ä±ksa grounded kontrolÃ¼ tek ray yerine ayak altÄ±nda kÃ¼Ã§Ã¼k bir box overlap ile yapÄ±lÄ±r (daire collider iÃ§in daha stabil). groundCheck foot hizasÄ±nda olmalÄ±; deÄŸilse yanlÄ±ÅŸ grounded verebilir.")]
+    [SerializeField] private bool    useBoxGroundCheck = false;
+    [SerializeField] private Vector2 groundBoxSize     = new Vector2(0.45f, 0.08f);
+    [Tooltip("Box merkezinin groundCheck'e gÃ¶re dikey ofseti (negatif = aÅŸaÄŸÄ±).")]
+    [SerializeField] private float   groundBoxOffsetY  = -0.05f;
+
     [Header("Combat")]
-    [Tooltip("Açıksa hasar trigger zone içindeyken zıplamaz.")]
+    [Tooltip("AÃ§Ä±ksa hasar trigger zone iÃ§indeyken zÄ±plamaz.")]
     [SerializeField] private bool blockJumpWhileDamagingPlayer = true;
 
     [Header("Chase Offset")]
-    [Tooltip("Açıksa her enemy player'ın tam merkezine değil kişisel ofset noktasına yönelir.")]
+    [Tooltip("AÃ§Ä±ksa her enemy player'Ä±n tam merkezine deÄŸil kiÅŸisel ofset noktasÄ±na yÃ¶nelir.")]
     [SerializeField] private bool  usePersonalChaseOffset   = true;
     [SerializeField] private float minChaseOffsetFromPlayer = 0.35f;
     [SerializeField] private float maxChaseOffsetFromPlayer = 1.4f;
     private float _personalChaseOffsetX;
 
     [Header("Crowd Separation")]
-    [Tooltip("Açıksa yakın enemy'lerden yatay olarak hafifçe uzaklaşır (physics collision gerektirmez).")]
+    [Tooltip("AÃ§Ä±ksa yakÄ±n enemy'lerden yatay olarak hafifÃ§e uzaklaÅŸÄ±r (physics collision gerektirmez).")]
     [SerializeField] private bool      useCrowdSeparation  = true;
     [SerializeField] private LayerMask enemyAvoidanceLayers;
     [SerializeField] private float     separationRadius    = 0.75f;
@@ -2333,21 +2418,31 @@ public class EnemyGroundChaseController : MonoBehaviour
     private Collider2D[]  _separationBuffer;
     private ContactFilter2D _separationFilter;
 
+    [Header("Debug")]
+    [Tooltip("AÃ§Ä±ksa obstacle jump kararlarÄ± (baÅŸarÄ± + ret nedeni) Console'a loglanÄ±r.")]
+    [SerializeField] private bool enableJumpDebugLogs = false;
+
     private Rigidbody2D _rb;
     private Transform _player;
-    private Transform _playerGroundCheck;
     private EnemyKnockback _knockback;
     private DamagePlayer _damagePlayer;
 
     private Vector3 _baseScale;
 
     private bool _isChasing;
+    private bool _isJumping;
     private float _lastJumpTime = -100f;
+    private float _jumpStartTime = -100f;
+    private float _jumpMoveDir;
     private bool _isGrounded;
     private bool _isCeilingAbove;
 
     private bool _isEscapingCeiling;
     private float _lockedFaceDir;
+
+    private string _jumpRejectReason;
+    private bool _groundCheckWarned;
+    private float _normalGravityScale = 1f;
 
     void Awake()
     {
@@ -2365,6 +2460,17 @@ public class EnemyGroundChaseController : MonoBehaviour
         _separationFilter = new ContactFilter2D();
         _separationFilter.SetLayerMask(enemyAvoidanceLayers);
         _separationFilter.useTriggers = true;
+
+        // GerÃ§ek gravity'yi cache'le â€” Update'teki sanity-net, gravity yanlÄ±ÅŸlÄ±kla 0'da
+        // takÄ±lÄ±rsa (Ã¶rn. bir ladder abort sÄ±zÄ±ntÄ±sÄ±) buna geri dÃ¶ner.
+        _normalGravityScale = _rb != null ? _rb.gravityScale : 1f;
+
+        // NOT: Enemyâ†”Enemy fiziksel Ã§arpÄ±ÅŸmasÄ± Physics2D Layer Collision Matrix'ten yÃ¶netilir.
+        // Runtime'da collider.excludeLayers DEÄÄ°ÅTÄ°RÄ°LMEZ â€” yanlÄ±ÅŸ bir maske Ground/Platform
+        // collision'Ä±nÄ± kapatÄ±p "havada yÃ¼rÃ¼me"ye yol aÃ§abilirdi. Crowd separation yalnÄ±z
+        // OverlapCircle steering ile Ã§alÄ±ÅŸÄ±r; fiziksel collision'a dokunmaz.
+        if (useCrowdSeparation && (enemyAvoidanceLayers.value & groundLayers.value) != 0)
+            Debug.LogWarning("[EnemyWalker] enemyAvoidanceLayers contains GroundLayers. This can break ground collision.", this);
     }
 
     void Start()
@@ -2375,6 +2481,16 @@ public class EnemyGroundChaseController : MonoBehaviour
     void Update()
     {
         TryCachePlayer();
+
+        // Gravity sanity-net: ladder kontrolde DEÄÄ°LKEN gravity 0'da takÄ±lÄ± kalmÄ±ÅŸsa dÃ¼zelt.
+        // ("Havada yÃ¼rÃ¼me"yi kesen kalkan; ladder climb'da gravity 0 normal olduÄŸundan
+        // yalnÄ±z !ExternalControlActive iken mÃ¼dahale eder â†’ ladder ile Ã§akÄ±ÅŸmaz.)
+        if (!ExternalControlActive && _rb != null && _normalGravityScale > 0f
+            && Mathf.Approximately(_rb.gravityScale, 0f))
+        {
+            _rb.gravityScale = _normalGravityScale;
+            Debug.LogWarning("[EnemyWalker] gravityScale is 0 while not climbing â€” restored (hover guard).", this);
+        }
 
         if (_player == null)
         {
@@ -2415,10 +2531,20 @@ public class EnemyGroundChaseController : MonoBehaviour
         if (_knockback != null && _knockback.IsActive)
             return;
 
+        // Ladder navigator kontrolÃ¼ aldÄ±ysa ground chase tamamen pasif.
         if (ExternalControlActive)
             return;
 
         UpdateSensorState();
+        UpdateJumpLandingState();
+
+        // Havadayken chase/separation/jump YOK â€” dÃ¼ÅŸman havada player'a yÃ¶nelmesin,
+        // mevcut X momentumuyla (veya hafif damping) balistik dÃ¼ÅŸsÃ¼n.
+        if (!_isGrounded)
+        {
+            ApplyAirBehavior();
+            return;
+        }
 
         float chaseDir = GetFaceDir();
         float sepInput = GetSeparationInput();
@@ -2429,16 +2555,47 @@ public class EnemyGroundChaseController : MonoBehaviour
         TryJump(chaseDir);
     }
 
+    // Jump 'landed' kontrolÃ¼ â€” min sÃ¼re geÃ§meden tetiklenmez (jump baÅŸÄ±nda ground ray
+    // hÃ¢lÃ¢ zemini gÃ¶rÃ¼yor olabilir; bu da _isJumping'i erken false yapardÄ±).
+    void UpdateJumpLandingState()
+    {
+        if (_isJumping
+            && Time.time >= _jumpStartTime + minJumpTimeBeforeLanding
+            && _isGrounded
+            && _rb.linearVelocity.y <= 0.05f)
+        {
+            _isJumping = false;
+            if (enableJumpDebugLogs) Debug.Log("[GroundChase] Jump landed.", this);
+        }
+    }
+
+    // Havadaki yatay davranÄ±ÅŸ. Default: hiÃ§ mÃ¼dahale yok (X momentumu korunur).
+    void ApplyAirBehavior()
+    {
+        if (!allowAirSteering)
+        {
+            if (airHorizontalDamping > 0f)
+            {
+                float nx = Mathf.MoveTowards(_rb.linearVelocity.x, 0f, airHorizontalDamping * Time.fixedDeltaTime);
+                _rb.linearVelocity = new Vector2(nx, _rb.linearVelocity.y);
+            }
+            return;
+        }
+
+        // Air steering aÃ§Ä±ksa bile player'a gÃ¶re DEÄÄ°L, mevcut bakÄ±ÅŸ yÃ¶nÃ¼ne gÃ¶re ve Ã§ok sÄ±nÄ±rlÄ±.
+        float dir = GetCurrentFacingDir();
+        float tx  = dir * moveSpeed * airControlMultiplier;
+        float nax = Mathf.MoveTowards(_rb.linearVelocity.x, tx, horizontalAcceleration * airControlMultiplier * Time.fixedDeltaTime);
+        _rb.linearVelocity = new Vector2(nax, _rb.linearVelocity.y);
+    }
+
     void TryCachePlayer()
     {
         if (_player != null)
             return;
 
         if (PlayerHealthController.instance != null)
-        {
             _player = PlayerHealthController.instance.transform;
-            _playerGroundCheck = _player.Find("Ground Check Point");
-        }
     }
 
     void StartChasing()
@@ -2472,12 +2629,15 @@ public class EnemyGroundChaseController : MonoBehaviour
         Vector2 groundOrigin = GetGroundRayOrigin();
         Vector2 ceilingOrigin = GetCeilingRayOrigin();
 
-        _isGrounded = Physics2D.Raycast(
-            groundOrigin,
-            Vector2.down,
-            groundCheckDistance,
-            groundLayers
-        );
+        if (useBoxGroundCheck)
+        {
+            Vector2 boxCenter = groundOrigin + new Vector2(0f, groundBoxOffsetY);
+            _isGrounded = Physics2D.OverlapBox(boxCenter, groundBoxSize, 0f, groundLayers);
+        }
+        else
+        {
+            _isGrounded = Physics2D.Raycast(groundOrigin, Vector2.down, groundCheckDistance, groundLayers);
+        }
 
         _isCeilingAbove = Physics2D.Raycast(
             ceilingOrigin,
@@ -2495,6 +2655,8 @@ public class EnemyGroundChaseController : MonoBehaviour
         float dx = targetPlayerX - transform.position.x;
         float dy = _player.position.y - transform.position.y;
 
+        // Tavan altÄ±ndayken ve player yukarÄ±dayken: Ã¶nÃ¼ndeki aÅŸÄ±lamaz duvara dayanÄ±p donmamak
+        // iÃ§in yÃ¶n kilitle/Ã§evir. BÃ¶ylece dÃ¼ÅŸman platform altÄ±ndan Ã§Ä±kÄ±p ladder'a yÃ¶nelebilir.
         if (_isCeilingAbove && dy > 1f)
         {
             if (!_isEscapingCeiling)
@@ -2581,38 +2743,34 @@ public class EnemyGroundChaseController : MonoBehaviour
         return facingRight ? 1f : -1f;
     }
 
+    // â”€â”€ Obstacle jump (tek zÄ±plama yolu) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
     void TryJump(float faceDir)
     {
         if (!CanStartJump())
-            return;
-
-        float jumpHeight;
-
-        if (TryGetFrontObstacleJumpHeight(faceDir, out jumpHeight))
         {
-            ApplyJumpForHeight(jumpHeight);
+            if (enableJumpDebugLogs && IsWallAhead(faceDir))
+                Debug.Log($"[GroundChase] Jump blocked: {_jumpRejectReason}", this);
             return;
         }
 
-        if (TryGetPlayerPlatformJumpHeight(faceDir, out jumpHeight))
-            ApplyJumpForHeight(jumpHeight);
+        if (TryGetFrontObstacleJumpHeight(faceDir, out float jumpHeight))
+            ApplyJumpForHeight(jumpHeight, faceDir);
+        else if (enableJumpDebugLogs && IsWallAhead(faceDir))
+            Debug.Log($"[GroundChase] Obstacle jump rejected: {_jumpRejectReason}", this);
     }
 
     bool CanStartJump()
     {
-        if (!_isGrounded)
-            return false;
-
-        if (Mathf.Abs(_rb.linearVelocity.y) > 0.05f)
-            return false;
-
-        if (Time.time < _lastJumpTime + jumpCooldown)
-            return false;
+        if (!_isGrounded)            { _jumpRejectReason = "not grounded"; return false; }
+        if (Mathf.Abs(_rb.linearVelocity.y) > 0.05f) { _jumpRejectReason = "vy not settled"; return false; }
+        if (Time.time < _lastJumpTime + jumpCooldown) { _jumpRejectReason = "cooldown"; return false; }
+        if (_isCeilingAbove)        { _jumpRejectReason = "ceiling blocked"; return false; }
 
         if (blockJumpWhileDamagingPlayer
             && _damagePlayer != null
             && _damagePlayer.IsPlayerInContact)
-            return false;
+        { _jumpRejectReason = "damaging player"; return false; }
 
         return true;
     }
@@ -2622,66 +2780,51 @@ public class EnemyGroundChaseController : MonoBehaviour
         jumpHeight = 0f;
 
         if (!jumpOverFrontObstacles)
-            return false;
+        { _jumpRejectReason = "obstacle jump disabled"; return false; }
 
-        RaycastHit2D wallHit;
-
-        if (!TryGetWallHitAhead(faceDir, out wallHit))
-            return false;
+        if (!TryGetWallHitAhead(faceDir, out RaycastHit2D wallHit))
+        { _jumpRejectReason = "no wall ahead"; return false; }
 
         float feetY = GetFeetY();
 
         if (!TryFindObstacleTopY(wallHit, faceDir, feetY, out float topY))
-            return false;
+        { _jumpRejectReason = "no obstacle top found"; return false; }
 
         float obstacleHeight = topY - feetY;
 
         if (obstacleHeight < minObstacleHeightToJump)
-            return false;
+        { _jumpRejectReason = "obstacle too low"; return false; }
 
         if (obstacleHeight > maxObstacleJumpHeight)
-            return false;
+        { _jumpRejectReason = "obstacle too high (ladder iÅŸi)"; return false; }
 
         if (!CanReachJumpHeight(obstacleHeight))
-            return false;
+        { _jumpRejectReason = "cannot reach"; return false; }
 
         jumpHeight = Mathf.Max(obstacleHeight, minHeightToJump);
         return true;
     }
 
+    // Engelin Ã¼st yÃ¼zeyini bul. Probe'u DAÄ°MA zÄ±planabilir en yÃ¼ksek noktanÄ±n ÃœSTÃœNDEN baÅŸlatÄ±r,
+    // bÃ¶ylece (m_QueriesStartInColliders=1 iken) duvarÄ±n iÃ§inden baÅŸlayÄ±p yÃ¼ksekliÄŸi olduÄŸundan az
+    // Ã¶lÃ§me hatasÄ± olmaz. BirkaÃ§ ileri-offset'le ince/kenardaki duvarlarÄ±n Ã¼stÃ¼ de yakalanÄ±r.
     bool TryFindObstacleTopY(RaycastHit2D wallHit, float faceDir, float feetY, out float topY)
     {
         topY = 0f;
 
-        Vector2 topProbeOrigin = new Vector2(
-            wallHit.point.x + faceDir * obstacleTopProbeForwardOffset,
-            wallHit.point.y + obstacleTopProbeExtraHeight
-        );
-
-        float probeDistance = maxObstacleJumpHeight + jumpHeightBuffer + 0.5f;
-
-        RaycastHit2D[] hits = Physics2D.RaycastAll(
-            topProbeOrigin,
-            Vector2.down,
-            probeDistance,
-            groundLayers
-        );
-
-        if (hits.Length == 0)
+        float reach = Mathf.Min(MaxReachableJumpHeight(), maxObstacleJumpHeight);
+        if (reach < minObstacleHeightToJump)
             return false;
 
+        float startY  = feetY + reach + jumpHeightBuffer + 0.35f;   // her zÄ±planabilir Ã¼stÃ¼n Ã¼stÃ¼nde
         float minTopY = feetY + minObstacleHeightToJump;
-        float maxTopY = feetY + maxObstacleJumpHeight + jumpHeightBuffer;
-        float bestY = float.MinValue;
+        float dist    = startY - (feetY - 0.5f);
+        float baseOff = obstacleTopProbeForwardOffset;
+        float bestY   = float.MinValue;
 
-        foreach (RaycastHit2D hit in hits)
-        {
-            if (hit.point.y < minTopY || hit.point.y > maxTopY)
-                continue;
-
-            if (hit.point.y > bestY)
-                bestY = hit.point.y;
-        }
+        ProbeObstacleTop(wallHit, faceDir, 0.05f,           startY, dist, minTopY, ref bestY);
+        ProbeObstacleTop(wallHit, faceDir, baseOff,         startY, dist, minTopY, ref bestY);
+        ProbeObstacleTop(wallHit, faceDir, baseOff + 0.25f, startY, dist, minTopY, ref bestY);
 
         if (bestY <= float.MinValue)
             return false;
@@ -2690,49 +2833,20 @@ public class EnemyGroundChaseController : MonoBehaviour
         return true;
     }
 
-    bool TryGetPlayerPlatformJumpHeight(float faceDir, out float jumpHeight)
+    void ProbeObstacleTop(RaycastHit2D wallHit, float faceDir, float forwardOffset,
+                          float startY, float dist, float minTopY, ref float bestY)
     {
-        jumpHeight = 0f;
-
-        if (SuppressPlayerPlatformJump)
-            return false;
-
-        if (!jumpTowardPlayerPlatform)
-            return false;
-
-        if (_player == null)
-            return false;
-
-        if (_isCeilingAbove)
-            return false;
-
-        if (!IsPlayerOnChaseSide(faceDir))
-            return false;
-
-        float feetY = GetFeetY();
-        float platformY = GetPlayerPlatformY();
-        float heightDelta = platformY - feetY;
-
-        if (heightDelta < minHeightToJump)
-            return false;
-
-        bool shouldJumpForPlayer =
-            IsAtLedge(faceDir) ||
-            Mathf.Abs(_player.position.x - transform.position.x) < jumpWhenCloseHorizontalDistance;
-
-        if (!shouldJumpForPlayer)
-            return false;
-
-        if (!CanReachJumpHeight(heightDelta))
-            return false;
-
-        jumpHeight = heightDelta;
-        return true;
+        Vector2 origin = new Vector2(wallHit.point.x + faceDir * forwardOffset, startY);
+        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, dist, groundLayers);
+        if (hit.collider == null || hit.point.y < minTopY)
+            return;
+        if (hit.point.y > bestY)
+            bestY = hit.point.y;
     }
 
-    bool ApplyJumpForHeight(float height)
+    bool ApplyJumpForHeight(float height, float jumpDir)
     {
-        float gravity = Mathf.Abs(Physics2D.gravity.y * _rb.gravityScale);
+        float gravity = GravityMagnitude();
 
         if (gravity < 0.01f)
             return false;
@@ -2746,15 +2860,23 @@ public class EnemyGroundChaseController : MonoBehaviour
         float requiredJumpVelocity = Mathf.Sqrt(2f * gravity * targetHeight);
         float finalJumpVelocity = Mathf.Min(requiredJumpVelocity, maxJumpVelocity);
 
-        _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, finalJumpVelocity);
-        _lastJumpTime = Time.time;
+        // KalkÄ±ÅŸta X momentumunu zÄ±plama yÃ¶nÃ¼ne kilitle; havada ApplyAirBehavior bunu korur
+        // (player yÃ¶nÃ¼ne gÃ¶re deÄŸiÅŸmez).
+        _jumpMoveDir = Mathf.Abs(jumpDir) < 0.01f ? GetCurrentFacingDir() : Mathf.Sign(jumpDir);
+        _rb.linearVelocity = new Vector2(_jumpMoveDir * moveSpeed, finalJumpVelocity);
+        _lastJumpTime  = Time.time;
+        _jumpStartTime = Time.time;
+        _isJumping     = true;
+
+        if (enableJumpDebugLogs)
+            Debug.Log($"[GroundChase] Obstacle jump: height {height:F2}, velocity {finalJumpVelocity:F2}, dir {_jumpMoveDir:F0}", this);
 
         return true;
     }
 
     bool CanReachJumpHeight(float height)
     {
-        float gravity = Mathf.Abs(Physics2D.gravity.y * _rb.gravityScale);
+        float gravity = GravityMagnitude();
 
         if (gravity < 0.01f)
             return false;
@@ -2764,6 +2886,26 @@ public class EnemyGroundChaseController : MonoBehaviour
 
         return targetHeight <= maxReachableHeight;
     }
+
+    // Bu dÃ¼ÅŸmanÄ±n fizik olarak Ã§Ä±kabileceÄŸi net engel yÃ¼ksekliÄŸi (jumpHeightBuffer dÃ¼ÅŸÃ¼lmÃ¼ÅŸ).
+    float MaxReachableJumpHeight()
+    {
+        float gravity = GravityMagnitude();
+        if (gravity < 0.01f)
+            return 0f;
+        return (maxJumpVelocity * maxJumpVelocity) / (2f * gravity) - jumpHeightBuffer;
+    }
+
+    // Edit-mode gizmo'da _rb henÃ¼z atanmamÄ±ÅŸ olabilir (Awake Ã§alÄ±ÅŸmaz) â†’ null-safe.
+    // Play mode'da _rb dolu olduÄŸundan GetComponent Ã§aÄŸrÄ±lmaz.
+    float GravityMagnitude()
+    {
+        Rigidbody2D rb = _rb != null ? _rb : GetComponent<Rigidbody2D>();
+        float gScale = rb != null ? rb.gravityScale : 1f;
+        return Mathf.Abs(Physics2D.gravity.y * gScale);
+    }
+
+    // â”€â”€ SensÃ¶r yardÄ±mcÄ±larÄ± â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     bool TryGetWallHitAhead(float faceDir, out RaycastHit2D hit)
     {
@@ -2786,61 +2928,12 @@ public class EnemyGroundChaseController : MonoBehaviour
 
     bool IsWallAhead(float faceDir)
     {
-        RaycastHit2D hit;
-        return TryGetWallHitAhead(faceDir, out hit);
+        return TryGetWallHitAhead(faceDir, out _);
     }
 
     bool CanJumpOverFrontObstacle(float faceDir)
     {
-        float jumpHeight;
-        return TryGetFrontObstacleJumpHeight(faceDir, out jumpHeight);
-    }
-
-    bool IsAtLedge(float faceDir)
-    {
-        if (Mathf.Abs(faceDir) < 0.01f)
-            return false;
-
-        Vector2 origin = GetLedgeRayOrigin(faceDir);
-
-        return !Physics2D.Raycast(
-            origin,
-            Vector2.down,
-            ledgeProbeDistance,
-            groundLayers
-        );
-    }
-
-    bool IsPlayerOnChaseSide(float faceDir)
-    {
-        float dx = _player.position.x - transform.position.x;
-
-        return Mathf.Abs(dx) < 0.3f || Mathf.Sign(dx) == faceDir;
-    }
-
-    float GetPlayerPlatformY()
-    {
-        Vector2 probeOrigin = GetPlayerFeetPosition();
-
-        RaycastHit2D hit = Physics2D.Raycast(
-            probeOrigin,
-            Vector2.down,
-            playerGroundProbeDistance,
-            groundLayers
-        );
-
-        if (hit.collider != null)
-            return hit.point.y;
-
-        return probeOrigin.y;
-    }
-
-    Vector2 GetPlayerFeetPosition()
-    {
-        if (_playerGroundCheck != null)
-            return _playerGroundCheck.position;
-
-        return (Vector2)_player.position + Vector2.down * playerFeetProbeOffset;
+        return TryGetFrontObstacleJumpHeight(faceDir, out _);
     }
 
     float GetFeetY()
@@ -2848,12 +2941,17 @@ public class EnemyGroundChaseController : MonoBehaviour
         if (groundCheck != null)
             return groundCheck.position.y;
 
-        return transform.position.y - playerFeetProbeOffset;
+        WarnNoGroundCheck();
+        return transform.position.y - 0.9f;
     }
 
     Vector2 GetGroundRayOrigin()
     {
-        return groundCheck != null ? groundCheck.position : (Vector2)transform.position;
+        if (groundCheck != null)
+            return groundCheck.position;
+
+        WarnNoGroundCheck();
+        return transform.position;
     }
 
     Vector2 GetCeilingRayOrigin()
@@ -2888,44 +2986,50 @@ public class EnemyGroundChaseController : MonoBehaviour
         return ceilingBlockLayers.value == 0 ? groundLayers : ceilingBlockLayers;
     }
 
-    void DrawFrontObstacleTopProbeGizmo(float faceDir)
+    void WarnNoGroundCheck()
     {
-        if (!jumpOverFrontObstacles)
+        if (_groundCheckWarned) return;
+        _groundCheckWarned = true;
+        Debug.LogWarning($"[GroundChase] {name}: groundCheck atanmamÄ±ÅŸ â€” transform.position fallback kullanÄ±lÄ±yor (daha az gÃ¼venilir).", this);
+    }
+
+    // â”€â”€ Gizmos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+    void DrawObstacleTopProbeGizmo(float faceDir)
+    {
+        if (!jumpOverFrontObstacles || Mathf.Abs(faceDir) < 0.01f)
             return;
 
-        if (Mathf.Abs(faceDir) < 0.01f)
-            return;
-
-        RaycastHit2D wallHit;
-
-        if (!TryGetWallHitAhead(faceDir, out wallHit))
+        if (!TryGetWallHitAhead(faceDir, out RaycastHit2D wallHit))
             return;
 
         float feetY = GetFeetY();
+        float reach = Mathf.Min(MaxReachableJumpHeight(), maxObstacleJumpHeight);
+        if (reach < minObstacleHeightToJump)
+            return;
 
-        Vector2 topProbeOrigin = new Vector2(
-            wallHit.point.x + faceDir * obstacleTopProbeForwardOffset,
-            wallHit.point.y + obstacleTopProbeExtraHeight
-        );
+        float startY = feetY + reach + jumpHeightBuffer + 0.35f;
+        float dist   = startY - (feetY - 0.5f);
+        float baseOff = obstacleTopProbeForwardOffset;
 
-        float probeDistance = maxObstacleJumpHeight + jumpHeightBuffer + 0.5f;
+        Gizmos.color = new Color(0f, 0.4f, 1f, 0.5f);
+        DrawProbeLine(wallHit, faceDir, 0.05f,           startY, dist);
+        DrawProbeLine(wallHit, faceDir, baseOff,         startY, dist);
+        DrawProbeLine(wallHit, faceDir, baseOff + 0.25f, startY, dist);
 
-        RaycastHit2D[] hits = Physics2D.RaycastAll(
-            topProbeOrigin,
-            Vector2.down,
-            probeDistance,
-            groundLayers
-        );
+        if (TryFindObstacleTopY(wallHit, faceDir, feetY, out float topY))
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(new Vector2(wallHit.point.x + faceDir * baseOff, topY), 0.08f);
+        }
+    }
 
-        Vector2 end = topProbeOrigin + Vector2.down * probeDistance;
-        bool foundTop = TryFindObstacleTopY(wallHit, faceDir, feetY, out float topY);
-
-        if (foundTop)
-            end = new Vector2(topProbeOrigin.x, topY);
-
-        Gizmos.color = foundTop ? Color.blue : new Color(0f, 0f, 1f, 0.35f);
-        Gizmos.DrawLine(topProbeOrigin, end);
-        Gizmos.DrawWireSphere(end, 0.07f);
+    void DrawProbeLine(RaycastHit2D wallHit, float faceDir, float forwardOffset, float startY, float dist)
+    {
+        Vector2 o = new Vector2(wallHit.point.x + faceDir * forwardOffset, startY);
+        RaycastHit2D h = Physics2D.Raycast(o, Vector2.down, dist, groundLayers);
+        Vector2 e = h.collider != null ? h.point : o + Vector2.down * dist;
+        Gizmos.DrawLine(o, e);
     }
 
     void OnDrawGizmos()
@@ -2936,29 +3040,13 @@ public class EnemyGroundChaseController : MonoBehaviour
         Vector2 groundEnd = groundOrigin + Vector2.down * groundCheckDistance;
         Vector2 ceilingEnd = ceilingOrigin + Vector2.up * ceilingCheckDistance;
 
-        RaycastHit2D groundHit = Physics2D.Raycast(
-            groundOrigin,
-            Vector2.down,
-            groundCheckDistance,
-            groundLayers
-        );
-
+        RaycastHit2D groundHit = Physics2D.Raycast(groundOrigin, Vector2.down, groundCheckDistance, groundLayers);
         bool grounded = groundHit.collider != null;
+        if (grounded) groundEnd = groundHit.point;
 
-        if (grounded)
-            groundEnd = groundHit.point;
-
-        RaycastHit2D ceilingHit = Physics2D.Raycast(
-            ceilingOrigin,
-            Vector2.up,
-            ceilingCheckDistance,
-            GetCeilingMask()
-        );
-
+        RaycastHit2D ceilingHit = Physics2D.Raycast(ceilingOrigin, Vector2.up, ceilingCheckDistance, GetCeilingMask());
         bool ceilingAbove = ceilingHit.collider != null;
-
-        if (ceilingAbove)
-            ceilingEnd = ceilingHit.point;
+        if (ceilingAbove) ceilingEnd = ceilingHit.point;
 
         Gizmos.color = grounded ? Color.green : new Color(0f, 1f, 0f, 0.35f);
         Gizmos.DrawLine(groundOrigin, groundEnd);
@@ -2973,7 +3061,6 @@ public class EnemyGroundChaseController : MonoBehaviour
         if (_player != null)
         {
             float dx = _player.position.x - transform.position.x;
-
             if (Mathf.Abs(dx) > 0.01f)
                 faceDir = Mathf.Sign(dx);
         }
@@ -2981,15 +3068,8 @@ public class EnemyGroundChaseController : MonoBehaviour
         Vector2 wallOrigin = GetWallRayOrigin(faceDir);
         Vector2 wallEnd = wallOrigin + Vector2.right * faceDir * wallProbeDistance;
 
-        RaycastHit2D wallHit = Physics2D.Raycast(
-            wallOrigin,
-            Vector2.right * faceDir,
-            wallProbeDistance,
-            groundLayers
-        );
-
-        if (wallHit.collider != null)
-            wallEnd = wallHit.point;
+        RaycastHit2D wallHit = Physics2D.Raycast(wallOrigin, Vector2.right * faceDir, wallProbeDistance, groundLayers);
+        if (wallHit.collider != null) wallEnd = wallHit.point;
 
         Gizmos.color = wallHit.collider != null ? Color.cyan : new Color(0f, 1f, 1f, 0.35f);
         Gizmos.DrawLine(wallOrigin, wallEnd);
@@ -2998,42 +3078,14 @@ public class EnemyGroundChaseController : MonoBehaviour
         Vector2 ledgeOrigin = GetLedgeRayOrigin(faceDir);
         Vector2 ledgeEnd = ledgeOrigin + Vector2.down * ledgeProbeDistance;
 
-        RaycastHit2D ledgeHit = Physics2D.Raycast(
-            ledgeOrigin,
-            Vector2.down,
-            ledgeProbeDistance,
-            groundLayers
-        );
-
-        if (ledgeHit.collider != null)
-            ledgeEnd = ledgeHit.point;
+        RaycastHit2D ledgeHit = Physics2D.Raycast(ledgeOrigin, Vector2.down, ledgeProbeDistance, groundLayers);
+        if (ledgeHit.collider != null) ledgeEnd = ledgeHit.point;
 
         Gizmos.color = ledgeHit.collider == null ? Color.yellow : new Color(1f, 1f, 0f, 0.35f);
         Gizmos.DrawLine(ledgeOrigin, ledgeEnd);
         Gizmos.DrawWireSphere(ledgeEnd, 0.06f);
 
-        DrawFrontObstacleTopProbeGizmo(faceDir);
-
-        if (_player != null && jumpTowardPlayerPlatform)
-        {
-            Vector2 playerProbeOrigin = GetPlayerFeetPosition();
-            Vector2 playerProbeEnd = playerProbeOrigin + Vector2.down * playerGroundProbeDistance;
-
-            RaycastHit2D playerGroundHit = Physics2D.Raycast(
-                playerProbeOrigin,
-                Vector2.down,
-                playerGroundProbeDistance,
-                groundLayers
-            );
-
-            if (playerGroundHit.collider != null)
-                playerProbeEnd = playerGroundHit.point;
-
-            Gizmos.color = Color.magenta;
-            Gizmos.DrawWireSphere(playerProbeOrigin, 0.06f);
-            Gizmos.DrawLine(playerProbeOrigin, playerProbeEnd);
-            Gizmos.DrawWireSphere(playerProbeEnd, 0.08f);
-        }
+        DrawObstacleTopProbeGizmo(faceDir);
     }
 
 #if UNITY_EDITOR
@@ -3056,25 +3108,27 @@ public class EnemyGroundChaseController : MonoBehaviour
         minHeightToJump = Mathf.Max(0f, minHeightToJump);
         jumpCooldown = Mathf.Max(0f, jumpCooldown);
         jumpHeightBuffer = Mathf.Max(0f, jumpHeightBuffer);
-        jumpWhenCloseHorizontalDistance = Mathf.Max(0f, jumpWhenCloseHorizontalDistance);
 
         minObstacleHeightToJump = Mathf.Max(0f, minObstacleHeightToJump);
         maxObstacleJumpHeight = Mathf.Max(minObstacleHeightToJump, maxObstacleJumpHeight);
         obstacleTopProbeForwardOffset = Mathf.Max(0.01f, obstacleTopProbeForwardOffset);
-        obstacleTopProbeExtraHeight = Mathf.Max(0f, obstacleTopProbeExtraHeight);
         wallRayStartInset = Mathf.Max(0f, wallRayStartInset);
-
-        playerGroundProbeDistance = Mathf.Max(0.01f, playerGroundProbeDistance);
-        playerFeetProbeOffset = Mathf.Max(0f, playerFeetProbeOffset);
 
         groundCheckDistance = Mathf.Max(0.01f, groundCheckDistance);
         ceilingCheckDistance = Mathf.Max(0.01f, ceilingCheckDistance);
         wallProbeDistance = Mathf.Max(0.01f, wallProbeDistance);
         ledgeProbeDistance = Mathf.Max(0.01f, ledgeProbeDistance);
+
+        minJumpTimeBeforeLanding = Mathf.Max(0f, minJumpTimeBeforeLanding);
+        airControlMultiplier = Mathf.Max(0f, airControlMultiplier);
+        airHorizontalDamping = Mathf.Max(0f, airHorizontalDamping);
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Enemy\EnemyHealthController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Enemy\EnemyHealthController.cs
+========================================================================
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -3087,7 +3141,7 @@ public class EnemyHealthController : MonoBehaviour
     [SerializeField] private EnemyDrops enemyDrops;
 
     [Header("Health Bar")]
-    [Tooltip("CanvasGroup on the health bar canvas root — controls visibility.")]
+    [Tooltip("CanvasGroup on the health bar canvas root â€” controls visibility.")]
     [SerializeField] private CanvasGroup healthBarGroup;
     [SerializeField] private Slider healthBarSlider;
     [Tooltip("Seconds after last hit before the health bar fades out.")]
@@ -3098,7 +3152,7 @@ public class EnemyHealthController : MonoBehaviour
     [Header("Damage Numbers")]
     [Tooltip("RectTransform of the DamageNumbers canvas (child of this enemy).")]
     [SerializeField] private RectTransform damageNumbersCanvas;
-    [Tooltip("DamagePopup prefab — the Text object with DamagePopup script.")]
+    [Tooltip("DamagePopup prefab â€” the Text object with DamagePopup script.")]
     [SerializeField] private DamagePopup damagePopupPrefab;
 
     public static int AliveCount { get; private set; }
@@ -3228,7 +3282,10 @@ public class EnemyHealthController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Enemy\EnemyKnockback.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Enemy\EnemyKnockback.cs
+========================================================================
 using System.Collections;
 using UnityEngine;
 
@@ -3315,7 +3372,10 @@ public class EnemyKnockback : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Enemy\EnemyLadderNavigator.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Enemy\EnemyLadderNavigator.cs
+========================================================================
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -3350,19 +3410,35 @@ public class EnemyLadderNavigator : MonoBehaviour
     [SerializeField] private bool  enableDebugLogs                      = false;
     [Tooltip("Enemy must chase directly this many seconds before considering a ladder. Prevents freshly-spawned enemies from immediately running to a ladder instead of chasing on foot.")]
     [SerializeField] private float minChaseDurationBeforeLadder         = 2.5f;
+    [Tooltip("Ladder'a yÃ¼rÃ¼rken hedefe yatay ilerleme olmadan bu sÃ¼re geÃ§erse vazgeÃ§ip normal chase'e dÃ¶ner (engele takÄ±lÄ±p donmayÄ± Ã¶nler).")]
+    [SerializeField] private float ladderApproachTimeout                = 3f;
+
+    [Header("Staged Routing")]
+    [Tooltip("Bir merdivenin giriÅŸ noktasÄ± (yukarÄ±: bottom, aÅŸaÄŸÄ±: topEntry) enemy'nin ayak Y'sine bu kadar yakÄ±nsa 'mevcut seviyede eriÅŸilebilir' sayÄ±lÄ±r.")]
+    [SerializeField] private float ladderEntryYTolerance             = 0.75f;
+    [Tooltip("Tek merdivenin taÅŸÄ±yabileceÄŸi maksimum dikey adÄ±m. 999 = sÄ±nÄ±rsÄ±z (kademeli rota entry Y kontrolÃ¼yle saÄŸlanÄ±r).")]
+    [SerializeField] private float maxSingleLadderStepHeight         = 999f;
+    [Tooltip("AÃ§Ä±ksa enemy yalnÄ±z mevcut platform seviyesinden giriÅŸ yapÄ±labilen merdivenleri aday gÃ¶rÃ¼r (kademeli rota).")]
+    [SerializeField] private bool  requireLadderEntryOnCurrentLevel  = true;
+    [Tooltip("AÃ§Ä±ksa skorlamada enemy'ye en yakÄ±n eriÅŸilebilir merdiven baskÄ±n olur (player'Ä±n final yÃ¼ksekliÄŸi deÄŸil).")]
+    [SerializeField] private bool  preferNearestReachableLadderFirst = true;
 
     private Rigidbody2D                _rb;
     private EnemyGroundChaseController _chase;
     private EnemyKnockback             _knockback;
     private Collider2D                 _bodyCollider;
     private Transform                  _player;
+    private PlayerClimbController      _playerClimb;
 
     private LadderState _state;
     private LadderZone  _targetLadder;
     private float       _ladderSearchTimer;
     private float       _originalGravity;
+    private bool        _gravityCached;
     private float       _reentryBlock;
     private float       _chaseDuration;
+    private float       _approachTimer;
+    private float       _approachBestDx;
 
     void Awake()
     {
@@ -3372,11 +3448,16 @@ public class EnemyLadderNavigator : MonoBehaviour
 
         foreach (var col in GetComponentsInChildren<Collider2D>())
             if (!col.isTrigger) { _bodyCollider = col; break; }
+
+        // GerÃ§ek gravity'yi bir kez, daha 0'lanmadan cache'le. BÃ¶ylece ladder'a yÃ¼rÃ¼rken
+        // (climb baÅŸlamadan) abort olsa bile restore gerÃ§ek deÄŸere dÃ¶ner, 0'a deÄŸil.
+        _originalGravity = _rb != null ? _rb.gravityScale : 1f;
+        _gravityCached   = true;
     }
 
     void Start() => TryCachePlayer();
 
-    // ── Update — state machine ────────────────────────────────────────────────────
+    // â”€â”€ Update â€” state machine â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void Update()
     {
@@ -3398,7 +3479,7 @@ public class EnemyLadderNavigator : MonoBehaviour
         }
     }
 
-    // ── FixedUpdate — climbing physics ───────────────────────────────────────────
+    // â”€â”€ FixedUpdate â€” climbing physics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void FixedUpdate()
     {
@@ -3446,7 +3527,7 @@ public class EnemyLadderNavigator : MonoBehaviour
         }
     }
 
-    // ── State ticks ──────────────────────────────────────────────────────────────
+    // â”€â”€ State ticks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void TickNone()
     {
@@ -3463,12 +3544,13 @@ public class EnemyLadderNavigator : MonoBehaviour
         if (yDiff > minVerticalDifferenceToUseLadder)
         {
             if (_chase != null) _chase.SuppressPlayerPlatformJump = false;
-            if (!IsPlayerOnGround()) return;
+            if (!IsPlayerGroundedOrClimbing()) return;
             LadderZone best = FindBestLadderForGoingUp();
             if (best != null)
             {
                 _targetLadder = best;
                 _state        = LadderState.MovingToLadderBottom;
+                BeginApproach();
                 if (_chase != null) _chase.ExternalControlActive = preventJumpSpamWhenLadderAvailable;
                 if (enableDebugLogs) Debug.Log($"[LadderNav] Going UP via {best.name}.");
             }
@@ -3481,12 +3563,13 @@ public class EnemyLadderNavigator : MonoBehaviour
         else if (yDiff < -minVerticalDifferenceToUseLadder)
         {
             if (_chase != null) _chase.SuppressPlayerPlatformJump = false;
-            if (!IsPlayerOnGround()) return;
+            if (!IsPlayerGroundedOrClimbing()) return;
             LadderZone best = FindBestLadderForGoingDown();
             if (best != null)
             {
                 _targetLadder = best;
                 _state        = LadderState.MovingToLadderTop;
+                BeginApproach();
                 if (_chase != null) _chase.ExternalControlActive = preventJumpSpamWhenLadderAvailable;
                 if (enableDebugLogs) Debug.Log($"[LadderNav] Going DOWN via {best.name}.");
             }
@@ -3509,6 +3592,7 @@ public class EnemyLadderNavigator : MonoBehaviour
 
         float targetX = _targetLadder.BottomPosition.x;
         float dx      = targetX - _rb.position.x;
+        if (CheckApproachTimeout(dx)) return;
         float dir     = Mathf.Abs(dx) < 0.01f ? 0f : Mathf.Sign(dx);
         float speed   = _chase != null ? _chase.MoveSpeed : 4f;
         float accel   = _chase != null ? _chase.HorizontalAcceleration : 40f;
@@ -3533,6 +3617,7 @@ public class EnemyLadderNavigator : MonoBehaviour
 
         float targetX = _targetLadder.TopEntryPosition.x;
         float dx      = targetX - _rb.position.x;
+        if (CheckApproachTimeout(dx)) return;
         float dir     = Mathf.Abs(dx) < 0.01f ? 0f : Mathf.Sign(dx);
         float speed   = _chase != null ? _chase.MoveSpeed : 4f;
         float accel   = _chase != null ? _chase.HorizontalAcceleration : 40f;
@@ -3545,16 +3630,12 @@ public class EnemyLadderNavigator : MonoBehaviour
             StartClimbingDown();
     }
 
-    // ── Transitions ──────────────────────────────────────────────────────────────
+    // â”€â”€ Transitions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void StartClimbingUp()
     {
         _state = LadderState.ClimbingUp;
-        if (disableGravityWhileClimbing)
-        {
-            _originalGravity = _rb.gravityScale;
-            _rb.gravityScale = 0f;
-        }
+        SetClimbingPhysics();
         _targetLadder?.gate?.IgnoreForCollider(_bodyCollider);
         if (_chase != null) _chase.SuppressPlayerPlatformJump = false;
         if (enableDebugLogs) Debug.Log("[LadderNav] Started climbing UP.");
@@ -3563,11 +3644,7 @@ public class EnemyLadderNavigator : MonoBehaviour
     void StartClimbingDown()
     {
         _state = LadderState.ClimbingDown;
-        if (disableGravityWhileClimbing)
-        {
-            _originalGravity = _rb.gravityScale;
-            _rb.gravityScale = 0f;
-        }
+        SetClimbingPhysics();
         _targetLadder?.gate?.IgnoreForCollider(_bodyCollider);
         if (_chase != null) { _chase.ExternalControlActive = true; _chase.SuppressPlayerPlatformJump = false; }
         if (enableDebugLogs) Debug.Log("[LadderNav] Started climbing DOWN.");
@@ -3597,7 +3674,7 @@ public class EnemyLadderNavigator : MonoBehaviour
     void RestoreAfterClimb()
     {
         _targetLadder?.gate?.RestoreForCollider(_bodyCollider);
-        if (disableGravityWhileClimbing && _rb != null) _rb.gravityScale = _originalGravity;
+        RestoreNormalPhysics();
         if (_chase != null)
         {
             _chase.ExternalControlActive      = false;
@@ -3608,17 +3685,41 @@ public class EnemyLadderNavigator : MonoBehaviour
         _chaseDuration = 0f;
     }
 
+    // â”€â”€ Climb fizik yardÄ±mcÄ±larÄ± (gravity'yi asla 0'da bÄ±rakma) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+    void CacheOriginalGravityIfNeeded()
+    {
+        if (_gravityCached || _rb == null) return;
+        _originalGravity = _rb.gravityScale;
+        _gravityCached   = true;
+    }
+
+    void SetClimbingPhysics()
+    {
+        if (!disableGravityWhileClimbing || _rb == null) return;
+        CacheOriginalGravityIfNeeded();
+        _rb.gravityScale = 0f;
+    }
+
+    void RestoreNormalPhysics()
+    {
+        if (_rb != null && _gravityCached && disableGravityWhileClimbing)
+            _rb.gravityScale = _originalGravity;   // her zaman GERÃ‡EK deÄŸere dÃ¶ner, asla 0'a deÄŸil
+        if (enableDebugLogs) Debug.Log($"[LadderNav] Gravity restored â†’ {_originalGravity}.", this);
+    }
+
     public void SetUseLadders(bool value) => useLadders = value;
 
     void OnDisable()  { if (_state != LadderState.None) RestoreAfterClimb(); }
     void OnDestroy()  { if (_state != LadderState.None) RestoreAfterClimb(); }
 
-    // ── Ladder scoring ───────────────────────────────────────────────────────────
+    // â”€â”€ Ladder scoring â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     LadderZone FindBestLadderForGoingUp()
     {
-        LadderZone best  = null;
-        float      bestS = float.MaxValue;
+        LadderZone best       = null;
+        float      bestS      = float.MaxValue;
+        float      enemyFeetY = GetEnemyFeetY();
 
         foreach (var lz in LadderZone.All)
         {
@@ -3627,23 +3728,40 @@ public class EnemyLadderNavigator : MonoBehaviour
             float enemyToBot = Vector2.Distance(transform.position, lz.BottomPosition);
             if (enemyToBot > maxLadderSearchDistance) continue;
 
-            float topY = lz.TopPosition.y;
-            if (topY < transform.position.y + minVerticalDifferenceToUseLadder) continue;
+            // GiriÅŸ (bottom) enemy'nin mevcut platform seviyesinde mi?
+            float bottomYDelta = Mathf.Abs(lz.BottomPosition.y - enemyFeetY);
+            if (requireLadderEntryOnCurrentLevel && bottomYDelta > ladderEntryYTolerance)
+            {
+                if (enableDebugLogs) Debug.Log($"[LadderNav] UP reject {lz.name}: bottom not on level (Î”{bottomYDelta:F2} > {ladderEntryYTolerance}).", this);
+                continue;
+            }
 
-            float topToPlayerY = Mathf.Abs(topY - _player.position.y);
-            float topToPlayerX = Mathf.Abs(_player.position.x - lz.TopPosition.x);
-            float score        = enemyToBot + topToPlayerY * 3f + topToPlayerX * 0.25f;
+            // Sadece anlamlÄ± yukarÄ± taÅŸÄ±yan, makul yÃ¼kseklikteki merdivenler
+            float stepH = lz.TopPosition.y - lz.BottomPosition.y;
+            if (stepH < minVerticalDifferenceToUseLadder * 0.5f) continue;                   // yukarÄ± taÅŸÄ±mÄ±yor / Ã§ok kÄ±sa
+            if (stepH > maxSingleLadderStepHeight) continue;                                 // Ã§ok yÃ¼ksek
+            if (lz.TopPosition.y <= enemyFeetY + minVerticalDifferenceToUseLadder) continue; // anlamlÄ± yukarÄ± deÄŸil
+
+            float nearW = preferNearestReachableLadderFirst ? 2.0f : 1.0f;
+            float score = enemyToBot * nearW
+                        + bottomYDelta * 5.0f
+                        + Mathf.Abs(lz.TopPosition.y - _player.position.y) * 0.75f
+                        + Mathf.Abs(lz.TopPosition.x - _player.position.x) * 0.15f;
 
             if (score < bestS) { bestS = score; best = lz; }
         }
+
+        if (best != null && enableDebugLogs)
+            Debug.Log($"[LadderNav] Selected UP {best.name} | feetY {enemyFeetY:F2} | bottomY {best.BottomPosition.y:F2} | topY {best.TopPosition.y:F2} | score {bestS:F2}", this);
 
         return best;
     }
 
     LadderZone FindBestLadderForGoingDown()
     {
-        LadderZone best  = null;
-        float      bestS = float.MaxValue;
+        LadderZone best       = null;
+        float      bestS      = float.MaxValue;
+        float      enemyFeetY = GetEnemyFeetY();
 
         foreach (var lz in LadderZone.All)
         {
@@ -3652,23 +3770,77 @@ public class EnemyLadderNavigator : MonoBehaviour
             float enemyToTop = Vector2.Distance(transform.position, lz.TopEntryPosition);
             if (enemyToTop > maxLadderSearchDistance) continue;
 
-            if (lz.BottomPosition.y >= transform.position.y - minVerticalDifferenceToUseLadder) continue;
+            // GiriÅŸ (top entry) enemy'nin mevcut platform seviyesinde mi?
+            float topEntryYDelta = Mathf.Abs(lz.TopEntryPosition.y - enemyFeetY);
+            if (requireLadderEntryOnCurrentLevel && topEntryYDelta > ladderEntryYTolerance)
+            {
+                if (enableDebugLogs) Debug.Log($"[LadderNav] DOWN reject {lz.name}: topEntry not on level (Î”{topEntryYDelta:F2} > {ladderEntryYTolerance}).", this);
+                continue;
+            }
 
-            float botToPlayerY = Mathf.Abs(lz.BottomPosition.y - _player.position.y);
-            float botToPlayerX = Mathf.Abs(_player.position.x - lz.BottomPosition.x);
-            float score        = enemyToTop + botToPlayerY * 3f + botToPlayerX * 0.25f;
+            // Sadece anlamlÄ± aÅŸaÄŸÄ± taÅŸÄ±yan, makul yÃ¼kseklikteki merdivenler
+            float stepH = lz.TopEntryPosition.y - lz.BottomPosition.y;
+            if (stepH < minVerticalDifferenceToUseLadder * 0.5f) continue;
+            if (stepH > maxSingleLadderStepHeight) continue;
+            if (lz.BottomPosition.y >= enemyFeetY - minVerticalDifferenceToUseLadder) continue; // anlamlÄ± aÅŸaÄŸÄ± deÄŸil
+
+            float nearW = preferNearestReachableLadderFirst ? 2.0f : 1.0f;
+            float score = enemyToTop * nearW
+                        + topEntryYDelta * 5.0f
+                        + Mathf.Abs(lz.BottomPosition.y - _player.position.y) * 0.75f
+                        + Mathf.Abs(lz.BottomPosition.x - _player.position.x) * 0.15f;
 
             if (score < bestS) { bestS = score; best = lz; }
         }
 
+        if (best != null && enableDebugLogs)
+            Debug.Log($"[LadderNav] Selected DOWN {best.name} | feetY {enemyFeetY:F2} | topEntryY {best.TopEntryPosition.y:F2} | bottomY {best.BottomPosition.y:F2} | score {bestS:F2}", this);
+
         return best;
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────────
+    // â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-    bool IsPlayerOnGround()
+    // Enemy'nin mevcut platform/ayak Y seviyesi (gÃ¶vde collider'Ä±nÄ±n altÄ±).
+    float GetEnemyFeetY()
+    {
+        if (_bodyCollider != null) return _bodyCollider.bounds.min.y;
+        return transform.position.y - 0.5f;
+    }
+
+    void BeginApproach()
+    {
+        _approachTimer  = 0f;
+        _approachBestDx = float.MaxValue;
+    }
+
+    // Ladder'a yÃ¼rÃ¼rken yatay ilerleme takibi. Hedefe yaklaÅŸÄ±yorsa timer sÄ±fÄ±rlanÄ±r;
+    // ilerleme yoksa (engele takÄ±lÄ±) timeout'ta navigasyon iptal edilir. true â†’ abort edildi.
+    bool CheckApproachTimeout(float dx)
+    {
+        float adx = Mathf.Abs(dx);
+        if (adx < _approachBestDx - 0.05f)
+        {
+            _approachBestDx = adx;
+            _approachTimer  = 0f;
+            return false;
+        }
+
+        _approachTimer += Time.deltaTime;
+        if (_approachTimer >= ladderApproachTimeout)
+        {
+            if (enableDebugLogs) Debug.Log("[LadderNav] Approach timed out â€” aborting.");
+            AbortNavigation();
+            return true;
+        }
+        return false;
+    }
+
+    bool IsPlayerGroundedOrClimbing()
     {
         if (_player == null) return false;
+        if (_playerClimb != null && (_playerClimb.IsClimbing || _playerClimb.IsOnLadder))
+            return true;
         LayerMask layers = _chase != null ? _chase.GroundLayers : (LayerMask)(-1);
         return Physics2D.Raycast((Vector2)_player.position, Vector2.down, playerGroundCheckDistance, layers);
     }
@@ -3677,7 +3849,10 @@ public class EnemyLadderNavigator : MonoBehaviour
     {
         if (_player != null) return;
         if (PlayerHealthController.instance != null)
+        {
             _player = PlayerHealthController.instance.transform;
+            _playerClimb = _player.GetComponent<PlayerClimbController>();
+        }
     }
 
 #if UNITY_EDITOR
@@ -3700,7 +3875,10 @@ public class EnemyLadderNavigator : MonoBehaviour
 #endif
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Enemy\EnemySpawnManager.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Enemy\EnemySpawnManager.cs
+========================================================================
 using UnityEngine;
 
 public class EnemySpawnManager : MonoBehaviour
@@ -3877,7 +4055,10 @@ public class EnemySpawnManager : MonoBehaviour
 #endif
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Enemy\EnemySpawnPoint.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Enemy\EnemySpawnPoint.cs
+========================================================================
 using UnityEngine;
 
 public class EnemySpawnPoint : MonoBehaviour
@@ -3927,12 +4108,15 @@ public class EnemySpawnPoint : MonoBehaviour
         Gizmos.color = new Color(1f, 0f, 1f, 0.35f);
         Gizmos.DrawSphere(transform.position, 0.3f);
         UnityEditor.Handles.Label(transform.position + Vector3.up * 0.6f,
-            gameObject.name + (enemyPrefab != null ? $"\n{enemyPrefab.name} ×{baseSpawnCount} / {baseSpawnInterval:F1}s" : "\n(no prefab)"));
+            gameObject.name + (enemyPrefab != null ? $"\n{enemyPrefab.name} Ã—{baseSpawnCount} / {baseSpawnInterval:F1}s" : "\n(no prefab)"));
     }
 #endif
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Enemy\HitFlash.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Enemy\HitFlash.cs
+========================================================================
 using System.Collections;
 using UnityEngine;
 
@@ -3958,7 +4142,7 @@ public class HitFlash : MonoBehaviour
     [Tooltip("Color of the outline ring.")]
     [SerializeField] private Color outlineColor = Color.white;
 
-    [Tooltip("Shader _Radius value. Outline spread ≈ sqrt(radius) pixels. Try 4–9 for a visible rim.")]
+    [Tooltip("Shader _Radius value. Outline spread â‰ˆ sqrt(radius) pixels. Try 4â€“9 for a visible rim.")]
     [SerializeField] [Range(1f, 10f)] private float outlineRadius = 4f;
 
     private SpriteRenderer[] _renderers;
@@ -4004,7 +4188,7 @@ public class HitFlash : MonoBehaviour
             osr.sprite         = sr.sprite;
             osr.sortingLayerID = sr.sortingLayerID;
             // Render one order behind so the original sprite covers the sprite part of
-            // the outline shader — only the outer rim pixels remain visible.
+            // the outline shader â€” only the outer rim pixels remain visible.
             osr.sortingOrder = sr.sortingOrder - 1;
 
             var mat = new Material(outlineShader);
@@ -4091,7 +4275,10 @@ public class HitFlash : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Enemy\RunDifficultyManager.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Enemy\RunDifficultyManager.cs
+========================================================================
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -4138,7 +4325,7 @@ public class RunDifficultyManager : MonoBehaviour
     [SerializeField] private int   absoluteMaxAliveEnemies          = 60;
 
     [Header("Scaling Whitelist")]
-    [Tooltip("Bu listedeki prefab'lardan spawn edilen enemy'lere difficulty scaling uygulanır.")]
+    [Tooltip("Bu listedeki prefab'lardan spawn edilen enemy'lere difficulty scaling uygulanÄ±r.")]
     [SerializeField] private List<GameObject> scaledEnemyPrefabs = new();
 
     [Header("Debug")]
@@ -4283,7 +4470,7 @@ public class RunDifficultyManager : MonoBehaviour
         absoluteMaxAliveEnemies         = Mathf.Max(baseMaxAliveEnemies, absoluteMaxAliveEnemies);
     }
 
-    // ── Debug helpers ──────────────────────────────────────────────────────────
+    // â”€â”€ Debug helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     [ContextMenu("Debug / Add 1 Kill")]
     public void Debug_AddKill() => RegisterEnemyKill();
@@ -4308,35 +4495,38 @@ public class RunDifficultyManager : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Pickups\AmmoCrateController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Pickups\AmmoCrateController.cs
+========================================================================
 using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Oyuncunun EquipmentController'ı aracılığıyla yere bıraktığı Ammo Crate.
+/// Oyuncunun EquipmentController'Ä± aracÄ±lÄ±ÄŸÄ±yla yere bÄ±raktÄ±ÄŸÄ± Ammo Crate.
 ///
-/// Kurulum gereksinimleri (prefab üzerinde):
+/// Kurulum gereksinimleri (prefab Ã¼zerinde):
 ///   - Bu script (root obje)
-///   - Root: BoxCollider2D (Is Trigger: kapalı) + Rigidbody2D  →  Layer: AmmoCrate
-///   - Child "TriggerZone": BoxCollider2D (Is Trigger: açık)   →  Layer: Default
-///   - triggerZone alanına child'daki trigger collider'ı sürükle
-///   - groundLayer'a zemin layer'ını ata
-///   - Oyuncu tag'ı "Player" olarak ayarlanmış olmalıdır.
+///   - Root: BoxCollider2D (Is Trigger: kapalÄ±) + Rigidbody2D  â†’  Layer: AmmoCrate
+///   - Child "TriggerZone": BoxCollider2D (Is Trigger: aÃ§Ä±k)   â†’  Layer: Default
+///   - triggerZone alanÄ±na child'daki trigger collider'Ä± sÃ¼rÃ¼kle
+///   - groundLayer'a zemin layer'Ä±nÄ± ata
+///   - Oyuncu tag'Ä± "Player" olarak ayarlanmÄ±ÅŸ olmalÄ±dÄ±r.
 /// </summary>
 public class AmmoCrateController : MonoBehaviour
 {
     [Header("Ammo Settings")]
-    [Tooltip("Her tick'te verilecek mermi miktarı.")]
+    [Tooltip("Her tick'te verilecek mermi miktarÄ±.")]
     [SerializeField] private int ammoPerTick = 20;
-    [Tooltip("Tick'ler arası bekleme süresi (saniye).")]
+    [Tooltip("Tick'ler arasÄ± bekleme sÃ¼resi (saniye).")]
     [SerializeField] private float tickInterval = 0.1f;
-    [Tooltip("Toplam tick sayısı. Toplam mermi = ammoPerTick × totalTicks.")]
+    [Tooltip("Toplam tick sayÄ±sÄ±. Toplam mermi = ammoPerTick Ã— totalTicks.")]
     [SerializeField] private int totalTicks = 10;
-    [Tooltip("Tüm mermiler verildikten sonra objenin yok olana kadar bekleme süresi (saniye).")]
+    [Tooltip("TÃ¼m mermiler verildikten sonra objenin yok olana kadar bekleme sÃ¼resi (saniye).")]
     [SerializeField] private float destroyDelay = 3f;
 
     [Header("Ground Detection")]
-    [Tooltip("Child objedeki trigger collider. Yere değene kadar devre dışı tutulur.")]
+    [Tooltip("Child objedeki trigger collider. Yere deÄŸene kadar devre dÄ±ÅŸÄ± tutulur.")]
     [SerializeField] private Collider2D triggerZone;
     [Tooltip("Zemin olarak kabul edilecek layer'lar.")]
     [SerializeField] private LayerMask groundLayer;
@@ -4377,7 +4567,7 @@ public class AmmoCrateController : MonoBehaviour
 
         if (_weapon == null)
         {
-            Debug.LogWarning("AmmoCrateController: Weapon bulunamadı, mermi verilemez.");
+            Debug.LogWarning("AmmoCrateController: Weapon bulunamadÄ±, mermi verilemez.");
             return;
         }
 
@@ -4402,7 +4592,7 @@ public class AmmoCrateController : MonoBehaviour
 
         while (ticksLeft > 0)
         {
-            // Oyuncu içeride değilse veya aktif silahın mermisi sonsuzsa bekle.
+            // Oyuncu iÃ§eride deÄŸilse veya aktif silahÄ±n mermisi sonsuzsa bekle.
             yield return new WaitUntil(() => _playerInside && !_weapon.ActiveWeaponHasInfiniteAmmo);
 
             _weapon.AddReserveAmmo(ammoPerTick);
@@ -4417,7 +4607,10 @@ public class AmmoCrateController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Pickups\AmmoOrbPickup.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Pickups\AmmoOrbPickup.cs
+========================================================================
 using UnityEngine;
 
 // Homing ammo orb spawned on enemy death. Bursts outward, waits, then glides to the player.
@@ -4609,7 +4802,10 @@ public class AmmoOrbPickup : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Pickups\HealthPickup.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Pickups\HealthPickup.cs
+========================================================================
 using UnityEngine;
 
 public class HealthPickup : MonoBehaviour
@@ -4633,7 +4829,10 @@ public class HealthPickup : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Player\AimPlaneUtil.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Player\AimPlaneUtil.cs
+========================================================================
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -4655,7 +4854,10 @@ public static class AimPlaneUtil
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Player\LadderPlatformGate.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Player\LadderPlatformGate.cs
+========================================================================
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -4671,7 +4873,7 @@ public class LadderPlatformGate : MonoBehaviour
         if (gateCollider == null) gateCollider = GetComponent<Collider2D>();
     }
 
-    // ── Generic API (player + enemy) ─────────────────────────────────────────────
+    // â”€â”€ Generic API (player + enemy) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     public void IgnoreForCollider(Collider2D target)
     {
@@ -4699,13 +4901,13 @@ public class LadderPlatformGate : MonoBehaviour
         return gateCollider.bounds.Intersects(target.bounds);
     }
 
-    // ── Player delegates (PlayerClimbController unchanged) ───────────────────────
+    // â”€â”€ Player delegates (PlayerClimbController unchanged) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     public void IgnoreForPlayer(Collider2D p)          => IgnoreForCollider(p);
     public void RestoreForPlayer(Collider2D p)          => RestoreForCollider(p);
     public bool IsPlayerStillInsideGate(Collider2D p)  => IsColliderStillInsideGate(p);
 
-    // ── Deferred restore ─────────────────────────────────────────────────────────
+    // â”€â”€ Deferred restore â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void Update()
     {
@@ -4719,7 +4921,10 @@ public class LadderPlatformGate : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Player\LadderTopEntryZone.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Player\LadderTopEntryZone.cs
+========================================================================
 using UnityEngine;
 
 public class LadderTopEntryZone : MonoBehaviour
@@ -4750,7 +4955,10 @@ public class LadderTopEntryZone : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Player\LadderZone.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Player\LadderZone.cs
+========================================================================
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -4763,9 +4971,9 @@ public class LadderZone : MonoBehaviour
     [SerializeField] public float enterDistance   = 0.25f;
     [SerializeField] public float exitDistance    = 0.25f;
     [SerializeField] public LadderPlatformGate gate;
-    [Tooltip("Enemy'nin durması gereken yükseklik. Boş bırakılırsa TopPoint kullanılır.")]
+    [Tooltip("Enemy'nin durmasÄ± gereken yÃ¼kseklik. BoÅŸ bÄ±rakÄ±lÄ±rsa TopPoint kullanÄ±lÄ±r.")]
     [SerializeField] public Transform enemyTopPoint;
-    [Tooltip("Enemy yukarıdan aşağı inerken yürüyeceği nokta. Boş bırakılırsa topPoint kullanılır.")]
+    [Tooltip("Enemy yukarÄ±dan aÅŸaÄŸÄ± inerken yÃ¼rÃ¼yeceÄŸi nokta. BoÅŸ bÄ±rakÄ±lÄ±rsa topPoint kullanÄ±lÄ±r.")]
     [SerializeField] private Transform topEntryPoint;
 
     public static readonly List<LadderZone> All = new();
@@ -4797,9 +5005,9 @@ public class LadderZone : MonoBehaviour
     void OnValidate()
     {
         if (bottomPoint == null)
-            Debug.LogWarning($"[LadderZone] {gameObject.name}: bottomPoint atanmamış!", this);
+            Debug.LogWarning($"[LadderZone] {gameObject.name}: bottomPoint atanmamÄ±ÅŸ!", this);
         if (topPoint == null)
-            Debug.LogWarning($"[LadderZone] {gameObject.name}: topPoint atanmamış!", this);
+            Debug.LogWarning($"[LadderZone] {gameObject.name}: topPoint atanmamÄ±ÅŸ!", this);
     }
 
     void OnDrawGizmos()
@@ -4837,7 +5045,10 @@ public class LadderZone : MonoBehaviour
 #endif
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Player\PlayerAbilityTracker.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Player\PlayerAbilityTracker.cs
+========================================================================
 using UnityEngine;
 
 public class PlayerAbilityTracker : MonoBehaviour
@@ -4859,7 +5070,10 @@ public class PlayerAbilityTracker : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Player\PlayerClimbController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Player\PlayerClimbController.cs
+========================================================================
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -4885,7 +5099,7 @@ public class PlayerClimbController : MonoBehaviour
     [Tooltip("Non-trigger body collider used for gate IgnoreCollision. Auto-found if empty.")]
     [SerializeField] private Collider2D playerBodyCollider;
 
-    [Header("Input — same actions as PlayerController")]
+    [Header("Input â€” same actions as PlayerController")]
     [SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference jumpAction;
 
@@ -4913,9 +5127,9 @@ public class PlayerClimbController : MonoBehaviour
     void OnDisable() { if (IsClimbing) { RestoreGravity(); _currentLadder?.gate?.RestoreForPlayer(playerBodyCollider); } }
     void OnDestroy() { if (IsClimbing) { RestoreGravity(); _currentLadder?.gate?.RestoreForPlayer(playerBodyCollider); } }
 
-    // ── Trigger detection (tutorial approach) ───────────────────────────────────
+    // â”€â”€ Trigger detection (tutorial approach) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // OnTriggerStay2D fires every physics step while inside trigger.
-    // No Enter/Exit — avoids spurious cancel events.
+    // No Enter/Exit â€” avoids spurious cancel events.
 
     void OnTriggerStay2D(Collider2D other)
     {
@@ -4926,7 +5140,7 @@ public class PlayerClimbController : MonoBehaviour
         _currentLadder = lz;
     }
 
-    // ── Update — input-driven state transitions ──────────────────────────────────
+    // â”€â”€ Update â€” input-driven state transitions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void Update()
     {
@@ -4947,7 +5161,7 @@ public class PlayerClimbController : MonoBehaviour
             JumpOffLadder();
     }
 
-    // ── FixedUpdate — physics + trigger presence check ───────────────────────────
+    // â”€â”€ FixedUpdate â€” physics + trigger presence check â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void FixedUpdate()
     {
@@ -4993,7 +5207,7 @@ public class PlayerClimbController : MonoBehaviour
             ExitAtBottom();
     }
 
-    // ── State transitions ────────────────────────────────────────────────────────
+    // â”€â”€ State transitions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void EnterClimbing()
     {
@@ -5046,7 +5260,7 @@ public class PlayerClimbController : MonoBehaviour
             _rb.gravityScale = _originalGravity;
     }
 
-    // ── Top Entry Zone (called by LadderTopEntryZone) ────────────────────────────
+    // â”€â”€ Top Entry Zone (called by LadderTopEntryZone) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     public void SetTopEntryZone(LadderZone ladder)   => _topEntryLadder = ladder;
     public void ClearTopEntryZone(LadderZone ladder) { if (_topEntryLadder == ladder) _topEntryLadder = null; }
@@ -5059,7 +5273,7 @@ public class PlayerClimbController : MonoBehaviour
         if (enableDebugLogs) Debug.Log("[Ladder] Started climbing from top.");
     }
 
-    // ── Input ────────────────────────────────────────────────────────────────────
+    // â”€â”€ Input â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     float GetVerticalInput()
     {
@@ -5076,7 +5290,10 @@ public class PlayerClimbController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Player\PlayerController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Player\PlayerController.cs
+========================================================================
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5567,7 +5784,7 @@ public class PlayerController : MonoBehaviour
 
         float targetVx = inputX * targetMax;
         bool hasHorizontalInput = Mathf.Abs(inputX) > 0.01f;
-        // No deceleration in air when player isn't pressing a horizontal key — prevents W (jump key
+        // No deceleration in air when player isn't pressing a horizontal key â€” prevents W (jump key
         // that's also the Move "Up" composite binding) from zeroing moveInput.x and braking mid-air.
         bool isClimbing = _climbController != null && _climbController.IsClimbing;
         float accel = hasHorizontalInput ? groundAcceleration : ((isOnGround || isClimbing) ? groundDeceleration : 0f);
@@ -5627,7 +5844,7 @@ public class PlayerController : MonoBehaviour
     // --- fire jump interact ---
 
     // Polls each jump binding independently so pressing a second key while the first is held
-    // still registers — Unity's performed callback doesn't re-fire when action is already held.
+    // still registers â€” Unity's performed callback doesn't re-fire when action is already held.
     void PollJumpInput()
     {
         if (!canMove) return;
@@ -5679,7 +5896,7 @@ public class PlayerController : MonoBehaviour
         jumpGraceEnd = Time.time + JumpGroundSuppressDuration;
 
         // Force isOnGround false immediately so the animator bool is already false
-        // when the trigger fires this same frame — otherwise RefreshGroundedState ran
+        // when the trigger fires this same frame â€” otherwise RefreshGroundedState ran
         // earlier in Update and the bool is still true, causing the condition to fail
         // and the trigger to be silently consumed.
         isOnGround = false;
@@ -5787,7 +6004,10 @@ public class PlayerController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Player\PlayerHealthController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Player\PlayerHealthController.cs
+========================================================================
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -5985,7 +6205,7 @@ public class PlayerHealthController : MonoBehaviour
             StartArmorFlash();
 
         if (healthDamage <= 0)
-            return; // armor absorbed all — no health damage, no flash, no iframes
+            return; // armor absorbed all â€” no health damage, no flash, no iframes
 
         StartFlash();
         currentHealth -= healthDamage;
@@ -6026,7 +6246,10 @@ public class PlayerHealthController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Player\PlayerSceneTransitionSupport.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Player\PlayerSceneTransitionSupport.cs
+========================================================================
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -6084,7 +6307,10 @@ public class PlayerSceneTransitionSupport : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Player\PlayerStats.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Player\PlayerStats.cs
+========================================================================
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6097,14 +6323,14 @@ public enum StatType
 }
 
 // Stores all run-time stat bonuses accumulated through upgrades.
-// Singleton scoped to the game scene — resets each run (not DontDestroyOnLoad).
+// Singleton scoped to the game scene â€” resets each run (not DontDestroyOnLoad).
 //
 // Stacking rules:
 //   Additive  (MaxHealth, MaxArmor, MovementSpeed, JumpForce):
 //       multiplier = 1 + totalBonusPercent / 100
 //   Multiplicative (everything else):
 //       multiplier compounds: current *= (1 + bonus/100)
-//   Luck / XPGain bonuses are raw fractions (0.2 = ×1.2 per upgrade), not percent.
+//   Luck / XPGain bonuses are raw fractions (0.2 = Ã—1.2 per upgrade), not percent.
 public class PlayerStats : MonoBehaviour
 {
     public static PlayerStats instance;
@@ -6114,31 +6340,31 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float baseLuck       = 1f;
     [Tooltip("Starting crit chance (0 = no crits by default).")]
     [SerializeField] private float baseCritChance = 0f;
-    [Tooltip("Starting crit damage multiplier (1.0 = 100%, no bonus — crits deal normal damage).")]
+    [Tooltip("Starting crit damage multiplier (1.0 = 100%, no bonus â€” crits deal normal damage).")]
     [SerializeField] private float baseCritDamage = 1f;
     [Tooltip("Starting XP gain multiplier (1 = no bonus).")]
     [SerializeField] private float baseXPGain     = 1f;
 
-    // ── Additive accumulators (percent points, e.g. 5 = +5%) ────────────────
+    // â”€â”€ Additive accumulators (percent points, e.g. 5 = +5%) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     private float _maxHealthBonus;
     private float _maxArmorBonus;
     private float _movementSpeedBonus;
     private float _jumpForceBonus;
 
-    // ── Multiplicative running values ────────────────────────────────────────
+    // â”€â”€ Multiplicative running values â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     private float _damageMult       = 1f;
     private float _rateOfFireMult   = 1f;
     private float _accuracyMult     = 1f;
     private float _magazineSizeMult = 1f;
     private float _reloadSpeedMult  = 1f;
 
-    // ── Absolute compounding stats ───────────────────────────────────────────
+    // â”€â”€ Absolute compounding stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     public float Luck            { get; private set; }
     public float CritChance      { get; private set; }
     public float CritDamage      { get; private set; }
     public float XPGainMultiplier{ get; private set; }
 
-    // ── Computed multiplier properties ───────────────────────────────────────
+    // â”€â”€ Computed multiplier properties â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     public float MaxHealthMultiplier     => 1f + _maxHealthBonus     / 100f;
     public float MaxArmorMultiplier      => 1f + _maxArmorBonus      / 100f;
     public float MovementSpeedMultiplier => 1f + _movementSpeedBonus / 100f;
@@ -6199,7 +6425,7 @@ public class PlayerStats : MonoBehaviour
             case StatType.MagazineSize:  _magazineSizeMult *= 1f + bonusValue / 100f; break;
             case StatType.ReloadSpeed:   _reloadSpeedMult  *= 1f - bonusValue / 100f; break;
 
-            // Luck / XPGain: flat additive (0.2 → Luck += 0.2)
+            // Luck / XPGain: flat additive (0.2 â†’ Luck += 0.2)
             case StatType.Luck:   Luck             += bonusValue; break;
             case StatType.XPGain: XPGainMultiplier += bonusValue; break;
 
@@ -6211,7 +6437,7 @@ public class PlayerStats : MonoBehaviour
         OnStatsChanged?.Invoke();
     }
 
-    // Returns the current actual value of a stat (base × multiplier where applicable).
+    // Returns the current actual value of a stat (base Ã— multiplier where applicable).
     public float GetCurrentValue(StatType stat)
     {
         return stat switch
@@ -6270,14 +6496,17 @@ public class PlayerStats : MonoBehaviour
     };
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Player\PreciseAimController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Player\PreciseAimController.cs
+========================================================================
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Sağ tık "precise aim" — kamera max offset X/Y, crosshair boyutu ve silah local Y kaldırması arasında yumuşak geçiş.
-/// İleride accuracy / handling alanları <see cref="PreciseAimPresentationProfile"/> üzerinden genişletilebilir.
+/// SaÄŸ tÄ±k "precise aim" â€” kamera max offset X/Y, crosshair boyutu ve silah local Y kaldÄ±rmasÄ± arasÄ±nda yumuÅŸak geÃ§iÅŸ.
+/// Ä°leride accuracy / handling alanlarÄ± <see cref="PreciseAimPresentationProfile"/> Ã¼zerinden geniÅŸletilebilir.
 /// </summary>
 [DefaultExecutionOrder(-20)]
 public class PreciseAimController : MonoBehaviour
@@ -6285,10 +6514,10 @@ public class PreciseAimController : MonoBehaviour
     [Serializable]
     public struct PreciseAimPresentationProfile
     {
-        [Tooltip("CameraMouseOffset maxOffsetX ile çarpılır (1 = normal, 1.5 = %50 artış).")]
+        [Tooltip("CameraMouseOffset maxOffsetX ile Ã§arpÄ±lÄ±r (1 = normal, 1.5 = %50 artÄ±ÅŸ).")]
         public float cameraMaxOffsetXMultiplier;
 
-        [Tooltip("CameraMouseOffset maxOffsetY ile çarpılır (1 = normal, 1.5 = %50 artış). 0 = eski sahneler: X ile aynı kabul edilir.")]
+        [Tooltip("CameraMouseOffset maxOffsetY ile Ã§arpÄ±lÄ±r (1 = normal, 1.5 = %50 artÄ±ÅŸ). 0 = eski sahneler: X ile aynÄ± kabul edilir.")]
         public float cameraMaxOffsetYMultiplier;
 
         public Vector2 crosshairSizeDelta;
@@ -6296,20 +6525,20 @@ public class PreciseAimController : MonoBehaviour
         [Tooltip("weaponLiftRoot local uzayda +Y (ADS hissi).")]
         public float weaponLocalLiftY;
 
-        // İleride: spread çarpanı, sway, ADS hızı vb. buraya eklenebilir.
+        // Ä°leride: spread Ã§arpanÄ±, sway, ADS hÄ±zÄ± vb. buraya eklenebilir.
     }
 
     [Header("Refs")]
     [SerializeField] private CameraMouseOffset cameraMouseOffset;
     [SerializeField] private RectTransform crosshairRect;
-    [Tooltip("Silahı local Y ile kaldırır. Weapon'daki positionShiftTarget ile AYNI transformu verme (LateUpdate o transformu sıfırlar). Tercih: silah hiyerarşisinde Weapon'ın üstünde boş bir 'GunMount' parent.")]
+    [Tooltip("SilahÄ± local Y ile kaldÄ±rÄ±r. Weapon'daki positionShiftTarget ile AYNI transformu verme (LateUpdate o transformu sÄ±fÄ±rlar). Tercih: silah hiyerarÅŸisinde Weapon'Ä±n Ã¼stÃ¼nde boÅŸ bir 'GunMount' parent.")]
     [SerializeField] private Transform weaponLiftRoot;
 
     [Header("Blend")]
-    [Tooltip("Hip ↔ precise geçiş hızı (exponential). Yükselt = daha snappy (ör. 18–28), düşür = daha yumuşak (ör. 6–10).")]
+    [Tooltip("Hip â†” precise geÃ§iÅŸ hÄ±zÄ± (exponential). YÃ¼kselt = daha snappy (Ã¶r. 18â€“28), dÃ¼ÅŸÃ¼r = daha yumuÅŸak (Ã¶r. 6â€“10).")]
     [SerializeField] private float blendSmooth = 16f;
 
-    [Header("Hip-fire (sağ tık yok)")]
+    [Header("Hip-fire (saÄŸ tÄ±k yok)")]
     [SerializeField] private PreciseAimPresentationProfile hip = new PreciseAimPresentationProfile
     {
         cameraMaxOffsetXMultiplier = 1f,
@@ -6318,7 +6547,7 @@ public class PreciseAimController : MonoBehaviour
         weaponLocalLiftY = 0f,
     };
 
-    [Header("Precise (sağ tık)")]
+    [Header("Precise (saÄŸ tÄ±k)")]
     [SerializeField] private PreciseAimPresentationProfile precise = new PreciseAimPresentationProfile
     {
         cameraMaxOffsetXMultiplier = 1.5f,
@@ -6331,7 +6560,7 @@ public class PreciseAimController : MonoBehaviour
     Vector3 _weaponBaseLocalPos;
     bool _weaponBaseCached;
 
-    /// <summary>0 = hip, 1 = tam precise; accuracy / handling için dışarıdan okunabilir.</summary>
+    /// <summary>0 = hip, 1 = tam precise; accuracy / handling iÃ§in dÄ±ÅŸarÄ±dan okunabilir.</summary>
     public float AimBlendNormalized => _blend;
 
     void Awake()
@@ -6419,7 +6648,10 @@ public class PreciseAimController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Progression\AbilityUnlock.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Progression\AbilityUnlock.cs
+========================================================================
 using UnityEngine;
 using TMPro;
 
@@ -6485,7 +6717,10 @@ public class AbilityUnlock : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Progression\ArmorController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Progression\ArmorController.cs
+========================================================================
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -6592,14 +6827,14 @@ public class ArmorController : MonoBehaviour
         if (armorType == ArmorType.None || _currentArmor >= max)
             return;
 
-        // Phase 1 – waiting after last hit.
+        // Phase 1 â€“ waiting after last hit.
         if (_rechargeTimer > 0f)
         {
             _rechargeTimer -= Time.deltaTime;
             return;
         }
 
-        // Phase 2 – gradually fill armor.
+        // Phase 2 â€“ gradually fill armor.
         float rate = max / Mathf.Max(0.01f, CurrentStats.refillDuration);
         _armorFloat = Mathf.Min(max, _armorFloat + rate * Time.deltaTime);
 
@@ -6663,7 +6898,10 @@ public class ArmorController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Progression\EquipmentController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Progression\EquipmentController.cs
+========================================================================
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6677,17 +6915,17 @@ public class EquipmentController : MonoBehaviour
     [SerializeField] private EquipmentType selectedEquipment = EquipmentType.StimShot;
 
     [Header("Input")]
-    [Tooltip("Equipment kullanma action'ı. Atanmazsa X tuşu fallback olarak kullanılır.")]
+    [Tooltip("Equipment kullanma action'Ä±. Atanmazsa X tuÅŸu fallback olarak kullanÄ±lÄ±r.")]
     [SerializeField] private InputActionReference useEquipmentAction;
 
     [Header("References")]
-    [Tooltip("Weapon bileşeni; boş bırakılırsa alt objelerden otomatik bulunur.")]
+    [Tooltip("Weapon bileÅŸeni; boÅŸ bÄ±rakÄ±lÄ±rsa alt objelerden otomatik bulunur.")]
     [SerializeField] private Weapon weapon;
 
     [Header("UI")]
-    [Tooltip("Seçili ekipmanın ikonunu gösteren Image.")]
+    [Tooltip("SeÃ§ili ekipmanÄ±n ikonunu gÃ¶steren Image.")]
     [SerializeField] private Image equipmentIconImage;
-    [Tooltip("Kalan cooldown'ı gösteren Slider. 1 = yeni kullanıldı, 0 = hazır.")]
+    [Tooltip("Kalan cooldown'Ä± gÃ¶steren Slider. 1 = yeni kullanÄ±ldÄ±, 0 = hazÄ±r.")]
     [SerializeField] private Slider cooldownSlider;
     [Tooltip("StimShot ikonu.")]
     [SerializeField] private Sprite stimShotSprite;
@@ -6695,23 +6933,23 @@ public class EquipmentController : MonoBehaviour
     [SerializeField] private Sprite ammoCrateSprite;
 
     [Header("StimShot Settings")]
-    [Tooltip("Toplam iyileşme miktarı (HP).")]
+    [Tooltip("Toplam iyileÅŸme miktarÄ± (HP).")]
     [SerializeField] private int stimTotalHeal = 50;
-    [Tooltip("İyileşmenin tamamlanacağı süre (saniye). Bu süre boyunca can smooth artar.")]
+    [Tooltip("Ä°yileÅŸmenin tamamlanacaÄŸÄ± sÃ¼re (saniye). Bu sÃ¼re boyunca can smooth artar.")]
     [SerializeField] private float stimDuration = 3f;
-    [Tooltip("StimShot'ın yeniden kullanılabilmesi için gereken bekleme süresi (saniye).")]
+    [Tooltip("StimShot'Ä±n yeniden kullanÄ±labilmesi iÃ§in gereken bekleme sÃ¼resi (saniye).")]
     [SerializeField] private float stimCooldown = 15f;
-    [Tooltip("Stim kullanıldığında spawn edilecek particle efekti prefab'ı (ParticleSystem içeren obje).")]
+    [Tooltip("Stim kullanÄ±ldÄ±ÄŸÄ±nda spawn edilecek particle efekti prefab'Ä± (ParticleSystem iÃ§eren obje).")]
     [SerializeField] private ParticleSystem stimParticleEffect;
-    [Tooltip("Particle'ın spawn olacağı nokta. Boş bırakılırsa player pivot'u kullanılır.")]
+    [Tooltip("Particle'Ä±n spawn olacaÄŸÄ± nokta. BoÅŸ bÄ±rakÄ±lÄ±rsa player pivot'u kullanÄ±lÄ±r.")]
     [SerializeField] private Transform stimSpawnPoint;
 
     [Header("AmmoCrate Settings")]
-    [Tooltip("Ammo crate'in spawn olacağı nokta (oyuncunun altı).")]
+    [Tooltip("Ammo crate'in spawn olacaÄŸÄ± nokta (oyuncunun altÄ±).")]
     [SerializeField] private Transform equipmentPoint;
-    [Tooltip("AmmoCrate prefab'ı.")]
+    [Tooltip("AmmoCrate prefab'Ä±.")]
     [SerializeField] private GameObject ammoCratePrefab;
-    [Tooltip("AmmoCrate'in yeniden kullanılabilmesi için gereken bekleme süresi (saniye).")]
+    [Tooltip("AmmoCrate'in yeniden kullanÄ±labilmesi iÃ§in gereken bekleme sÃ¼resi (saniye).")]
     [SerializeField] private float ammoCrateCooldown = 20f;
 
     private float _stimCooldownRemaining;
@@ -6777,7 +7015,7 @@ public class EquipmentController : MonoBehaviour
         }
     }
 
-    // ── StimShot ─────────────────────────────────────────────────────────────
+    // â”€â”€ StimShot â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void UseStimShot()
     {
@@ -6805,7 +7043,7 @@ public class EquipmentController : MonoBehaviour
             elapsed     += Time.deltaTime;
             accumulated += healRate * Time.deltaTime;
 
-            // Her frame biriken kesirli canı tam sayıya dönüştürünce uygula.
+            // Her frame biriken kesirli canÄ± tam sayÄ±ya dÃ¶nÃ¼ÅŸtÃ¼rÃ¼nce uygula.
             int toHeal = Mathf.FloorToInt(accumulated);
             if (toHeal > 0 && PlayerHealthController.instance != null)
             {
@@ -6816,7 +7054,7 @@ public class EquipmentController : MonoBehaviour
             yield return null;
         }
 
-        // Kalan kesirli miktarı yuvarla ve uygula.
+        // Kalan kesirli miktarÄ± yuvarla ve uygula.
         int remainder = Mathf.RoundToInt(accumulated);
         if (remainder > 0)
             PlayerHealthController.instance?.HealPlayer(remainder);
@@ -6824,13 +7062,13 @@ public class EquipmentController : MonoBehaviour
         _stimRoutine = null;
     }
 
-    // ── AmmoCrate ────────────────────────────────────────────────────────────
+    // â”€â”€ AmmoCrate â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void UseAmmoCrate()
     {
         if (ammoCratePrefab == null || equipmentPoint == null)
         {
-            Debug.LogWarning("EquipmentController: ammoCratePrefab veya equipmentPoint atanmamış!");
+            Debug.LogWarning("EquipmentController: ammoCratePrefab veya equipmentPoint atanmamÄ±ÅŸ!");
             return;
         }
 
@@ -6842,7 +7080,7 @@ public class EquipmentController : MonoBehaviour
             crate.Initialize(weapon);
     }
 
-    // ── Cooldown & UI ────────────────────────────────────────────────────────
+    // â”€â”€ Cooldown & UI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     void TickCooldowns()
     {
@@ -6864,7 +7102,7 @@ public class EquipmentController : MonoBehaviour
             ? stimCooldown
             : ammoCrateCooldown;
 
-        // 1 = yeni kullanıldı (tam dolu), 0 = hazır.
+        // 1 = yeni kullanÄ±ldÄ± (tam dolu), 0 = hazÄ±r.
         cooldownSlider.value = duration > 0f ? remaining / duration : 0f;
     }
 
@@ -6879,33 +7117,39 @@ public class EquipmentController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Progression\EquipmentData.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Progression\EquipmentData.cs
+========================================================================
 using UnityEngine;
 
-// Loadout menüsünde gösterilecek ekipman bilgileri.
+// Loadout menÃ¼sÃ¼nde gÃ¶sterilecek ekipman bilgileri.
 [CreateAssetMenu(fileName = "EquipmentData", menuName = "Game/Equipment Data", order = 1)]
 public class EquipmentData : ScriptableObject
 {
-    [Tooltip("Loadout menüsünde gösterilecek isim.")]
+    [Tooltip("Loadout menÃ¼sÃ¼nde gÃ¶sterilecek isim.")]
     public string equipmentName;
 
     public Sprite equipmentSprite;
 
-    [Tooltip("Bu veri hangi ekipman tipine karşılık gelir.")]
+    [Tooltip("Bu veri hangi ekipman tipine karÅŸÄ±lÄ±k gelir.")]
     public EquipmentController.EquipmentType equipmentType;
 
     [Header("Stats")]
-    [Tooltip("Ammo Crate için verilen toplam mermi miktarı. Stim Shot için kullanılmaz.")]
+    [Tooltip("Ammo Crate iÃ§in verilen toplam mermi miktarÄ±. Stim Shot iÃ§in kullanÄ±lmaz.")]
     public int totalAmmo;
 
-    [Tooltip("Stim Shot için iyileşme miktarı (HP). Ammo Crate için kullanılmaz.")]
+    [Tooltip("Stim Shot iÃ§in iyileÅŸme miktarÄ± (HP). Ammo Crate iÃ§in kullanÄ±lmaz.")]
     public int healthAmount;
 
-    [Tooltip("Yeniden kullanım süresi (saniye).")]
+    [Tooltip("Yeniden kullanÄ±m sÃ¼resi (saniye).")]
     public float cooldown;
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Progression\LoadoutController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Progression\LoadoutController.cs
+========================================================================
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -6922,11 +7166,11 @@ public class LoadoutController : MonoBehaviour
     [Tooltip("GameObject containing the Armor selection UI.")]
     [SerializeField] private GameObject armorHorizontal;
 
-    [Header("Primary Weapon — Weapon Buttons")]
+    [Header("Primary Weapon â€” Weapon Buttons")]
     [Tooltip("Ordered list of weapon select buttons: 0=AR, 1=SMG, 2=Shotgun.")]
     [SerializeField] private Button[] weaponButtons;
 
-    [Header("Primary Weapon — Center Display")]
+    [Header("Primary Weapon â€” Center Display")]
     [SerializeField] private TMP_Text weaponNameText;
     [SerializeField] private Image weaponDisplayImage;
     [SerializeField] private TMP_Text damageText;
@@ -6939,11 +7183,11 @@ public class LoadoutController : MonoBehaviour
     [Tooltip("Image in the right panel that shows the currently equipped weapon on the player sprite.")]
     [SerializeField] private Image playerWeaponPreviewImage;
 
-    [Header("Equipment — Equipment Buttons")]
+    [Header("Equipment â€” Equipment Buttons")]
     [Tooltip("Ordered list of equipment select buttons: 0=Ammo Crate, 1=Stim Shot.")]
     [SerializeField] private Button[] equipmentButtons;
 
-    [Header("Equipment — Center Display")]
+    [Header("Equipment â€” Center Display")]
     [SerializeField] private TMP_Text equipmentNameText;
     [SerializeField] private Image equipmentDisplayImage;
     [Tooltip("Entire row GameObject for Total Ammo stat (hidden when Stim Shot selected).")]
@@ -6954,16 +7198,16 @@ public class LoadoutController : MonoBehaviour
     [SerializeField] private TMP_Text healthAmountText;
     [SerializeField] private TMP_Text equipmentCooldownText;
 
-    [Header("Armor — Armor Buttons")]
+    [Header("Armor â€” Armor Buttons")]
     [Tooltip("Ordered list of armor select buttons: 0=Medium, 1=Heavy, 2=Light.")]
     [SerializeField] private Button[] armorButtons;
 
-    [Header("Armor — Stats (filled from ArmorController Inspector values)")]
+    [Header("Armor â€” Stats (filled from ArmorController Inspector values)")]
     [SerializeField] private ArmorController.ArmorStats mediumArmorStats;
     [SerializeField] private ArmorController.ArmorStats heavyArmorStats;
     [SerializeField] private ArmorController.ArmorStats lightArmorStats;
 
-    [Header("Armor — Center Display")]
+    [Header("Armor â€” Center Display")]
     [SerializeField] private TMP_Text armorNameText;
     [SerializeField] private TMP_Text maxArmorText;
     [SerializeField] private TMP_Text rechargeDelayText;
@@ -7009,11 +7253,11 @@ public class LoadoutController : MonoBehaviour
 
         if (data == null) return;
 
-        // Center display — name
+        // Center display â€” name
         if (weaponNameText != null)
             weaponNameText.text = string.IsNullOrEmpty(data.weaponName) ? data.name : data.weaponName;
 
-        // Center display — weapon image
+        // Center display â€” weapon image
         if (weaponDisplayImage != null)
         {
             weaponDisplayImage.sprite = data.weaponSprite;
@@ -7165,7 +7409,10 @@ public class LoadoutController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Progression\LoadoutManager.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Progression\LoadoutManager.cs
+========================================================================
 using UnityEngine;
 
 // Persistent singleton that stores the player's loadout choices across scenes.
@@ -7260,12 +7507,15 @@ public class LoadoutManager : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Progression\RunLevelManager.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Progression\RunLevelManager.cs
+========================================================================
 using System;
 using UnityEngine;
 
 // Manages the run's XP and level progression.
-// Singleton — persists for the duration of the run (not DontDestroyOnLoad; resets each run).
+// Singleton â€” persists for the duration of the run (not DontDestroyOnLoad; resets each run).
 public class RunLevelManager : MonoBehaviour
 {
     public static RunLevelManager instance;
@@ -7318,11 +7568,14 @@ public class RunLevelManager : MonoBehaviour
         }
     }
 
-    // Normalised progress towards the next level (0–1).
+    // Normalised progress towards the next level (0â€“1).
     public float LevelProgress => XPToNextLevel > 0 ? (float)CurrentXP / XPToNextLevel : 0f;
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Progression\UpgradeDefinition.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Progression\UpgradeDefinition.cs
+========================================================================
 using UnityEngine;
 
 public enum UpgradeTier { Low = 0, Mid = 1, High = 2 }
@@ -7358,7 +7611,10 @@ public class UpgradeDefinition : ScriptableObject
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Progression\UpgradeManager.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Progression\UpgradeManager.cs
+========================================================================
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7439,7 +7695,7 @@ public class UpgradeManager : MonoBehaviour
         });
     }
 
-    // ── Public actions wired to canvas buttons ───────────────────────────────
+    // â”€â”€ Public actions wired to canvas buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     public void OnSelectUpgrade(int slotIndex)
     {
@@ -7462,7 +7718,7 @@ public class UpgradeManager : MonoBehaviour
         upgradeCanvas.Show(_currentOffers, rerollAvailable: false);
     }
 
-    // ── Rolling logic ────────────────────────────────────────────────────────
+    // â”€â”€ Rolling logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     // Rolls 3 unique offers (unique by StatType, guaranteed no duplicates).
     private List<UpgradeOffer> RollOffers()
@@ -7487,7 +7743,7 @@ public class UpgradeManager : MonoBehaviour
         return offers;
     }
 
-    // Tier probabilities scale with the player's Luck stat (high/mid × luck; normalize if sum > 1).
+    // Tier probabilities scale with the player's Luck stat (high/mid Ã— luck; normalize if sum > 1).
     private UpgradeTier RollTier()
     {
         float luck = PlayerStats.instance != null ? PlayerStats.instance.Luck : 1f;
@@ -7520,7 +7776,10 @@ public class UpgradeManager : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\UI\DifficultyRunUI.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\UI\DifficultyRunUI.cs
+========================================================================
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7561,7 +7820,10 @@ public class DifficultyRunUI : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\UI\GameOverScreenController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\UI\GameOverScreenController.cs
+========================================================================
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7606,7 +7868,10 @@ public class GameOverScreenController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\UI\MainMenu.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\UI\MainMenu.cs
+========================================================================
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7656,7 +7921,10 @@ public class MainMenu : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\UI\RunLevelUI.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\UI\RunLevelUI.cs
+========================================================================
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -7722,12 +7990,15 @@ public class RunLevelUI : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\UI\StatsScreenController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\UI\StatsScreenController.cs
+========================================================================
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// Tab-toggle stats overlay. Shows effective run stat values (base × upgrades).
+// Tab-toggle stats overlay. Shows effective run stat values (base Ã— upgrades).
 // Attach to an always-active object (e.g. UI Canvas); statsPanel starts inactive in the scene.
 public class StatsScreenController : MonoBehaviour
 {
@@ -7890,7 +8161,10 @@ public class StatsScreenController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\UI\UIController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\UI\UIController.cs
+========================================================================
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
@@ -8023,13 +8297,16 @@ public class UIController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\UI\UICrosshairFollowPointer.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\UI\UICrosshairFollowPointer.cs
+========================================================================
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Crosshair panelini (altındaki reticle çizgileriyle birlikte) fare / pointer ekran konumuna taşır.
-/// Bu bileşeni Canvas hiyerarşisindeki Crosshair kök <see cref="RectTransform"/> üzerine ekleyin.
+/// Crosshair panelini (altÄ±ndaki reticle Ã§izgileriyle birlikte) fare / pointer ekran konumuna taÅŸÄ±r.
+/// Bu bileÅŸeni Canvas hiyerarÅŸisindeki Crosshair kÃ¶k <see cref="RectTransform"/> Ã¼zerine ekleyin.
 /// </summary>
 [RequireComponent(typeof(RectTransform))]
 public class UICrosshairFollowPointer : MonoBehaviour
@@ -8087,7 +8364,10 @@ public class UICrosshairFollowPointer : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\UI\UIFacingFix.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\UI\UIFacingFix.cs
+========================================================================
 using UnityEngine;
 
 // Attach to any World Space canvas that is a child of a sprite flipped via localScale.x.
@@ -8116,7 +8396,10 @@ public class UIFacingFix : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\UI\UpgradeButton.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\UI\UpgradeButton.cs
+========================================================================
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8189,7 +8472,10 @@ public class UpgradeButton : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\UI\UpgradeCanvasController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\UI\UpgradeCanvasController.cs
+========================================================================
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8220,7 +8506,7 @@ public class UpgradeCanvasController : MonoBehaviour
 
         if (canvasGroup != null)
             canvasGroup.alpha = 0f;
-        // Do NOT call SetActive(false) here — the canvas starts inactive in the scene hierarchy.
+        // Do NOT call SetActive(false) here â€” the canvas starts inactive in the scene hierarchy.
         // Calling SetActive(false) in Awake would re-trigger Awake on the next SetActive(true),
         // causing StartCoroutine to fail because the object briefly becomes inactive again.
     }
@@ -8304,7 +8590,10 @@ public class UpgradeCanvasController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\UI\XPPopup.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\UI\XPPopup.cs
+========================================================================
 using System.Collections;
 using UnityEngine;
 using TMPro;
@@ -8417,7 +8706,10 @@ public class XPPopup : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\Utility\WorldSpaceAnchor.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\Utility\WorldSpaceAnchor.cs
+========================================================================
 using UnityEngine;
 
 // Keeps this GameObject at a fixed world-space offset from its parent,
@@ -8442,7 +8734,10 @@ public class WorldSpaceAnchor : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\World\GateController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\World\GateController.cs
+========================================================================
 using UnityEngine; 
 using System.Collections;
 using UnityEngine.InputSystem;
@@ -8518,7 +8813,10 @@ public class GateController : MonoBehaviour
     }
 }
 
-=== C:\A\unity\Paragon\Assets\Scripts\World\RespawnController.cs ===
+
+========================================================================
+// FILE: Assets\Scripts\World\RespawnController.cs
+========================================================================
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8610,3 +8908,5 @@ public class RespawnController : MonoBehaviour
     }
 }
 
+
+[END - 68 dosya]

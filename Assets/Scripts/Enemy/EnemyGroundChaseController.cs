@@ -555,7 +555,7 @@ public class EnemyGroundChaseController : MonoBehaviour
 
     bool ApplyJumpForHeight(float height, float jumpDir)
     {
-        float gravity = Mathf.Abs(Physics2D.gravity.y * _rb.gravityScale);
+        float gravity = GravityMagnitude();
 
         if (gravity < 0.01f)
             return false;
@@ -585,7 +585,7 @@ public class EnemyGroundChaseController : MonoBehaviour
 
     bool CanReachJumpHeight(float height)
     {
-        float gravity = Mathf.Abs(Physics2D.gravity.y * _rb.gravityScale);
+        float gravity = GravityMagnitude();
 
         if (gravity < 0.01f)
             return false;
@@ -599,10 +599,19 @@ public class EnemyGroundChaseController : MonoBehaviour
     // Bu düşmanın fizik olarak çıkabileceği net engel yüksekliği (jumpHeightBuffer düşülmüş).
     float MaxReachableJumpHeight()
     {
-        float gravity = Mathf.Abs(Physics2D.gravity.y * _rb.gravityScale);
+        float gravity = GravityMagnitude();
         if (gravity < 0.01f)
             return 0f;
         return (maxJumpVelocity * maxJumpVelocity) / (2f * gravity) - jumpHeightBuffer;
+    }
+
+    // Edit-mode gizmo'da _rb henüz atanmamış olabilir (Awake çalışmaz) → null-safe.
+    // Play mode'da _rb dolu olduğundan GetComponent çağrılmaz.
+    float GravityMagnitude()
+    {
+        Rigidbody2D rb = _rb != null ? _rb : GetComponent<Rigidbody2D>();
+        float gScale = rb != null ? rb.gravityScale : 1f;
+        return Mathf.Abs(Physics2D.gravity.y * gScale);
     }
 
     // ── Sensör yardımcıları ──────────────────────────────────────────────────────

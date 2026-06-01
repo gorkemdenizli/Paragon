@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WeaponData_SMG
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: Sub Machine Gun
-  damage: 50
+  damage: 8
   fireRate: 16
   accuracy: 4
   magazineSize: 24

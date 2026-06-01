@@ -35,6 +35,16 @@ public class EnemyLadderNavigator : MonoBehaviour
     [Tooltip("Ladder'a yürürken hedefe yatay ilerleme olmadan bu süre geçerse vazgeçip normal chase'e döner (engele takılıp donmayı önler).")]
     [SerializeField] private float ladderApproachTimeout                = 3f;
 
+    [Header("Staged Routing")]
+    [Tooltip("Bir merdivenin giriş noktası (yukarı: bottom, aşağı: topEntry) enemy'nin ayak Y'sine bu kadar yakınsa 'mevcut seviyede erişilebilir' sayılır.")]
+    [SerializeField] private float ladderEntryYTolerance             = 0.75f;
+    [Tooltip("Tek merdivenin taşıyabileceği maksimum dikey adım. 999 = sınırsız (kademeli rota entry Y kontrolüyle sağlanır).")]
+    [SerializeField] private float maxSingleLadderStepHeight         = 999f;
+    [Tooltip("Açıksa enemy yalnız mevcut platform seviyesinden giriş yapılabilen merdivenleri aday görür (kademeli rota).")]
+    [SerializeField] private bool  requireLadderEntryOnCurrentLevel  = true;
+    [Tooltip("Açıksa skorlamada enemy'ye en yakın erişilebilir merdiven baskın olur (player'ın final yüksekliği değil).")]
+    [SerializeField] private bool  preferNearestReachableLadderFirst = true;
+
     private Rigidbody2D                _rb;
     private EnemyGroundChaseController _chase;
     private EnemyKnockback             _knockback;
@@ -329,8 +339,9 @@ public class EnemyLadderNavigator : MonoBehaviour
 
     LadderZone FindBestLadderForGoingUp()
     {
-        LadderZone best  = null;
-        float      bestS = float.MaxValue;
+        LadderZone best       = null;
+        float      bestS      = float.MaxValue;
+        float      enemyFeetY = GetEnemyFeetY();
 
         foreach (var lz in LadderZone.All)
         {
@@ -339,23 +350,40 @@ public class EnemyLadderNavigator : MonoBehaviour
             float enemyToBot = Vector2.Distance(transform.position, lz.BottomPosition);
             if (enemyToBot > maxLadderSearchDistance) continue;
 
-            float topY = lz.TopPosition.y;
-            if (topY < transform.position.y + minVerticalDifferenceToUseLadder) continue;
+            // Giriş (bottom) enemy'nin mevcut platform seviyesinde mi?
+            float bottomYDelta = Mathf.Abs(lz.BottomPosition.y - enemyFeetY);
+            if (requireLadderEntryOnCurrentLevel && bottomYDelta > ladderEntryYTolerance)
+            {
+                if (enableDebugLogs) Debug.Log($"[LadderNav] UP reject {lz.name}: bottom not on level (Δ{bottomYDelta:F2} > {ladderEntryYTolerance}).", this);
+                continue;
+            }
 
-            float topToPlayerY = Mathf.Abs(topY - _player.position.y);
-            float topToPlayerX = Mathf.Abs(_player.position.x - lz.TopPosition.x);
-            float score        = enemyToBot + topToPlayerY * 3f + topToPlayerX * 0.25f;
+            // Sadece anlamlı yukarı taşıyan, makul yükseklikteki merdivenler
+            float stepH = lz.TopPosition.y - lz.BottomPosition.y;
+            if (stepH < minVerticalDifferenceToUseLadder * 0.5f) continue;                   // yukarı taşımıyor / çok kısa
+            if (stepH > maxSingleLadderStepHeight) continue;                                 // çok yüksek
+            if (lz.TopPosition.y <= enemyFeetY + minVerticalDifferenceToUseLadder) continue; // anlamlı yukarı değil
+
+            float nearW = preferNearestReachableLadderFirst ? 2.0f : 1.0f;
+            float score = enemyToBot * nearW
+                        + bottomYDelta * 5.0f
+                        + Mathf.Abs(lz.TopPosition.y - _player.position.y) * 0.75f
+                        + Mathf.Abs(lz.TopPosition.x - _player.position.x) * 0.15f;
 
             if (score < bestS) { bestS = score; best = lz; }
         }
+
+        if (best != null && enableDebugLogs)
+            Debug.Log($"[LadderNav] Selected UP {best.name} | feetY {enemyFeetY:F2} | bottomY {best.BottomPosition.y:F2} | topY {best.TopPosition.y:F2} | score {bestS:F2}", this);
 
         return best;
     }
 
     LadderZone FindBestLadderForGoingDown()
     {
-        LadderZone best  = null;
-        float      bestS = float.MaxValue;
+        LadderZone best       = null;
+        float      bestS      = float.MaxValue;
+        float      enemyFeetY = GetEnemyFeetY();
 
         foreach (var lz in LadderZone.All)
         {
@@ -364,19 +392,43 @@ public class EnemyLadderNavigator : MonoBehaviour
             float enemyToTop = Vector2.Distance(transform.position, lz.TopEntryPosition);
             if (enemyToTop > maxLadderSearchDistance) continue;
 
-            if (lz.BottomPosition.y >= transform.position.y - minVerticalDifferenceToUseLadder) continue;
+            // Giriş (top entry) enemy'nin mevcut platform seviyesinde mi?
+            float topEntryYDelta = Mathf.Abs(lz.TopEntryPosition.y - enemyFeetY);
+            if (requireLadderEntryOnCurrentLevel && topEntryYDelta > ladderEntryYTolerance)
+            {
+                if (enableDebugLogs) Debug.Log($"[LadderNav] DOWN reject {lz.name}: topEntry not on level (Δ{topEntryYDelta:F2} > {ladderEntryYTolerance}).", this);
+                continue;
+            }
 
-            float botToPlayerY = Mathf.Abs(lz.BottomPosition.y - _player.position.y);
-            float botToPlayerX = Mathf.Abs(_player.position.x - lz.BottomPosition.x);
-            float score        = enemyToTop + botToPlayerY * 3f + botToPlayerX * 0.25f;
+            // Sadece anlamlı aşağı taşıyan, makul yükseklikteki merdivenler
+            float stepH = lz.TopEntryPosition.y - lz.BottomPosition.y;
+            if (stepH < minVerticalDifferenceToUseLadder * 0.5f) continue;
+            if (stepH > maxSingleLadderStepHeight) continue;
+            if (lz.BottomPosition.y >= enemyFeetY - minVerticalDifferenceToUseLadder) continue; // anlamlı aşağı değil
+
+            float nearW = preferNearestReachableLadderFirst ? 2.0f : 1.0f;
+            float score = enemyToTop * nearW
+                        + topEntryYDelta * 5.0f
+                        + Mathf.Abs(lz.BottomPosition.y - _player.position.y) * 0.75f
+                        + Mathf.Abs(lz.BottomPosition.x - _player.position.x) * 0.15f;
 
             if (score < bestS) { bestS = score; best = lz; }
         }
+
+        if (best != null && enableDebugLogs)
+            Debug.Log($"[LadderNav] Selected DOWN {best.name} | feetY {enemyFeetY:F2} | topEntryY {best.TopEntryPosition.y:F2} | bottomY {best.BottomPosition.y:F2} | score {bestS:F2}", this);
 
         return best;
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────────
+
+    // Enemy'nin mevcut platform/ayak Y seviyesi (gövde collider'ının altı).
+    float GetEnemyFeetY()
+    {
+        if (_bodyCollider != null) return _bodyCollider.bounds.min.y;
+        return transform.position.y - 0.5f;
+    }
 
     void BeginApproach()
     {

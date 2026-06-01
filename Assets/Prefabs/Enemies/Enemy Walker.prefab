@@ -537,8 +537,8 @@ MonoBehaviour:
   minOrbCount: 1
   maxOrbCount: 3
   spawnSpreadRadius: 1
-  minAmmoPerOrb: 1
-  maxAmmoPerOrb: 10
+  minAmmoPerOrb: 10
+  maxAmmoPerOrb: 15
   orbHomingSpeed: 40
   orbAbsorbDistance: 0.35
   orbHomingDelay: 0.4
@@ -573,6 +573,10 @@ MonoBehaviour:
   enableDebugLogs: 0
   minChaseDurationBeforeLadder: 2.5
   ladderApproachTimeout: 3
+  ladderEntryYTolerance: 0.75
+  maxSingleLadderStepHeight: 999
+  requireLadderEntryOnCurrentLevel: 1
+  preferNearestReachableLadderFirst: 1
 --- !u!1 &2588783535824518738
 GameObject:
   m_ObjectHideFlags: 0
